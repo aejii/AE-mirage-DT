@@ -1,0 +1,118 @@
+@import 'vars';
+
+:host {
+  display: flex;
+  position: relative;
+  height: 100%;
+  place-content: flex-start stretch;
+  flex-flow: row;
+  box-sizing: border-box;
+}
+
+nav {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 200ms ease-in-out;
+
+  &.hidden {
+    .menu > mg-card {
+      box-shadow: none;
+    }
+  }
+
+  .menu {
+    position: relative;
+
+    > mg-card {
+      transition: all 200ms ease-in-out;
+      margin: 0;
+      > button[mg-icon-button]:not(:last-child) {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .drawer {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      overflow: hidden;
+      padding: 8px;
+
+      mg-card {
+        cursor: pointer;
+        margin: 0;
+        padding: 1rem 0rem;
+      }
+    }
+  }
+}
+
+main {
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+mg-instances-container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  z-index: 0;
+}
+
+nav.left {
+  left: 0;
+  &.hidden {
+    left: -4.5rem;
+  }
+  .menu {
+    > mg-card {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    .drawer {
+      left: 100%;
+      padding-left: 0;
+      mg-card {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        padding-left: 0;
+        .opened {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+}
+
+nav.right {
+  right: 0;
+  &.hidden {
+    right: -4.5rem;
+  }
+  .menu {
+    > mg-card {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .drawer {
+      right: 100%;
+      padding-right: 0;
+      mg-card {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-right: 0;
+        mat-icon {
+          transform: rotate(180deg);
+
+        }
+        .opened {
+          transform: rotate(0deg);
+        }
+      }
+    }
+  }
+}

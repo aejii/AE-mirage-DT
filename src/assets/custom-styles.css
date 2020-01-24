@@ -1,0 +1,14 @@
+div.quantity.mirage-shortcut-chip {
+  display: block;
+  top: auto;
+  left: auto;
+  right: 0;
+  bottom: 0;
+  color: white;
+  transform: scale(0.75);
+  transform-origin: right bottom;
+  font-weight: 700;
+  font-size: 17px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+}

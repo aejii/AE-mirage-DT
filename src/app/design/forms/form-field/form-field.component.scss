@@ -1,0 +1,30 @@
+@import 'vars';
+
+$height: 2rem;
+:host {
+  display: inline-flex;
+  height: $height;
+  min-width: 256px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-flow: row;
+  border-radius: $height / 4;
+  padding: 1rem 1rem;
+  box-sizing: border-box;
+
+  box-shadow: inset 4px 4px 8px mat-color($gray, 500),
+    inset -4px -4px 8px mat-color($gray, A100);
+}
+
+::ng-deep input {
+  background: transparent;
+  border: 0;
+  font-size: $height / 2.5;
+  width: 100%;
+  min-width: 0;
+  color: mat-color($primary, 500);
+  font-weight: 700;
+  &::placeholder {
+    color: mat-color($gray, 400);
+  }
+}

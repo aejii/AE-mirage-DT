@@ -1,0 +1,46 @@
+<form novalidate [formGroup]="accountForm" (ngSubmit)="addAccount()">
+  <div
+    class="new-account"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    fxLayoutGap="2rem"
+  >
+    <mg-form-field>
+      <input
+        type="text"
+        placeholder="Nom de compte"
+        formControlName="username"
+      />
+    </mg-form-field>
+
+    <mg-form-field>
+      <input
+        type="password"
+        placeholder="Mot de passe"
+        formControlName="password"
+      />
+    </mg-form-field>
+
+    <button mg-icon-button color="primary" [disabled]="!accountForm.valid">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</form>
+
+<p>Sélectionne les comptes que tu souhaites connecter (reste appuyé sur un compte pour le supprimer) :</p>
+
+<div class="accounts" fxLayout="row wrap" fxLayoutAlign="start center">
+  <ng-container *ngFor="let account of accounts$ | async; trackBy: trackFn">
+    <mg-card
+      class="account"
+      [class.connects]="account.doesConnect"
+      (click)="updateConnect(account)"
+      (contextmenu)="deleteAccount(account)"
+      >{{ account.username }}</mg-card
+    >
+  </ng-container>
+</div>
+
+<div class="actions" fxLayoutAlign="start start">
+  <button mg-button color="primary" (click)="connect()" [disabled]="!(activeAccounts$ |async)?.length">Connexion</button>
+</div>

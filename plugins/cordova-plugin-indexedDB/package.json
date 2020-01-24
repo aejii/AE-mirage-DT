@@ -1,0 +1,63 @@
+{
+  "_from": "cordova-plugin-indexeddb",
+  "_id": "cordova-plugin-indexeddb@0.1.2",
+  "_inBundle": false,
+  "_integrity": "sha1-ZOYDVEVV4GWjaveaqLgp8zm/WZU=",
+  "_location": "/cordova-plugin-indexeddb",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-indexeddb",
+    "name": "cordova-plugin-indexeddb",
+    "escapedName": "cordova-plugin-indexeddb",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-indexeddb/-/cordova-plugin-indexeddb-0.1.2.tgz",
+  "_shasum": "64e603544555e065a36af79aa8b829f339bf5995",
+  "_spec": "cordova-plugin-indexeddb",
+  "_where": "/mnt/c/Users/mtrichard-ext/projects/mirage-DT",
+  "author": {
+    "name": "Microsoft Open Technologies Inc"
+  },
+  "bugs": {
+    "url": "https://github.com/MSOpenTech/cordova-plugin-indexedDB/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-indexeddb",
+    "platforms": [
+      "android",
+      "ios",
+      "windows8",
+      "windows",
+      "browser"
+    ]
+  },
+  "deprecated": false,
+  "description": "Cordova IndexedDB Plugin",
+  "homepage": "https://github.com/MSOpenTech/cordova-plugin-indexedDB#readme",
+  "keywords": [
+    "cordova",
+    "indexeddb",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-windows8",
+    "cordova-windows",
+    "cordova-browser"
+  ],
+  "license": "Apache 2.0",
+  "name": "cordova-plugin-indexeddb",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MSOpenTech/cordova-plugin-indexedDB.git"
+  },
+  "version": "0.1.2"
+}

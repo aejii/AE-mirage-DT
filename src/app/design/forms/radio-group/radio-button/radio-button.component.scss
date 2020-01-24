@@ -1,0 +1,70 @@
+@import 'vars';
+
+:host {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.radio {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  transition: all 200ms ease-in-out;
+  background: mat-color($gray, 200);
+  box-shadow: 4px 4px 4px mat-color($gray, 500),
+    -4px -4px 4px mat-color($gray, A100);
+  &:after {
+    transition: all 200ms ease-in-out;
+    content: '';
+    display: block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: transparent;
+    transform: scale(0);
+    transform-origin: center;
+  }
+}
+
+.label {
+  transition: all 200ms ease-in-out;
+  font-size: 1rem;
+  flex: 1 1 auto;
+}
+
+:host.mg-inverted {
+  flex-flow: row-reverse;
+  .label {
+    margin-right: 1rem;
+    text-align: right;
+  }
+  .radio {
+    margin-right: 0;
+  }
+}
+
+:host.mg-radio-active {
+  .radio {
+    background: mat-color($primary, 500);
+    box-shadow: inset 4px 4px 4px mat-color($primary, 800),
+      inset -4px -4px 4px mat-color($primary, A100);
+
+    &:after {
+      transform: scale(1);
+      background: mat-color($gray, 200);
+      box-shadow: 4px 4px 8px mat-color($primary, 800),
+        -4px -4px 8px mat-color($primary, A100);
+    }
+  }
+
+  .label {
+    color: mat-color($primary, 500);
+    font-weight: 900;
+  }
+}

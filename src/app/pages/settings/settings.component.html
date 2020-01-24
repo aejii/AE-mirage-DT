@@ -1,0 +1,86 @@
+<h1>Paramètres</h1>
+
+<h2>Affichage</h2>
+
+<mg-card class="display">
+  <div class="step">
+    <span class="flexer">Position du menu</span>
+    <mg-radio-group [formControl]="navAlign" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="2rem">
+      <mg-radio-button direction="right" value="left">Gauche</mg-radio-button>
+      <mg-radio-button direction="right" value="right">Droite</mg-radio-button>
+    </mg-radio-group>
+  </div>
+  <div class="step">
+    <span class="flexer">Position de la liste des comptes</span>
+    <mg-radio-group [formControl]="accountsNavAlign" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="2rem">
+      <mg-radio-button direction="right" value="left">Gauche</mg-radio-button>
+      <mg-radio-button direction="right" value="right">Droite</mg-radio-button>
+    </mg-radio-group>
+  </div>
+</mg-card>
+
+<h2>Installation</h2>
+
+<mg-card class="installation">
+  <div class="step">
+    <span>Souci d'affichage ? Mets à jour les assets.</span>
+    <span class="flexer"></span>
+    <button
+      mg-icon-button
+      color="primary"
+      (click)="installAssets()"
+      [disabled]="fsBusy$ | async"
+    >
+      <mat-icon>image</mat-icon>
+    </button>
+  </div>
+  <div class="step">
+    <span>Jeu qui plante ? Rebuild-le.</span>
+    <span class="flexer"></span>
+    <button
+      mg-icon-button
+      color="primary"
+      (click)="installBuild()"
+      [disabled]="fsBusy$ | async"
+    >
+      <mat-icon>build</mat-icon>
+    </button>
+  </div>
+  <div class="step">
+    <span>Problème de connexion ? Met le jeu à jour.</span>
+    <span class="flexer"></span>
+    <button
+      mg-icon-button
+      color="primary"
+      (click)="updateGame()"
+      [disabled]="fsBusy$ | async"
+    >
+      <mat-icon>loop</mat-icon>
+    </button>
+  </div>
+  <p [style.margin-top.rem]="3">
+    Statut de l'installation
+  </p>
+  <div
+    [ngSwitch]="installStatus$ | async"
+    [class.installed]="(installStatus$ | async) === 2"
+    class="status step"
+  >
+    <ng-container *ngSwitchCase="0"
+      >Installe le jeu depuis les paramètres</ng-container
+    >
+    <ng-container *ngSwitchCase="1">Installation en cours ...</ng-container>
+    <ng-container *ngSwitchCase="2">
+      <span class="valid">Prêt à jouer !</span>
+    </ng-container>
+    <ng-container *ngSwitchCase="3">
+      <span class="error"
+        >Erreur d'installation : copie-la et envoie-la nous sur Discord 😅</span
+      >
+      <span class="flexer"></span>
+      <button mg-icon-button color="error" (click)="copyError()">
+        <mat-icon>assignment</mat-icon>
+      </button>
+    </ng-container>
+  </div>
+</mg-card>

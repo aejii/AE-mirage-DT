@@ -1,0 +1,7 @@
+<iframe
+  #frame
+  *ngIf="instance"
+  frameborder="0"
+  [src]="src$ | async | safe"
+  (load)="instance.frameLoaded(frame)"
+></iframe>

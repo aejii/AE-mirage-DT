@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mirage</title>
+    <base href="/" />
+    <!-- Script found in the APK, used to fit the game to the window -->
+    <script>
+      'use strict';
+      // App is in landscape so width is larger than height
+      // Screen width and height can be inverted depending on platform
+      var screenWidth = Math.max(screen.width, screen.height);
+      var screenHeight = Math.min(screen.width, screen.height);
+      var MIN_SUPPORTED_HEIGHT = 600;
+      if (screenHeight < MIN_SUPPORTED_HEIGHT) {
+        var screenRatio = screenWidth / screenHeight;
+        var width = window.parseInt(MIN_SUPPORTED_HEIGHT * screenRatio, 10);
+        document.write(
+          '<meta name="viewport" content="width=' +
+            width +
+            ', maximum-scale=1, user-scalable=no, viewport-fit=cover" />',
+        );
+      } else {
+        document.write(
+          '<meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no, viewport-fit=cover" />',
+        );
+      }
+    </script>
+
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src * data: gap: cdvfile: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; frame-src * 'self' cdvfile: "
+    />
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <mg-root></mg-root>
+    <script type="text/javascript" src="cordova.js"></script>
+  </body>
+</html>

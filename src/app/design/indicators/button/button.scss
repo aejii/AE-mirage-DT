@@ -1,0 +1,137 @@
+@import 'vars';
+
+/*
+██████╗  █████╗ ███████╗███████╗
+██╔══██╗██╔══██╗██╔════╝██╔════╝
+██████╔╝███████║███████╗█████╗  
+██╔══██╗██╔══██║╚════██║██╔══╝  
+██████╔╝██║  ██║███████║███████╗
+╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝
+                                
+*/
+
+$buttonSize: 2.5rem;
+
+@mixin baseButton {
+  background: mat-color($gray, 200);
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: $buttonSize;
+  padding: 0;
+
+  box-shadow: 4px 4px 8px mat-color($gray, 500),
+    -4px -4px 8px mat-color($gray, A100);
+
+  &.mg-active {
+    animation: buttonClick 200ms linear;
+    &.mg-no-shadow {
+      animation: noShadowButtonClick 200ms linear;
+    }
+  }
+}
+
+button.mg-button:disabled,
+button.mg-toggle-button:disabled,
+button.mg-icon-button:disabled {
+  background: mat-color($gray, 300) !important;
+  box-shadow: none !important;
+  color: mat-color($gray, 400) !important;
+}
+
+
+
+@keyframes buttonClick {
+  from,
+  to {
+    box-shadow: 4px 4px 8px mat-color($gray, 500),
+      -4px -4px 8px mat-color($gray, A100);
+  }
+  25%,
+  75% {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: inset 4px 4px 8px mat-color($gray, 500),
+      inset -4px -4px 8px mat-color($gray, A100);
+  }
+}
+
+@keyframes noShadowButtonClick {
+  from,
+  to {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: inset 4px 4px 8px mat-color($gray, 500),
+      inset -4px -4px 8px mat-color($gray, A100);
+  }
+}
+
+/*
+███████╗████████╗██╗   ██╗██╗     ██╗███╗   ██╗ ██████╗ 
+██╔════╝╚══██╔══╝╚██╗ ██╔╝██║     ██║████╗  ██║██╔════╝ 
+███████╗   ██║    ╚████╔╝ ██║     ██║██╔██╗ ██║██║  ███╗
+╚════██║   ██║     ╚██╔╝  ██║     ██║██║╚██╗██║██║   ██║
+███████║   ██║      ██║   ███████╗██║██║ ╚████║╚██████╔╝
+╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+                                                        
+*/
+
+button.mg-icon-button,
+button.mg-toggle-button {
+  @include baseButton();
+
+  $buttonFontSize: $buttonSize * 0.6;
+
+  width: $buttonSize;
+  border-radius: 50%;
+  font-size: $buttonFontSize;
+
+  &.mg-button-primary {
+    color: mat-color($primary, 500);
+  }
+
+  &.mg-button-error {
+    color: mat-color($warn, 500);
+  }
+  mat-icon {
+    height: $buttonFontSize;
+    width: $buttonFontSize;
+    font-size: $buttonFontSize;
+  }
+}
+
+button.mg-button {
+  @include baseButton();
+  font-size: 1rem;
+  font-weight: bold;
+  box-sizing: border-box;
+  padding: 0 1rem;
+  border-radius: $buttonSize / 2;
+  background: mat-color($gray, A100);
+
+  mat-icon {
+    margin-right: 1rem;
+  }
+
+  &.mg-button-primary {
+    background: mat-color($primary, 500);
+    color: mat-color($primary, '500-contrast');
+  }
+
+  &.mg-button-error {
+    background: mat-color($warn, 500);
+    color: mat-color($warn, '500-contrast');
+  }
+}
+
+button.mg-toggle-button {
+  box-shadow: none;
+  transition: all 200ms ease-in-out;
+  &.mg-toggle-active {
+    box-shadow: inset 4px 4px 8px mat-color($gray, 500),
+    inset -4px -4px 8px mat-color($gray, A100);
+  }
+}

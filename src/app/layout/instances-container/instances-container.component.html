@@ -1,0 +1,51 @@
+<ng-container *ngIf="instances$ | async as instances">
+  <div class="container" fxFlex>
+    <ng-container *ngFor="let instance of instances">
+      <mg-game-instance
+        [instance]="instance"
+        [class.active]="instance === (active$ | async)"
+      ></mg-game-instance>
+    </ng-container>
+  </div>
+
+  <div
+    class="accounts-nav"
+    [ngClass]="navAlign$ | async"
+    fxLayout="column"
+    fxLayoutGap="1rem"
+  >
+    <button
+      mg-icon-button
+      color="primary"
+      (click)="addGame()"
+      [disabled]="!(gameReady$ | async)"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+    <ng-container *ngFor="let instance of instances; index as i">
+      <button
+        mg-toggle-button
+        (click)="setActive(instance)"
+        (dblclick)="instance.refresh()"
+        (contextmenu)="removeInstance(instance)"
+        [active]="!!(instance === (active$ | async))"
+        class="account-button"
+      >
+        <div class="account-container" #accounts>
+          <span>{{ i + 1 }}</span>
+        </div>
+      </button>
+    </ng-container>
+
+    <span fxFlex></span>
+
+    <button
+      mg-icon-button
+      color="error"
+      (click)="removeAllInstances()"
+      *ngIf="instances.length"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</ng-container>

@@ -1,0 +1,82 @@
+{
+  "_args": [
+    [
+      "cordova-plugin-browsersync-gen2@1.1.7",
+      "/mnt/c/Users/mtrichard-ext/projects/mirage-DT"
+    ]
+  ],
+  "_from": "cordova-plugin-browsersync-gen2@1.1.7",
+  "_id": "cordova-plugin-browsersync-gen2@1.1.7",
+  "_inBundle": false,
+  "_integrity": "sha512-10shp7zdzoyNLq4oAMWVqPCMVUEZFW8arSKPKq+pAEXIP9+syhFo8v5Lk4FymTHSPq6RuqS+wHX5XRiRn7vERQ==",
+  "_location": "/cordova-plugin-browsersync-gen2",
+  "_phantomChildren": {
+    "@types/node": "8.9.5",
+    "boolbase": "1.0.0",
+    "dom-serializer": "0.1.1",
+    "domelementtype": "1.3.1",
+    "domhandler": "2.3.0",
+    "entities": "1.1.2",
+    "inherits": "2.0.4",
+    "lodash": "4.17.15",
+    "nth-check": "1.0.2",
+    "string_decoder": "1.1.1",
+    "util-deprecate": "1.0.2"
+  },
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "cordova-plugin-browsersync-gen2@1.1.7",
+    "name": "cordova-plugin-browsersync-gen2",
+    "escapedName": "cordova-plugin-browsersync-gen2",
+    "rawSpec": "1.1.7",
+    "saveSpec": null,
+    "fetchSpec": "1.1.7"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-browsersync-gen2/-/cordova-plugin-browsersync-gen2-1.1.7.tgz",
+  "_spec": "1.1.7",
+  "_where": "/mnt/c/Users/mtrichard-ext/projects/mirage-DT",
+  "author": {
+    "name": "Dimitris - Rafail Katsampas",
+    "email": "katsampasdr@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/DimitrisRK/cordova-plugin-browsersync-gen2/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-browsersync-gen2",
+    "platforms": [
+      "android",
+      "browser",
+      "ios"
+    ]
+  },
+  "dependencies": {
+    "browser-sync": "^2.26.0",
+    "cheerio": "^1.0.0-rc.2",
+    "csp-parse": "0.0.2",
+    "elementtree": "^0.1.6",
+    "glob": "^7.1.2",
+    "plist": "^3.0.0"
+  },
+  "description": "A fork of original Cordova Plugin to integrate browser-sync in the workflow",
+  "homepage": "https://github.com/DimitrisRK/cordova-plugin-browsersync-gen2#readme",
+  "id": "cordova-plugin-browsersync-gen2",
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "name": "cordova-plugin-browsersync-gen2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DimitrisRK/cordova-plugin-browsersync-gen2.git"
+  },
+  "version": "1.1.7"
+}

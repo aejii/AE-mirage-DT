@@ -1,0 +1,24 @@
+@import 'vars';
+
+:host {
+  padding: 3rem;
+  box-sizing: border-box;
+  display: block;
+}
+
+.new-account {
+  margin-bottom: 3rem;
+  box-sizing: border-box;
+}
+
+.account {
+  transition: color 300ms ease-in-out;
+}
+
+.connects {
+  color: mat-color($primary, 500);
+}
+
+.actions {
+  margin-top: 2rem;
+}

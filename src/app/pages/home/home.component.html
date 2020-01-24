@@ -1,0 +1,8 @@
+<mg-logo [color]="(installStatus$ | async) === 2 ? 'primary' : ''"></mg-logo>
+
+<mg-card [ngSwitch]="installStatus$ | async"  [class.installed]="(installStatus$ | async) === 2">
+  <ng-container *ngSwitchCase="0">Installe le jeu depuis les paramètres</ng-container>
+  <ng-container *ngSwitchCase="1">Installation en cours ...</ng-container>
+  <ng-container *ngSwitchCase="2">Prêt à jouer !</ng-container>
+  <ng-container *ngSwitchCase="3">Une erreur d'installation est survenue.</ng-container>
+</mg-card>
