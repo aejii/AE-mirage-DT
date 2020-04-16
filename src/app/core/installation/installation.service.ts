@@ -34,6 +34,7 @@ export class InstallationService {
 
   installAssets() {
     this.store.setFileSystemBusiness(true);
+    this.store.setAssetsReady(false);
 
     const manifest = this.fileSystem.getRemoteAssetMap().pipe(shareReplay());
     const assets = manifest.pipe(map((obj) => getMissingFiles(obj)));
@@ -48,12 +49,14 @@ export class InstallationService {
 
     return forkJoin([concat(assetsOperations, manifestOperation)]).pipe(
       tap(() => this.store.setFileSystemBusiness(false)),
+      tap(() => this.store.setAssetsReady(true)),
       this.manageError(),
     );
   }
 
   installBuild() {
     this.store.setFileSystemBusiness(true);
+    this.store.setBuildReady(false);
     const manifest = this.fileSystem.getRemoteManifest().pipe(shareReplay());
     const buildFiles = manifest.pipe(map((obj) => getMissingFiles(obj)));
 
@@ -67,6 +70,7 @@ export class InstallationService {
 
     return forkJoin([concat(...operations)]).pipe(
       tap(() => this.store.setFileSystemBusiness(false)),
+      tap(() => this.store.setBuildReady(true)),
       this.manageError(),
     );
   }

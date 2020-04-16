@@ -1,6 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { combineLatest } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { InstallationQuery } from 'src/app/core/installation/installation.query';
 import { UserInterfaceQuery } from 'src/app/core/user-interface/user-interface.query';
 import { UserInterfaceStore } from 'src/app/core/user-interface/user-interface.store';
 
@@ -13,14 +21,24 @@ import { UserInterfaceStore } from 'src/app/core/user-interface/user-interface.s
 export class AccountsComponent implements OnInit {
   accountForm = this.createForm();
 
-  accounts$ = this.query.accounts$;
-  activeAccounts$ = this.query.activeAccounts$;
+  accounts$ = this.interfaceQuery.accounts$;
+  activeAccounts$ = this.interfaceQuery.activeAccounts$;
+
+  canConnect$ = combineLatest([
+    this.activeAccounts$,
+    this.installationQuery.gameUpdated$,
+  ]).pipe(
+    map(([accounts, update]) => !!accounts?.length && update),
+    tap(() => setTimeout(() => this.cdRef.detectChanges())),
+  );
 
   constructor(
     private fb: FormBuilder,
-    private store: UserInterfaceStore,
-    private query: UserInterfaceQuery,
+    private interfaceStore: UserInterfaceStore,
+    private interfaceQuery: UserInterfaceQuery,
+    private installationQuery: InstallationQuery,
     private router: Router,
+    private cdRef: ChangeDetectorRef,
   ) {}
 
   createForm(): FormGroup {
@@ -38,23 +56,23 @@ export class AccountsComponent implements OnInit {
 
   addAccount() {
     if (this.accountForm.valid) {
-      this.store.addAccount(this.accountForm.value);
+      this.interfaceStore.addAccount(this.accountForm.value);
       this.accountForm = this.createForm();
     }
   }
 
   updateConnect(account: AppAccount) {
-    this.store.updateAccountConnect(account);
+    this.interfaceStore.updateAccountConnect(account);
   }
 
   deleteAccount(account: AppAccount) {
-    this.store.removeAccount(account);
+    this.interfaceStore.removeAccount(account);
   }
 
   connect() {
-    this.query.connectAccounts();
+    this.interfaceQuery.connectAccounts();
     this.router.navigate(['/home']);
-    this.store.toggleMenu(false);
+    this.interfaceStore.toggleMenu(false);
   }
 
   trackFn(item: AppAccount, index: number) {

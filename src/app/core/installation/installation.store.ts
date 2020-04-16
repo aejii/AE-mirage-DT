@@ -4,6 +4,8 @@ import { Store, StoreConfig } from '@datorama/akita';
 export interface InstallationState {
   fileSystemBusy: boolean;
   isGameUpdated: boolean;
+  assetsReady: boolean;
+  buildReady: boolean;
   installError: string;
 }
 
@@ -12,6 +14,8 @@ export function createInitialState(): InstallationState {
     fileSystemBusy: false,
     isGameUpdated: false,
     installError: undefined,
+    assetsReady: false,
+    buildReady: false,
   };
 }
 
@@ -36,6 +40,20 @@ export class InstallationStore extends Store<InstallationState> {
   }
 
   setGameUpdatedStatus(isGameUpdated: boolean) {
-    this.update({ isGameUpdated });
+    this.update({ isGameUpdated, assetsReady: true, buildReady: true });
+  }
+
+  setAssetsReady(assetsReady: boolean) {
+    this.update({
+      assetsReady,
+      isGameUpdated: assetsReady && this.getValue().buildReady,
+    });
+  }
+
+  setBuildReady(buildReady: boolean) {
+    this.update({
+      buildReady,
+      isGameUpdated: buildReady && this.getValue().assetsReady,
+    });
   }
 }

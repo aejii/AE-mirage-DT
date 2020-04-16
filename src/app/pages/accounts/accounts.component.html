@@ -41,6 +41,6 @@
   </ng-container>
 </div>
 
-<div class="actions" fxLayoutAlign="start start">
-  <button mg-button color="primary" (click)="connect()" [disabled]="!(activeAccounts$ |async)?.length">Connexion</button>
+<div class="actions" fxLayoutAlign="center start">
+  <button mg-button color="primary" (click)="connect()" [disabled]="!(canConnect$ | async)">Connexion</button>
 </div>
