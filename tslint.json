@@ -54,7 +54,8 @@
     "use-pipe-transform-interface": true,
 
     "curly": false,
-    "variable-name": false
+    "variable-name": false,
+    "no-unused-expression": false
   },
   "rulesDirectory": ["codelyzer"]
 }

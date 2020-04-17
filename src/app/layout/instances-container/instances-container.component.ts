@@ -9,9 +9,9 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { combineLatest } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { GameInstance } from 'src/app/core/model/game/instance.class';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { InstallationQuery } from 'src/app/core/installation/installation.query';
+import { GameInstance } from 'src/app/core/model/game/instance.class';
 import { UserInterfaceQuery } from 'src/app/core/user-interface/user-interface.query';
 import { UserInterfaceStore } from 'src/app/core/user-interface/user-interface.store';
 import { UserPreferencesQuery } from 'src/app/core/user-preferences/user-preferences.query';
@@ -35,7 +35,7 @@ export class InstancesContainerComponent implements OnInit {
     this.installationQuery.gameUpdated$,
   ]).pipe(
     map(([fs, update]) => !fs && !!update),
-    tap(() => setTimeout(() => this.cdRef.detectChanges()))
+    tap(() => setTimeout(() => this.cdRef.detectChanges())),
   );
 
   navAlign$ = this.preferencesQuery.accountsNavAlign$;
@@ -50,6 +50,21 @@ export class InstancesContainerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Mute all instances except first one
+    this.active$
+      .pipe(
+        filter((instance) => !!instance),
+        switchMap((instance) => {
+          instance.muteAllSounds(false);
+          return this.instances$.pipe(
+            map((instances) => instances.filter((i) => i !== instance)),
+          );
+        }),
+      )
+      .subscribe((instances) =>
+        instances.forEach((instance) => instance.muteAllSounds(true)),
+      );
+
     this.instances$.subscribe((instances) => {
       const instancesToListen = instances.filter(
         (instance) => !this.listenedInstancesId.includes(instance.ID),
@@ -87,6 +102,12 @@ export class InstancesContainerComponent implements OnInit {
 
   removeAllInstances() {
     this.interfaceStore.removeAllInstances();
+  }
+
+  private muteAllButFirst(instances: GameInstance[]) {
+    const [first, ...others] = instances;
+    first.muteAllSounds(false);
+    others.forEach((instance) => instance.muteAllSounds(true));
   }
 
   setAccountImage(instance: GameInstance, canvas: HTMLCanvasElement) {

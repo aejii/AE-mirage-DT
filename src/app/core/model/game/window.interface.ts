@@ -1,5 +1,6 @@
 import { GameLoginForm } from './login-form.interface';
-import { SingletonScreenMeasurement } from './singletons-interfaces/screen-measurement.interface';
+import { SingletonScreenMeasurement } from './singletons-interfaces/screen-measurement.singleton';
+import { SingletonAudioManager } from './singletons-interfaces/audio-manager.singleton';
 
 export interface GameWindow extends Window, Undiscorvered {
   gui: {
@@ -21,6 +22,7 @@ export interface GameWindow extends Window, Undiscorvered {
    */
   singletons(ref: number): any;
   singletons(ref: 179): SingletonScreenMeasurement;
+  singletons(ref: 254): SingletonAudioManager;
 }
 
 interface Undiscorvered {

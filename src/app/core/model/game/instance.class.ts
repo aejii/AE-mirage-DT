@@ -144,11 +144,18 @@ export class GameInstance {
   private enableResizing() {
     this.window.onresize = (event: UIEvent) => {
       // Singleton update required because unlike a computer, the browser size does not change
-      const screen = this.window.singletons(179);
+      const screen = this.window.singletons?.(179);
+      if (!screen) return;
       screen.dimensions.viewportWidth = this.window.document.documentElement.clientWidth;
       screen.updateScreen();
       this.refresh();
     };
+  }
+
+  muteAllSounds(mute: boolean = false) {
+    const audio = this.window?.singletons?.(254);
+    if (!audio) return;
+    audio.setMute?.(mute);
   }
 
   removeNotification(notificationId: string) {
