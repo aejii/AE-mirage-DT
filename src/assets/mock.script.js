@@ -5,7 +5,7 @@ window.buildVersion = '${window.buildVersion}';
 window.appVersion = '${window.appVersion}';
 
 window.appInfo = {
-  version: window.appVersion
+  version: window.appVersion,
 };
 
 // Prevents script errors by mocking the dependencies
@@ -19,23 +19,23 @@ window.appInfo = {
 window.cordova = {
   plugins: {
     isemulator: {
-      assess: function(fct) {
+      assess: function (fct) {
         fct(false);
-      }
+      },
     },
     Keyboard: {
-      close: function() {},
-      disableScroll: function() {},
-      show: function() {},
-      hideKeyboardAccessoryBar: function() {}
+      close: function () {},
+      disableScroll: function () {},
+      show: function () {},
+      hideKeyboardAccessoryBar: function () {},
     },
     notification: {
-      local: false
+      local: false,
     },
     pushNotification: {
-      onDeviceReady: function() {},
-      setUserId: function() {},
-      registerDevice: function() {}
-    }
-  }
+      onDeviceReady: function () {},
+      setUserId: function () {},
+      registerDevice: function () {},
+    },
+  },
 };

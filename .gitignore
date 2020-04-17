@@ -16,6 +16,9 @@
 # Cordova build files
 /platforms/android/app/src/main/assets
 
+# Game script file
+game.script.js
+
 # dependencies
 /node_modules
 
