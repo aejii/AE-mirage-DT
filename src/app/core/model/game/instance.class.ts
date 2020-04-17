@@ -91,6 +91,7 @@ export class GameInstance {
    */
   frameLoaded(frame: HTMLIFrameElement) {
     this.window = frame.contentWindow as GameWindow;
+    this.enableResizing();
   }
 
   connect(username: string, password: string, remember = false) {
@@ -138,6 +139,16 @@ export class GameInstance {
     interval(30000).subscribe(() => {
       this.window.mirageInactivity.recordActivity();
     });
+  }
+
+  private enableResizing() {
+    this.window.onresize = (event: UIEvent) => {
+      // Singleton update required because unlike a computer, the browser size does not change
+      const screen = this.window.singletons(179);
+      screen.dimensions.viewportWidth = this.window.document.documentElement.clientWidth;
+      screen.updateScreen();
+      this.refresh();
+    };
   }
 
   removeNotification(notificationId: string) {

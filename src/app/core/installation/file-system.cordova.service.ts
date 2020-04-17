@@ -372,6 +372,8 @@ const styleRegexes = [
 ];
 
 const scriptRegexes = [
+  // Attaches the singletons manager to the window
+  ['(function (\\D)\\(n\\)\\{)(if\\(i\\[n\\]\\)return i\\[n\\]\\.exports;)', '$1window.singletons = $2;$3'],
   // Removes cordova filesystem
   ['cdvfile://localhost/persistent/data/assets', '../assets'],
   // Remove analytics

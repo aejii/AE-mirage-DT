@@ -1,4 +1,5 @@
 import { GameLoginForm } from './login-form.interface';
+import { SingletonScreenMeasurement } from './singletons-interfaces/screen-measurement.interface';
 
 export interface GameWindow extends Window, Undiscorvered {
   gui: {
@@ -10,8 +11,16 @@ export interface GameWindow extends Window, Undiscorvered {
 
   // Set by regexes
   mirageInactivity: {
-    recordActivity: () => void
-  }
+    recordActivity: () => void;
+  };
+
+  /**
+   * Definition of singletons bound to the window.singletons object.
+   * This is set by a script file regex and allows to get memory references of uglified code.
+   * No more scouting into nested objects !
+   */
+  singletons(ref: number): any;
+  singletons(ref: 179): SingletonScreenMeasurement;
 }
 
 interface Undiscorvered {
