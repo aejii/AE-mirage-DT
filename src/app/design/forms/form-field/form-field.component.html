@@ -1,1 +1,5 @@
-<ng-content select="input"></ng-content>
+<ng-content #input select="input"></ng-content>
+
+<ng-container *ngIf="isPassword">
+  <mat-icon class="show-password" (click)="togglePassword()" [class.shown]="showPassword">visibility</mat-icon>
+</ng-container>

@@ -28,3 +28,13 @@ $height: 2rem;
     color: mat-color($gray, 400);
   }
 }
+
+mat-icon.show-password {
+  margin-left: 1rem;
+  color: mat-color($primary, 500);
+  transition: opacity 200ms ease-in-out;
+  opacity: 0.25;
+  &.shown {
+    opacity: 1;
+  }
+}
