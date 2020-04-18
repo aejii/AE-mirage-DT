@@ -78,6 +78,23 @@ export class GameInstance {
     return this.window?.gui?.playerData?.id;
   }
 
+  get hasParty() {
+    return !!this.window?.gui?.party?.currentParty?._childrenList?.filter(
+      (c) => !!c.memberData,
+    )?.length;
+  }
+
+  get dropChance() {
+    return (
+      this.window?.gui?.playerData?.characters?.mainCharacter?.characteristics?.prospecting?.getTotalStat() ||
+      0
+    );
+  }
+
+  get level() {
+    return this.window?.gui?.playerData?.characterBaseInformations?.level || 0;
+  }
+
   constructor() {
     this.connect$.subscribe((v) => {
       this.removeShopButton();
@@ -97,10 +114,13 @@ export class GameInstance {
         const spellId = slot.data?.id;
 
         if (cellId && spellId)
-          this.window.dofus.sendMessage('GameActionFightCastRequestMessage', {
-            cellId,
-            spellId,
-          });
+          this.window.dofus.connectionManager.sendMessage(
+            'GameActionFightCastRequestMessage',
+            {
+              cellId,
+              spellId,
+            },
+          );
       });
 
       this.disconnect$
@@ -189,28 +209,71 @@ export class GameInstance {
   }
 
   sendPartyInvite(playerName: string) {
-    this.window.dofus.sendMessage('PartyInvitationRequestMessage', {
-      name: playerName,
-    });
+    this.window.dofus.connectionManager.sendMessage(
+      'PartyInvitationRequestMessage',
+      {
+        name: playerName,
+      },
+    );
   }
 
   waitForPartyInvite() {
     const sub = new Subject<any>();
 
     sub.pipe(first()).subscribe(({ partyId }) => {
-      this.window.dofus.sendMessage('PartyAcceptInvitationMessage', {
-        partyId,
-      });
+      this.window.dofus.connectionManager.sendMessage(
+        'PartyAcceptInvitationMessage',
+        {
+          partyId,
+        },
+      );
       this.removeNotification('party' + partyId);
       this.collapsePartyElement();
     });
 
-    this.window.dofus.on('PartyInvitationMessage', (response) =>
-      sub.next(response),
+    this.window.dofus.connectionManager.on(
+      'PartyInvitationMessage',
+      (response) => sub.next(response),
     );
   }
 
   collapsePartyElement() {
     this.window.gui.party.collapse();
+  }
+
+  addPartyInformations(dropChance: number, level: number) {
+    if (!this.hasParty) return;
+
+    const partyContainer: HTMLElement = this.window?.gui?.party?.classicParty
+      ?.rootElement;
+
+    if (!partyContainer) return;
+
+    let hasInfosAlready = false;
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < partyContainer.children.length; i++) {
+      if (!partyContainer.children[i].classList.contains('member'))
+        hasInfosAlready = true;
+    }
+
+    if (hasInfosAlready) {
+      partyContainer.children[0].textContent = '🍀  ' + dropChance;
+      partyContainer.children[1].textContent = '🌟  ' + level;
+    } else {
+      const lvl = document.createElement('div');
+      const dc = document.createElement('div');
+
+      [lvl, dc].forEach((el) => {
+        el.style.padding = '0 0.25em';
+        el.style.textAlign = 'left';
+      });
+      lvl.style.paddingBottom = '0.5em';
+
+      dc.textContent = '🍀  ' + dropChance;
+      lvl.textContent = '🌟  ' + level;
+
+      partyContainer.insertBefore(lvl, partyContainer.firstChild);
+      partyContainer.insertBefore(dc, partyContainer.firstChild);
+    }
   }
 }

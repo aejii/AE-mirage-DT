@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  Renderer2,
-  ViewChildren,
-} from '@angular/core';
-import { combineLatest } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { combineLatest, interval } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { InstallationQuery } from 'src/app/core/installation/installation.query';
 import { GameInstance } from 'src/app/core/model/game/instance.class';
@@ -28,6 +19,8 @@ export class InstancesContainerComponent implements OnInit {
 
   @ViewChildren('accounts') accounts: QueryList<ElementRef<HTMLDivElement>>;
 
+  @ViewChild('partyInfos') partyInfosRef: ElementRef<HTMLDivElement>;
+
   listenedInstancesId: string[] = [];
 
   gameReady$ = combineLatest([
@@ -39,6 +32,8 @@ export class InstancesContainerComponent implements OnInit {
   );
 
   navAlign$ = this.preferencesQuery.accountsNavAlign$;
+
+  updateSource$ = interval(5000);
 
   constructor(
     private renderer: Renderer2,
@@ -85,6 +80,15 @@ export class InstancesContainerComponent implements OnInit {
         this.listenedInstancesId.push(instance.ID);
       });
     });
+
+    this.updateSource$
+      .pipe(switchMap(() => this.instances$))
+      .subscribe((instances) => {
+        const dc = instances.reduce((acc, i) => acc + i.dropChance, 0);
+        const lvl = instances.reduce((acc, i) => acc + i.level, 0);
+
+        instances.forEach(instance => instance.addPartyInformations(dc, lvl));
+      });
   }
 
   addGame() {

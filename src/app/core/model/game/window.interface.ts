@@ -16,8 +16,10 @@ export interface GameWindow extends Window, Undiscorvered {
   };
 
   dofus: {
+    connectionManager: {
       sendMessage: (verb: string, payload: any) => any;
       on: (verb: string, cb: (...args) => void) => any;
+    };
   };
 
   /**
