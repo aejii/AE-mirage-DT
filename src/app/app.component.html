@@ -1,6 +1,11 @@
-<nav [class.hidden]="!(isMenuVisible$ | async)" [ngClass]="navAlign$ | async">
+<nav
+  [class.hidden]="!(isMenuVisible$ | async)"
+  [ngClass]="navAlign$ | async"
+  cdkDrag
+  cdkDragLockAxis="y"
+>
   <div class="menu">
-    <div class="drawer">
+    <div class="drawer" cdkDragHandle>
       <mg-card
         (click)="toggleMenu()"
         [class.mg-no-shadow]="(hasInstances$ | async) && rlaHome.isActive"
