@@ -104,12 +104,6 @@ export class InstancesContainerComponent implements OnInit {
     this.interfaceStore.removeAllInstances();
   }
 
-  private muteAllButFirst(instances: GameInstance[]) {
-    const [first, ...others] = instances;
-    first.muteAllSounds(false);
-    others.forEach((instance) => instance.muteAllSounds(true));
-  }
-
   setAccountImage(instance: GameInstance, canvas: HTMLCanvasElement) {
     const accounts = this.accounts.toArray();
     const account = accounts[this.interfaceQuery.indexOfInstance(instance)];

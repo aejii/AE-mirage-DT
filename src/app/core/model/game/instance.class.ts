@@ -82,6 +82,32 @@ export class GameInstance {
     this.connect$.subscribe((v) => {
       this.removeShopButton();
       this.preventUserInactivity();
+      this.bindSpellDoubleTap();
+    });
+  }
+
+  private bindSpellDoubleTap() {
+    this.window?.gui?.shortcutBar?._panels?.spell?.slotList?.forEach((slot) => {
+      slot.addListener('doubletap', () => {
+        if (!this.window?.gui?.playerData?.isFighting) return;
+
+        const cellId = this.window?.gui?.fightManager?._fighters[
+          this.window?.gui?.playerData?.characterBaseInformations?.id
+        ]?.data?.disposition?.cellId;
+        const spellId = slot.data?.id;
+
+        if (cellId && spellId)
+          this.window.dofus.sendMessage('GameActionFightCastRequestMessage', {
+            cellId,
+            spellId,
+          });
+      });
+
+      this.disconnect$
+        .pipe(first())
+        .subscribe(() =>
+          slot.removeListener('doubletap', slot._events.doubletap),
+        );
     });
   }
 
@@ -179,9 +205,8 @@ export class GameInstance {
       this.collapsePartyElement();
     });
 
-    this.window.dofus.connectionManager.on(
-      'PartyInvitationMessage',
-      (response) => sub.next(response),
+    this.window.dofus.on('PartyInvitationMessage', (response) =>
+      sub.next(response),
     );
   }
 

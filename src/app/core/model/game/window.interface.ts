@@ -1,6 +1,6 @@
 import { GameLoginForm } from './login-form.interface';
-import { SingletonScreenMeasurement } from './singletons-interfaces/screen-measurement.singleton';
 import { SingletonAudioManager } from './singletons-interfaces/audio-manager.singleton';
+import { SingletonScreenMeasurement } from './singletons-interfaces/screen-measurement.singleton';
 
 export interface GameWindow extends Window, Undiscorvered {
   gui: {
@@ -13,6 +13,11 @@ export interface GameWindow extends Window, Undiscorvered {
   // Set by regexes
   mirageInactivity: {
     recordActivity: () => void;
+  };
+
+  dofus: {
+      sendMessage: (verb: string, payload: any) => any;
+      on: (verb: string, cb: (...args) => void) => any;
   };
 
   /**
