@@ -25,6 +25,6 @@ export class ToggleButtonDirective extends MgButtonBase implements OnChanges {
   }
 
   onClick() {
-    this.active = !this.active;
+    // this.active = !this.active;
   }
 }
