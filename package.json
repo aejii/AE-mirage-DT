@@ -16,7 +16,7 @@
     "cordova:prod": "cordova build android --release --prod",
     "script:get": "touch game.script.js && rm game.script.js && wget -O game.script.js https://proxyconnection.touch.dofus.com/build/script.js",
     "script:get:beautified": "npm run script:get && js-beautify -r game.script.js",
-    "start": "npm run cordova:dev",
+    "start": "npm run android:delete-local-properties && npm run cordova:dev",
     "build": "npm run ng:dev",
     "release": "npm run ng:prod && npm run android:delete-local-properties && npm run apk:delete-old && npm run cordova:prod && npm run apk:move && npm run apk:sign && npm run apk:delete-unsigned",
     "test": "ng test",

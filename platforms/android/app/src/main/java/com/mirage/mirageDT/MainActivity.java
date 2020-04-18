@@ -20,6 +20,8 @@
 package com.mirage.mirageDT;
 
 import android.os.Bundle;
+import android.view.WindowManager;
+
 import org.apache.cordova.*;
 
 public class MainActivity extends CordovaActivity
@@ -37,5 +39,7 @@ public class MainActivity extends CordovaActivity
 
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }
