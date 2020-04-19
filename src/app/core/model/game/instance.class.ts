@@ -113,14 +113,10 @@ export class GameInstance {
         ]?.data?.disposition?.cellId;
         const spellId = slot.data?.id;
 
-        if (cellId && spellId)
-          this.window.dofus.connectionManager.sendMessage(
-            'GameActionFightCastRequestMessage',
-            {
-              cellId,
-              spellId,
-            },
-          );
+        if (cellId && spellId) {
+          this.window.foreground.selectSpell(spellId);
+          this.window.isoEngine._castSpellImmediately(cellId);
+        }
       });
 
       this.disconnect$
