@@ -68,6 +68,20 @@ export class GameInstance {
     shareReplay(),
   );
 
+  castSpellInFight$ = source$.pipe(
+    map(() => this.window?.dofus?.connectionManager),
+    filter((v) => !!v),
+    switchMap(
+      () =>
+        new Observable<number>((observer) =>
+          this.window.gui.on('spellSlotSelected', (spellId) =>
+            observer.next(spellId),
+          ),
+        ),
+    ),
+    filter(() => this.window?.gui?.playerData?.isFighting),
+  );
+
   public readonly ID = Math.random().toString(36).slice(2);
 
   get characterName() {
@@ -100,6 +114,22 @@ export class GameInstance {
       this.removeShopButton();
       this.preventUserInactivity();
       this.bindSpellDoubleTap();
+      this.previewDamages();
+    });
+
+    this.castSpellInFight$.subscribe((spellId) => {
+      const spell = this.window?.gui?.playerData?.characters?.mainCharacter
+        ?.spellData?.spells?.[spellId];
+      console.log(spell);
+      const spellLevel = spell.spellLevel.id;
+      const effects = Object.entries(spell.effectInstances).filter(
+        ([k]) => k.includes(spellLevel) && !k.includes('criticalEffect'),
+      );
+      const critEffects = Object.entries(spell.effectInstances).filter(
+        ([k]) => k.includes(spellLevel) && k.includes('criticalEffect'),
+      );
+
+      console.log(effects, critEffects);
     });
   }
 
@@ -272,4 +302,6 @@ export class GameInstance {
       partyContainer.insertBefore(dc, partyContainer.firstChild);
     }
   }
+
+  previewDamages() {}
 }
