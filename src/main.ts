@@ -3,15 +3,13 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { persistState } from '@datorama/akita';
 import { AppModule } from './app/app.module';
 import { UserInterfaceState } from './app/core/user-interface/user-interface.store';
-import { environment } from './environments/environment';
 
-if (environment.production)
+if (!window.cordova) bootstrapApp();
+else
   document.addEventListener('deviceready', () => {
-    window.screen.orientation.lock('landscape');
     enableProdMode();
     bootstrapApp();
   });
-else bootstrapApp();
 
 function bootstrapApp() {
   persistState({

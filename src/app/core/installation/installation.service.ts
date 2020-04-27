@@ -168,10 +168,9 @@ export class InstallationService {
   }
 
   private installRemoteFiles(files: FileItem[]) {
-    const fileUpdateOperations = files.map((file, index) =>
-      this.fileSystem
-        .updateGameFile(file.filename)
-        .pipe(tap(() => console.log(`${index} - ${file.filename}`))),
+    const fileUpdateOperations = files.map(
+      (file, index) => this.fileSystem.updateGameFile(file.filename)
+      .pipe(tap(() => console.log(`${index} - ${file.filename}`))),
     );
 
     return forkJoin([concat(...fileUpdateOperations)]);

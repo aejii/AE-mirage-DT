@@ -17,6 +17,7 @@ import { InstancesContainerComponent } from './layout/instances-container/instan
 import { AccountsComponent } from './pages/accounts/accounts.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { PhoneService } from './providers/application/phone/phone.service';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ export class AppModule {
   constructor(
     private registry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
+    private phoneService: PhoneService,
   ) {
     this.registry.addSvgIcon(
       'mirage',
