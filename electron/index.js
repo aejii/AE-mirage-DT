@@ -1,7 +1,7 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
-const appPath = path.join(__dirname, '..', 'www', 'index.html');
+const appPath = path.join('./', 'app', 'index.html');
 
 const height = 768;
 const width = height * 2.5;
@@ -15,9 +15,11 @@ function createWindow() {
     },
   });
 
-  win.loadFile(appPath);
-  win.webContents.openDevTools();
-  win.webContents.on('did-fail-load', () => win.loadFile(appPath));
+  const load = win.loadFile(appPath);
+
+  load();
+  // win.webContents.openDevTools();
+  win.webContents.on('did-fail-load', () => load());
 }
 
 app.commandLine.appendSwitch('disable-site-isolation-trials');

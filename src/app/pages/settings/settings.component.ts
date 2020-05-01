@@ -83,7 +83,7 @@ export class SettingsComponent {
       .subscribe((value) => this.deviceForm.setValue(value.device));
 
     this.deviceForm.valueChanges
-      .pipe(filter(() => this.isCordova))
+      .pipe(filter(() => !this.isCordova))
       .subscribe((value: string) => {
         this.preferencesStore.updateDeviceFromName(value);
         this.phone.overrideUserAgent();

@@ -5,7 +5,6 @@ import { UserPreferencesStore } from 'src/app/core/user-preferences/user-prefere
   providedIn: 'root',
 })
 export class PhoneService {
-
   get isCordova() {
     return !!window.cordova;
   }
@@ -20,7 +19,7 @@ export class PhoneService {
   }
 
   overrideUserAgent(targetWindow: Window = window) {
-    if (window.cordova) return;
+    if (this.isCordova) return;
 
     let device = this.preferencesStore.getValue().selectedDevice;
     const devices = this.preferencesStore.getValue().availableDevices;
