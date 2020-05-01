@@ -4,6 +4,9 @@
 window.buildVersion = '${window.buildVersion}';
 window.appVersion = '${window.appVersion}';
 
+// Override the user agent with the one from the parent window
+window.parent.overrideUserAgent(window);
+
 window.appInfo = {
   version: window.appVersion,
 };
@@ -40,23 +43,23 @@ window.cordova = {
   },
 };
 
-function overrideUserAgent() {
-  const userAgent =
-    'Mozilla/5.0 (Linux; Android 10; ONEPLUS A6003) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.111 Mobile Safari/537.36';
-  const platform = 'Linux armv8l';
+// function overrideUserAgent() {
+//   const userAgent =
+//     'Mozilla/5.0 (Linux; Android 10; ONEPLUS A6003) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.111 Mobile Safari/537.36';
+//   const platform = 'Linux armv8l';
 
-  Object.defineProperty(navigator, 'userAgent', {
-    get: () => userAgent,
-  });
-  Object.defineProperty(navigator, 'appVersion', {
-    get: () => userAgent,
-  });
-  Object.defineProperty(navigator, 'platform', {
-    get: () => platform,
-  });
-}
+//   Object.defineProperty(navigator, 'userAgent', {
+//     get: () => userAgent,
+//   });
+//   Object.defineProperty(navigator, 'appVersion', {
+//     get: () => userAgent,
+//   });
+//   Object.defineProperty(navigator, 'platform', {
+//     get: () => platform,
+//   });
+// }
 
-overrideUserAgent();
+// overrideUserAgent();
 
 function findKey(propToFind, obj = window, maxDepth = 10) {
   let path = `[YOUR OBJ]`;

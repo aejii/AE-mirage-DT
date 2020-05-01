@@ -1,33 +1,42 @@
 import { Injectable } from '@angular/core';
+import { UserPreferencesStore } from 'src/app/core/user-preferences/user-preferences.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PhoneService {
-  constructor() {
-    if (!window.cordova) {
-    } else {
-      this.setOrientation('landscape');
-    }
+  constructor(private preferencesStore: UserPreferencesStore) {
+    // Bind the function to the window so that the iframe can access it through the js mocks
+    (window as any).overrideUserAgent = this.overrideUserAgent.bind(this);
   }
 
   setOrientation(orientation: OrientationLockType) {
     window.screen.orientation.lock(orientation).catch((err) => {});
   }
 
-  overrideUserAgent() {
-    const userAgent =
-      'Mozilla/5.0 (Linux; Android 10; ONEPLUS A6003) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.111 Mobile Safari/537.36';
-    const platform = 'Linux armv8l';
+  overrideUserAgent(targetWindow: Window = window) {
+    let device = this.preferencesStore.getValue().selectedDevice;
+    const devices = this.preferencesStore.getValue().availableDevices;
 
-    Object.defineProperty(navigator, 'userAgent', {
-      get: () => userAgent,
-    });
-    Object.defineProperty(navigator, 'appVersion', {
-      get: () => userAgent,
-    });
-    Object.defineProperty(navigator, 'platform', {
-      get: () => platform,
-    });
+    if (!device) {
+      const randIndex = Math.trunc(Math.random() * devices.length);
+      const randDevice = devices[randIndex];
+      this.preferencesStore.updateDevice(randDevice);
+      device = randDevice;
+    }
+
+    if (targetWindow.navigator) {
+      const userAgent = device.agent;
+      const platform = 'Linux armv8l';
+      Object.defineProperty(targetWindow.navigator, 'userAgent', {
+        get: () => userAgent,
+      });
+      Object.defineProperty(targetWindow.navigator, 'appVersion', {
+        get: () => userAgent,
+      });
+      Object.defineProperty(targetWindow.navigator, 'platform', {
+        get: () => platform,
+      });
+    }
   }
 }

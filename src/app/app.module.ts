@@ -64,5 +64,11 @@ export class AppModule {
       'mirage',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/logo.svg'),
     );
+
+    if (!window.cordova) {
+      this.phoneService.overrideUserAgent();
+    } else {
+      this.phoneService.setOrientation('landscape');
+    }
   }
 }
