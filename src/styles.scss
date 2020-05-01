@@ -1,6 +1,12 @@
 @import 'theming';
+@import '~@angular/cdk/overlay-prebuilt.css';
 
 * {
   outline: none;
   user-select: none;
+}
+
+.cdk-overlay-connected-position-bounding-box {
+  height: auto;
+  width: auto;
 }

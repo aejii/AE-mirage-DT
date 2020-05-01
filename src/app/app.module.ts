@@ -65,7 +65,7 @@ export class AppModule {
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/logo.svg'),
     );
 
-    if (!window.cordova) {
+    if (!this.phoneService.isCordova) {
       this.phoneService.overrideUserAgent();
     } else {
       this.phoneService.setOrientation('landscape');

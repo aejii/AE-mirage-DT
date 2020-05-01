@@ -1,0 +1,15 @@
+@import 'vars';
+
+:host {
+  display: block;
+  flex: 0 0 auto;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: color 250ms ease-in-out;
+  &:hover {
+    color: mat-color($primary, 500);
+  }
+}

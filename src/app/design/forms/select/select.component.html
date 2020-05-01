@@ -1,0 +1,15 @@
+<mg-card class="select" (click)="openOptions()">
+  <span class="value">{{ value$ | async }}</span>
+  <span class="icon">
+    <mat-icon>arrow_drop_down</mat-icon>
+  </span>
+</mg-card>
+
+<ng-template #optionsPortal>
+  <mg-card class="options">
+    <div class="spacer"></div>
+    <div class="list">
+      <ng-content select="mg-option"></ng-content>
+    </div>
+  </mg-card>
+</ng-template>

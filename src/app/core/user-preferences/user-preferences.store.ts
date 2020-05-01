@@ -24,6 +24,7 @@ export function createInitialState(): UserPreferencesState {
 export class UserPreferencesStore extends Store<UserPreferencesState> {
   constructor() {
     super(createInitialState());
+    this.update({ availableDevices });
   }
 
   setNavAlign(navAlign: CardinalPosition) {
@@ -36,6 +37,16 @@ export class UserPreferencesStore extends Store<UserPreferencesState> {
 
   updateDevice(selectedDevice: Device) {
     this.update({ selectedDevice });
+  }
+
+  /**
+   * Same as updateDevice, but retrieves the device from the given device name
+   */
+  updateDeviceFromName(deviceName: string) {
+    const device = this.getValue().availableDevices.find(
+      (d) => d.device === deviceName,
+    );
+    this.updateDevice(device);
   }
 }
 
@@ -195,5 +206,10 @@ const availableDevices: Device[] = [
     device: 'LG G Pad 7.0',
     agent:
       'Mozilla/5.0 (Linux; Android 5.0.2; LG-V410/V41020c Build/LRX22G) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/34.0.1847.118 Safari/537.36',
+  },
+  {
+    device: 'One Plus 6',
+    agent:
+      'Mozilla/5.0 (Linux; Android 10; ONEPLUS A6003) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.111 Mobile Safari/537.36',
   },
 ];

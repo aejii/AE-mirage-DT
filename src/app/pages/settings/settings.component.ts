@@ -5,10 +5,11 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { combineLatest } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { filter, first, map, tap } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
 import { UserPreferencesQuery } from 'src/app/core/user-preferences/user-preferences.query';
 import { UserPreferencesStore } from 'src/app/core/user-preferences/user-preferences.store';
+import { PhoneService } from 'src/app/providers/application/phone/phone.service';
 import { InstallationQuery } from '../../core/installation/installation.query';
 
 @Component({
@@ -44,6 +45,14 @@ export class SettingsComponent {
 
   navAlign = new FormControl();
   accountsNavAlign = new FormControl();
+  deviceForm = new FormControl();
+
+  devices$ = this.preferencesQuery.devices$;
+  device$ = this.preferencesQuery.device$;
+
+  get isCordova() {
+    return this.phone.isCordova;
+  }
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -51,6 +60,7 @@ export class SettingsComponent {
     private installationQuery: InstallationQuery,
     private preferencesStore: UserPreferencesStore,
     private preferencesQuery: UserPreferencesQuery,
+    private phone: PhoneService,
   ) {
     this.preferencesQuery.navAlign$
       .pipe(first())
@@ -67,6 +77,17 @@ export class SettingsComponent {
     this.accountsNavAlign.valueChanges.subscribe((value) =>
       this.preferencesStore.setAccountsNavAlign(value),
     );
+
+    this.preferencesQuery.device$
+      .pipe(first())
+      .subscribe((value) => this.deviceForm.setValue(value.device));
+
+    this.deviceForm.valueChanges
+      .pipe(filter(() => this.isCordova))
+      .subscribe((value: string) => {
+        this.preferencesStore.updateDeviceFromName(value);
+        this.phone.overrideUserAgent();
+      });
   }
 
   updateGame() {

@@ -3,16 +3,37 @@
 <h2>Affichage</h2>
 
 <mg-card class="display">
+  <div class="step" *ngIf="!isCordova">
+    <span class="flexer">Appareil à simuler <small><i>(J'te conseille de prendre ton téléphone !)</i></small></span>
+    <mg-select [formControl]="deviceForm">
+      <mg-option
+        *ngFor="let device of devices$ | async"
+        [value]="device.device"
+      >
+        {{ device.device }}
+      </mg-option>
+    </mg-select>
+  </div>
   <div class="step">
     <span class="flexer">Position du menu</span>
-    <mg-radio-group [formControl]="navAlign" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="2rem">
+    <mg-radio-group
+      [formControl]="navAlign"
+      fxLayout="row"
+      fxLayoutAlign="end center"
+      fxLayoutGap="2rem"
+    >
       <mg-radio-button direction="right" value="left">Gauche</mg-radio-button>
       <mg-radio-button direction="right" value="right">Droite</mg-radio-button>
     </mg-radio-group>
   </div>
   <div class="step">
     <span class="flexer">Position de la liste des comptes</span>
-    <mg-radio-group [formControl]="accountsNavAlign" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="2rem">
+    <mg-radio-group
+      [formControl]="accountsNavAlign"
+      fxLayout="row"
+      fxLayoutAlign="end center"
+      fxLayoutGap="2rem"
+    >
       <mg-radio-button direction="right" value="left">Gauche</mg-radio-button>
       <mg-radio-button direction="right" value="right">Droite</mg-radio-button>
     </mg-radio-group>

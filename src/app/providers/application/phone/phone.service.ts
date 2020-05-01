@@ -5,6 +5,11 @@ import { UserPreferencesStore } from 'src/app/core/user-preferences/user-prefere
   providedIn: 'root',
 })
 export class PhoneService {
+
+  get isCordova() {
+    return !!window.cordova;
+  }
+
   constructor(private preferencesStore: UserPreferencesStore) {
     // Bind the function to the window so that the iframe can access it through the js mocks
     (window as any).overrideUserAgent = this.overrideUserAgent.bind(this);
@@ -15,6 +20,8 @@ export class PhoneService {
   }
 
   overrideUserAgent(targetWindow: Window = window) {
+    if (window.cordova) return;
+
     let device = this.preferencesStore.getValue().selectedDevice;
     const devices = this.preferencesStore.getValue().availableDevices;
 
