@@ -59,6 +59,7 @@
             },
             "electron-dev": {
               "baseHref": "./",
+              "outputPath": "electron/app",
               "watch": true,
               "fileReplacements": [
                 {

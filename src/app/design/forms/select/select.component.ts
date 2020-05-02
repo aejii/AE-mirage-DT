@@ -72,6 +72,7 @@ export class MgSelectComponent implements ControlValueAccessor, AfterViewInit {
   }
 
   openOptions() {
+    this.overlayRef?.dispose();
     this.overlayRef = this.overlay.create({
       width: this.elRef.nativeElement.clientWidth,
       height: 'auto',

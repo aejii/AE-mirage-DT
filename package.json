@@ -6,31 +6,28 @@
     "docker": "docker.sh",
 
     "electron:preclean": "rm -rf electron/dist electron/app",
-    "electron:build": "ng build -c electron-prod",
-    "electron:setup": "touch electron/package.json",
-    "electron:package": "npx electron-packager electron Mirage --out ./electron/dist --platform=win32 --arch=x64 --asar --icon=./electron/logo.ico",
-    "electron:postclean": "rm -rf electron/package.json electron/app",
+    "electron:build": "npx ng build -c electron-prod",
+    "electron:setup": "touch electron/package.json && echo {} >> electron/package.json",
+    "electron:package": "npx electron-packager electron Mirage --out electron/dist --platform=win32 --arch=x64 --asar --icon=electron/logo.ico",
+    "electron:move": "cp -r electron/dist/Mirage-win32-x64 release",
+    "electron:postclean": "rm -rf electron/package.json electron/app electron/dist",
 
-    "release:electron": "npm run electron:preclean && npm run electron:build && npm run electron:setup && npm run electron:package && npm run electron:postclean",
+    "cordova:build:angular": "ng build -c cordova-prod",
+    "cordova:build:java": "cordova build android --release --prod",
+    
+    "android:preclean": "touch platforms/android/local.properties && rm platforms/android/local.properties",
+    "android:apk:move": "cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk apk",
+    "android:postclean": "rm apk/app-release-unsigned.apk",
 
+    "docker:apk:sign": "/usr/lib/Android/build-tools/29.0.3/apksigner sign --out release/Mirage.apk --ks apk/keystore.jks --ks-pass pass:MaxTri2012 --key-pass pass:MaxTri2012 apk/app-release-unsigned.apk",
 
+    "release:electron": "npm run electron:preclean && npm run electron:build && npm run electron:setup && npm run electron:package &&npm run electron:move && npm run electron:postclean",
+    "release:android": "npm run cordova:build:angular && npm run android:preclean && npm run cordova:build:java && npm run android:apk:move && npm run docker:apk:sign && npm run android:postclean",
 
-
-    "apk:move": "cp ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk ./apk",
-    "apk:sign": "/usr/lib/Android/build-tools/29.0.3/apksigner sign --out apk/mirage.apk --ks apk/keystore.jks --ks-pass pass:MaxTri2012 --key-pass pass:MaxTri2012 apk/app-release-unsigned.apk",
-    "apk:delete-old": "touch ./apk/mirage.apk && rm ./apk/mirage.apk",
-    "apk:delete-unsigned": "touch ./apk/app-release-unsigned.apk && rm ./apk/app-release-unsigned.apk",
-    "android:delete-local-properties": "touch ./platforms/android/local.properties && rm ./platforms/android/local.properties",
-    "ng:serve": "ng serve",
-    "ng:dev": "ng build -c cordova-dev",
-    "ng:prod": "ng build -c cordova-prod",
-    "cordova:dev": "cordova run android",
-    "cordova:prod": "cordova build android --release --prod",
     "script:get": "touch game.script.js && rm game.script.js && wget -O game.script.js https://proxyconnection.touch.dofus.com/build/script.js",
     "script:get:beautified": "npm run script:get && js-beautify -r game.script.js",
-    "start": "npm run android:delete-local-properties && npm run cordova:dev",
-    "build": "npm run ng:dev",
-    "release": "npm run ng:prod && npm run android:delete-local-properties && npm run apk:delete-old && npm run cordova:prod && npm run apk:move && npm run apk:sign && npm run apk:delete-unsigned",
+
+    "start": "npm run android:preclean && npx ng build -c cordova-dev",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
