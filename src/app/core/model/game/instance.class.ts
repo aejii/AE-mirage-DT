@@ -3,6 +3,7 @@ import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { gameCharacterUtils } from './utils/character.utils';
 import { gameEventsUtils } from './utils/events.utils';
 import { gameFightUtils } from './utils/fight.utils';
+import { gameFinderUtils } from './utils/finder.utils';
 import { gameGuiUtils } from './utils/gui-utils';
 import { rxjsUtils } from './utils/rxjs.utils';
 import { GameWindow } from './window.interface';
@@ -98,6 +99,7 @@ export class GameInstance {
    */
   frameLoaded(frame: HTMLIFrameElement) {
     this.window = frame.contentWindow as GameWindow;
+    gameFinderUtils.attachFinderToWindow(this.window);
   }
 
   /**
@@ -189,3 +191,16 @@ export class GameInstance {
       );
   }
 }
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */

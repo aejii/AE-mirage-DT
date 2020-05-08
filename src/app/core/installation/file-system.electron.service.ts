@@ -12,7 +12,7 @@ const nodeFs: typeof import('fs') = window.require('fs');
 
 const appDataPath =
   process.env.APPDATA ||
-  (process.platform == 'darwin'
+  (process.platform === 'darwin'
     ? process.env.HOME + '/Library/Preferences'
     : process.env.HOME + '/.local/share');
 
