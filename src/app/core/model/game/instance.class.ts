@@ -1,146 +1,85 @@
-import { interval, Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { gameCharacterUtils } from './utils/character.utils';
+import { gameEventsUtils } from './utils/events.utils';
+import { gameFightUtils } from './utils/fight.utils';
+import { gameGuiUtils } from './utils/gui-utils';
+import { rxjsUtils } from './utils/rxjs.utils';
 import { GameWindow } from './window.interface';
 
-const source$ = interval(100);
-
 export class GameInstance {
-  private window: GameWindow;
+  public window: GameWindow;
 
-  loginReady$ = source$.pipe(
-    map(() => this.window?.gui?.loginScreen?._loginForm),
-    filter((v) => !!v),
-    first(),
+  // ---------- LIFECYCLE EVENTS ----------
+
+  loginReady$ = rxjsUtils.waitForTruthiness$(
+    () => gameGuiUtils.getLoginForm(this.window),
+    true,
   );
 
-  connect$ = source$.pipe(
-    map(() => this.window?.gui?.on),
-    filter((v) => !!v),
-    first(),
-    switchMap(
-      (on: (v, cb) => void) =>
-        new Observable((observer) =>
-          this.window.gui.on('connected', (v) => observer.next(v)),
-        ),
-    ),
-  );
+  connect$ = this._fromGuiCallback$('connected');
+  disconnect$ = this._fromGuiCallback$('disconnect');
 
-  disconnect$ = source$.pipe(
-    map(() => this.window?.gui?.on),
-    filter((v) => !!v),
-    first(),
-    switchMap(
-      (on: (v, cb) => void) =>
-        new Observable((observer) =>
-          this.window.gui.on('disconnect', (v) => observer.next(v)),
-        ),
+  fightTurnStart$ = this._fromGuiCallback$<{ id: number }>(
+    'GameFightTurnStartMessage',
+  ).pipe(
+    filter(
+      (response) => response?.id === gameCharacterUtils.getId(this.window),
     ),
-  );
-
-  fightTurnStart$ = source$.pipe(
-    map(() => this.window?.gui?.on),
-    filter((v) => !!v),
-    first(),
-    switchMap(
-      () =>
-        new Observable<{ id: number }>((observer) =>
-          this.window.gui.on('GameFightTurnStartMessage', (v: { id: number }) =>
-            observer.next(v),
-          ),
-        ),
-    ),
-    filter((response) => response?.id === this.characterId),
   );
 
   characterImage$ = this.connect$.pipe(
-    map(() => {
-      const char = this.getCharacterImage();
-      const canvas = char.canvas;
-      const canvasEl: HTMLCanvasElement = char.rootElement;
-
-      canvas.width = 128;
-      canvas.height = 128;
-
-      char._render();
-
-      return canvasEl;
-    }),
+    map(() => gameGuiUtils.getCharacterImage(this.window)),
     shareReplay(),
   );
 
-  castSpellInFight$ = source$.pipe(
-    map(() => this.window?.dofus?.connectionManager),
-    filter((v) => !!v),
-    switchMap(
-      () =>
-        new Observable<number>((observer) =>
-          this.window.gui.on('spellSlotSelected', (spellId) =>
-            observer.next(spellId),
-          ),
-        ),
-    ),
-    filter(() => this.window?.gui?.playerData?.isFighting),
+  castSpellInFight$ = this._fromGuiCallback$<number>('spellSlotSelected').pipe(
+    filter(() => gameFightUtils.isFighting(this.window)),
   );
 
   public readonly ID = Math.random().toString(36).slice(2);
 
+  // ---------- CONVENIENCE GETTERS ----------
+
   get characterName() {
-    return this.window?.gui?.playerData?.characterBaseInformations?.name;
-  }
-
-  get characterId() {
-    return this.window?.gui?.playerData?.id;
-  }
-
-  get hasParty() {
-    return !!this.window?.gui?.party?.currentParty?._childrenList?.filter(
-      (c) => !!c.memberData,
-    )?.length;
+    return gameCharacterUtils.getName(this.window);
   }
 
   get dropChance() {
-    return (
-      this.window?.gui?.playerData?.characters?.mainCharacter?.characteristics?.prospecting?.getTotalStat() ||
-      0
-    );
+    return gameCharacterUtils.getDropChance(this.window);
   }
 
   get level() {
-    return this.window?.gui?.playerData?.characterBaseInformations?.level || 0;
+    return gameCharacterUtils.getLevel(this.window);
   }
 
   constructor() {
-    this.connect$.subscribe((v) => {
-      this.removeShopButton();
-      this.preventUserInactivity();
-      this.bindSpellDoubleTap();
-      this.previewDamages();
+    // Used to not make a subscribe into another subscribe
+    let slots: any[];
+
+    this.connect$.subscribe(() => {
+      gameGuiUtils.removeShopButton(this.window);
+      gameEventsUtils.preventUserInactivity(this.window);
+      slots = this.addSpellsDoubleTapListener();
     });
 
-    this.castSpellInFight$.subscribe((spellId) => {
-      const spell = this.window?.gui?.playerData?.characters?.mainCharacter
-        ?.spellData?.spells?.[spellId];
-      console.log(spell);
-      const spellLevel = spell.spellLevel.id;
-      const effects = Object.entries(spell.effectInstances).filter(
-        ([k]) => k.includes(spellLevel) && !k.includes('criticalEffect'),
+    this.disconnect$.subscribe(() => {
+      slots?.forEach((slot) =>
+        slot?.removeListener?.('doubletap', slot._events.doubletap),
       );
-      const critEffects = Object.entries(spell.effectInstances).filter(
-        ([k]) => k.includes(spellLevel) && k.includes('criticalEffect'),
-      );
-
-      console.log(effects, critEffects);
     });
   }
 
-  private bindSpellDoubleTap() {
-    this.window?.gui?.shortcutBar?._panels?.spell?.slotList?.forEach((slot) => {
+  // Listens for a double tap on a spell and casts it on self when in fight
+  private addSpellsDoubleTapListener() {
+    const slots = gameGuiUtils.getSpellsShortcutSlots(this.window);
+    return slots.map((slot) => {
       slot.addListener('doubletap', () => {
-        if (!this.window?.gui?.playerData?.isFighting) return;
+        if (!gameFightUtils.isFighting(this.window)) return;
 
-        const cellId = this.window?.gui?.fightManager?._fighters[
-          this.window?.gui?.playerData?.characterBaseInformations?.id
-        ]?.data?.disposition?.cellId;
+        const fighters = gameFightUtils.getFighters(this.window);
+        const fighter = fighters[gameCharacterUtils.getId(this.window)];
+        const cellId = fighter.data?.disposition?.cellId;
         const spellId = slot.data?.id;
 
         if (cellId && spellId) {
@@ -149,11 +88,7 @@ export class GameInstance {
         }
       });
 
-      this.disconnect$
-        .pipe(first())
-        .subscribe(() =>
-          slot.removeListener('doubletap', slot._events.doubletap),
-        );
+      return slot;
     });
   }
 
@@ -163,9 +98,11 @@ export class GameInstance {
    */
   frameLoaded(frame: HTMLIFrameElement) {
     this.window = frame.contentWindow as GameWindow;
-    this.enableResizing();
   }
 
+  /**
+   * Connects an account to the game
+   */
   connect(username: string, password: string, remember = false) {
     this.loginReady$.pipe(first()).subscribe((form) => {
       form._inputLogin.rootElement.value = username;
@@ -176,99 +113,27 @@ export class GameInstance {
     });
   }
 
+  /** Refreshes the game GUI (useful for when the UI has bugs) */
   refresh() {
-    try {
-      this.window?.gui?._resizeUi();
-    } catch (error) {}
-  }
-
-  /** Returns an object that manages the inventory image of a character */
-  getCharacterImage(): any {
-    const char = new this.window.CharacterDisplay({ scale: 'fitin' });
-    char.setLook(
-      this.window.gui.playerData.characterBaseInformations.entityLook,
-      {
-        riderOnly: true,
-        direction: 4,
-        animation: 'AnimArtwork',
-        boneType: 'timeline/',
-        skinType: 'timeline/',
-      },
-    );
-
-    char.horizontalAlign = 'center';
-    char.verticalAlign = 'top';
-
-    return char;
-  }
-
-  private removeShopButton() {
-    // Make it run after the original command with a timeout
-    setTimeout(() => this.window.gui.shopFloatingToolbar.hide());
-  }
-
-  private preventUserInactivity() {
-    interval(30000).subscribe(() => {
-      this.window.mirageInactivity.recordActivity();
-    });
-  }
-
-  private enableResizing() {
-    this.window.onresize = (event: UIEvent) => {
-      // Singleton update required because unlike a computer, the browser size does not change
-      const screen = this.window.singletons?.(179);
-      if (!screen) return;
-      screen.dimensions.viewportWidth = this.window.document.documentElement.clientWidth;
-      screen.updateScreen();
-      this.refresh();
-    };
+    gameGuiUtils.refreshGui(this.window);
   }
 
   muteAllSounds(mute: boolean = false) {
-    const audio = this.window?.singletons?.(254);
-    if (!audio) return;
-    audio.setMute?.(mute);
-  }
-
-  removeNotification(notificationId: string) {
-    this.window.gui.notificationBar.removeNotification(notificationId);
+    // TODO
   }
 
   sendPartyInvite(playerName: string) {
-    this.window.dofus.connectionManager.sendMessage(
-      'PartyInvitationRequestMessage',
-      {
-        name: playerName,
-      },
-    );
+    gameEventsUtils.sendPartyInvite(this.window, playerName);
   }
 
+  /** Accepts a party invite and collapses the GUI party element */
   waitForPartyInvite() {
-    const sub = new Subject<any>();
-
-    sub.pipe(first()).subscribe(({ partyId }) => {
-      this.window.dofus.connectionManager.sendMessage(
-        'PartyAcceptInvitationMessage',
-        {
-          partyId,
-        },
-      );
-      this.removeNotification('party' + partyId);
-      this.collapsePartyElement();
-    });
-
-    this.window.dofus.connectionManager.on(
-      'PartyInvitationMessage',
-      (response) => sub.next(response),
-    );
+    gameEventsUtils.waitForPartyInvite(this.window);
   }
 
-  collapsePartyElement() {
-    this.window.gui.party.collapse();
-  }
-
+  /** Adds the party level and drop chance to the GUI party element */
   addPartyInformations(dropChance: number, level: number) {
-    if (!this.hasParty) return;
+    if (!gameCharacterUtils.hasParty(this.window)) return;
 
     const partyContainer: HTMLElement = this.window?.gui?.party?.classicParty
       ?.rootElement;
@@ -303,5 +168,24 @@ export class GameInstance {
     }
   }
 
-  previewDamages() {}
+  /** Creates an observable from a window.gui.on(verb) callback */
+  private _fromGuiCallback$<T>(
+    verb: string,
+    listenOnce = false,
+    forceValue?: T,
+  ) {
+    return rxjsUtils
+      .waitForTruthiness$(() => this.window?.gui?.on)
+      .pipe(
+        switchMap(
+          () =>
+            new Observable<T>((handler) => {
+              this.window.gui.on(verb, (v) => {
+                handler.next(forceValue ?? v);
+                if (listenOnce) handler.complete();
+              });
+            }),
+        ),
+      );
+  }
 }
