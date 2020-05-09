@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  Renderer2,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { combineLatest, interval } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { InstallationQuery } from 'src/app/core/installation/installation.query';
@@ -74,6 +84,8 @@ export class InstancesContainerComponent implements OnInit {
 
         instance.fightTurnStart$.subscribe(() => {
           this.setActive(instance);
+          if (document.activeElement instanceof HTMLElement)
+            document.activeElement.blur();
           this.cdRef.detectChanges();
         });
 
@@ -87,7 +99,7 @@ export class InstancesContainerComponent implements OnInit {
         const dc = instances.reduce((acc, i) => acc + i.dropChance, 0);
         const lvl = instances.reduce((acc, i) => acc + i.level, 0);
 
-        instances.forEach(instance => instance.addPartyInformations(dc, lvl));
+        instances.forEach((instance) => instance.addPartyInformations(dc, lvl));
       });
   }
 
