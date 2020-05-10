@@ -1,40 +1,21 @@
 {
   "name": "mirage",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "scripts": {
     "ng": "ng",
-    "docker": "docker.sh",
-
-    "electron:preclean": "rm -rf electron/dist electron/app",
-    "electron:build": "npx ng build -c electron-prod",
-    "electron:setup": "touch electron/package.json && echo {} >> electron/package.json",
-    "electron:package": "npx electron-packager electron Mirage --out electron/dist --platform=win32 --arch=x64 --asar --icon=electron/logo.ico",
-    "electron:move": "cp -r electron/dist/Mirage-win32-x64 release",
-    "electron:postclean": "rm -rf electron/package.json electron/app electron/dist",
-
-    "cordova:build:angular": "ng build -c cordova-prod",
-    "cordova:build:java": "cordova build android --release --prod",
-    
-    "android:preclean": "touch platforms/android/local.properties && rm platforms/android/local.properties",
-    "android:apk:move": "cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk apk",
-    "android:postclean": "rm apk/app-release-unsigned.apk",
-
-    "docker:apk:sign": "/usr/lib/Android/build-tools/29.0.3/apksigner sign --out release/Mirage.apk --ks apk/keystore.jks --ks-pass pass:MaxTri2012 --key-pass pass:MaxTri2012 apk/app-release-unsigned.apk",
-
-    "release:electron": "npm run electron:preclean && npm run electron:build && npm run electron:setup && npm run electron:package &&npm run electron:move && npm run electron:postclean",
-    "release:android": "npm run cordova:build:angular && npm run android:preclean && npm run cordova:build:java && npm run android:apk:move && npm run docker:apk:sign && npm run android:postclean",
-
     "script:get": "touch game.script.js && rm game.script.js && wget -O game.script.js https://proxyconnection.touch.dofus.com/build/script.js",
-    "script:get:beautified": "npm run script:get && js-beautify -r game.script.js",
-
-    "start": "npm run android:preclean && npx ng build -c cordova-dev",
+    "script:get:beautified": "npm run script:get && npx js-beautify -r game.script.js",
+    "serve:electron": "ng build -c electron-dev",
+    "serve:cordova": "ng build -c cordova-dev",
+    "start:electron": "electron electron/index.js",
+    "start:cordova": "cordova run android",
+    "start": "npm run start:electron",
+    "release:patch": "scripts/release.sh patch",
+    "release:minor": "scripts/release.sh minor",
+    "release:major": "scripts/release.sh major",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-
-    "xxx": " rm -rf dist && npx electron-packager electron Mirage --out ./dist --platform=win32 --arch=x64 --asar --icon=./electron/logo.ico",
-    "yyy": "rm -rf electron/www && cp -r ./www ./electron/app",
-    "zzz": "npm run yyy && npm run xxx"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

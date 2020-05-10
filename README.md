@@ -2,42 +2,55 @@
 
 **The unofficial best way to play Dofus Touch**
 
-## Installing a dev environment
+# What is this file ? 
+
+This is a README, which is used to explain key points in the repository. 
+It contains severaml points that have been raised, and things to know in order to make the app work. 
+
+# Installing a development environment
 
 Simply follow the Dockerfile requirements (JDK, Node, SDK, etc) and adapt it to your own operating system. 
+Once done, you will have access to npm scripts in the `package.json`.
 
-## NPM commands
+You will need two core dependencies : `electron` and `cordova`.
 
-There are many NPM commands in the `packge.json`, they're mostly here for reference.
+# Android Debug Bridge (ADB)
 
-The most important dev commands to remember are 
+The debug bridge is the middleware that allows cordova to deploy the app on testing devices. It should be included into the Androdi SDK.
+
+When available in the command line, you will get the following commands : 
 
 ```bash
-npm run build
-npm run start
-npm run ng:serve
+TODO
 ```
 
-The first one builds the app, the second one makes Cordova run the built app, and the third one is used to avoid using Cordova to develop the app. 
-This is notably useful when doing non-game related features, as Cordova's only addition is installing the game. 
+# CI/CD Scripts
 
-## About Docker
+The `scripts` folder contains several scripts that are used to deployment and integration. 
 
-- `./docker.sh` can be ran to get a TTY into the Cordova docker container
-  - From there, you can build the app, **but not run it on a device** with `cordova run` (working on it)
+You can read them and use their code if you'd like to, but they're built around the Docker image.
 
-## About Cordova
+# Cordova tweaks
 
 - Make sur to have a `www` folder to let Cordova know that this is a Cordova-ready folder. 
-- `platforms/android/local.properties` can sometimes be created and mess up the SDK path. In cas you encounter this issue, there is a NPM command for that. 
-- In `platforms/android/CordovaLib/src/org/apache/cordova/engine/SystemWebViewEngine.java @ initWebViewSettings` add this to allow the viewport to be resized
 
+# Platform specific tweaks
+
+## Android
+
+- `platforms/android/local.properties` can sometimes be created and mess up the SDK path. In case you encounter this issue, remove this file. 
+- In `platforms/android/CordovaLib/src/org/apache/cordova/engine/SystemWebViewEngine.java @ initWebViewSettings` add this to allow the viewport to be resized
 ```java
 settings.setUseWideViewPort(true);
 settings.setLoadWithOverviewMode(true);
 ```
+- In `platforms\android\app\src\main\java\com\mirage\mirageDT\MainActivity.java @ onCreate`, at the end, add those lines to ensure the phone does not go into sleep mode and the status bar does not show up at all. This comes from `import android.view.WindowManager;`, which needs to be added too.
+```java
+getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+```
 
-## About Android
+## Electron
 
-- **DO NOT REMOVE THE APK FOLDER**, it contains the keystore to sign the app
-- `apk/keystore.jks` must be existing to sign the app
+- The packageer requires a `package.json` in the app root folder to properly work
+- It also requires an `app` folder in the root folder, which contains the compiled application
