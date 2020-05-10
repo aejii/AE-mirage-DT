@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 WORKDIR /tmp
 
 RUN apt update
-RUN apt install -y openjdk-8-jdk curl wget unzip make git python
+RUN apt install -y openjdk-8-jdk curl wget unzip make git python zip git
 # Run {  update-alternatives --config java  } and remove /bin/java from the desired java path 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/jre
 
@@ -25,6 +25,7 @@ ENV GRADLE_HOME /usr/lib/Gradle/gradle-6.3/bin
 ENV ANDROID_SDK_ROOT ${ANDROID_HOME}
 
 ENV PATH ${ANDROID_HOME}/tools:${PATH}
+ENV PATH ${ANDROID_HOME}/build-tools/29.0.3:${PATH}
 ENV PATH ${ANDROID_HOME}/tools/bin:${PATH}
 ENV PATH ${ANDROID_HOME}/platform-tools:${PATH}
 ENV PATH ${ANDROID_SDK_ROOT}:${GRADLE_HOME}:${PATH}
