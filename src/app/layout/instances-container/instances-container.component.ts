@@ -84,8 +84,6 @@ export class InstancesContainerComponent implements OnInit {
 
         instance.fightTurnStart$.subscribe(() => {
           this.setActive(instance);
-          if (document.activeElement instanceof HTMLElement)
-            document.activeElement.blur();
           this.cdRef.detectChanges();
         });
 
