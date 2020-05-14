@@ -56,8 +56,9 @@
     configContent.replace(configRegex, `$1"${newVersion}"`),
   );
 
-  console.log(`Updated version from ${configVersion} to ${newVersion}`);
-  console.log(`Creating git release for new version ...`);
+  console.log(`Updated version from ${configVersion} to ${newVersion}.`);
+
+  console.log(`Creating and versionning git tag for version ${configVersion} ...`);
 
   try {
     await exec(`git tag -a ${configVersion} -m "v${configVersion}"`);
@@ -67,6 +68,8 @@
     console.error(error);
     process.exit(1);
   }
+
+  console.log('\x1b[33m%s\x1b[0m', `\nBe sure to manually put the binaries in the version control !`);
 
   process.exit(0);
 

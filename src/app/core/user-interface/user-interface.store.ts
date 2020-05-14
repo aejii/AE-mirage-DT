@@ -72,6 +72,9 @@ export class UserInterfaceStore extends Store<UserInterfaceState> {
   setActiveInstance(instance?: GameInstance) {
     if (instance) this.update({ activeInstance: instance });
     else this.update({ activeInstance: this.getValue().instances[0] });
+
+    if (document.activeElement instanceof HTMLElement)
+      document.activeElement.blur();
   }
 
   removeInstance(instance: GameInstance) {
