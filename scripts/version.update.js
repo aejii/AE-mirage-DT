@@ -56,13 +56,11 @@
     configContent.replace(configRegex, `$1"${newVersion}"`),
   );
 
-  console.log(`Updated version from ${configVersion} to ${newVersion}.`);
-
   console.log(`Creating and versionning git tag for version ${configVersion} ...`);
 
   try {
-    await exec(`git tag -a ${configVersion} -m "v${configVersion}"`);
-    await exec(`git push origin ${configVersion}`);
+    await exec(`git tag -a ${newVersion} -m "v${newVersion}"`);
+    await exec(`git push origin ${newVersion}`);
   } catch (error) {
     console.error('\x1b[31m%s\x1b[0m', 'Error while creating git tags : ');
     console.error(error);
@@ -70,6 +68,8 @@
   }
 
   console.log('\x1b[33m%s\x1b[0m', `\nBe sure to manually put the binaries in the version control !`);
+
+  console.log('\x1b[33m%s\x1b[0m', `Updated version from ${configVersion} to ${newVersion}.`);
 
   process.exit(0);
 
