@@ -1,5 +1,8 @@
 @import 'theming';
-@import '~@angular/cdk/overlay-prebuilt.css';
+
+@import './app/ui/core.style.scss';
+
+@include dt-core();
 
 * {
   outline: none;

@@ -8,15 +8,14 @@
     </ng-container>
   </div>
 
-  <div
+  <dt-container
     class="accounts-nav"
     [ngClass]="navAlign$ | async"
     fxLayout="column"
     fxLayoutGap="1rem"
   >
     <button
-      mg-icon-button
-      color="primary"
+      dt-icon-button
       (click)="addGame()"
       [disabled]="!(gameReady$ | async)"
     >
@@ -40,12 +39,12 @@
     <span fxFlex></span>
 
     <button
-      mg-icon-button
+      dt-icon-button
       color="error"
       (click)="removeAllInstances()"
       *ngIf="instances.length"
     >
       <mat-icon>delete</mat-icon>
     </button>
-  </div>
+  </dt-container>
 </ng-container>

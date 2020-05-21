@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostBinding,
 } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -21,6 +22,8 @@ export class HomeComponent {
     2: 'installed',
     3: 'error',
   };
+
+  @HostBinding('style.display') display = 'flex';
 
   installStatus$ = combineLatest([
     this.query.gameUpdated$,

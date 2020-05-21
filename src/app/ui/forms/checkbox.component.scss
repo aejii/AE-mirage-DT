@@ -1,0 +1,19 @@
+@mixin dtCheckbox {
+  .dt-checkbox {
+    visibility: visible;
+    content: attr('placeholder');
+    display: block;
+    margin: 0 4px;
+    text-align: left;
+    padding: 3px 3px 3px 30px;
+    background-position: -24px calc(50% - 2px);
+    background-size: 18px 18px;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    background-image: url('./assets/design/checkbox_no.png');
+    box-sizing: border-box;
+    &.checked {
+      background-image: url('./assets/design/checkbox_yes.png');
+    }
+  }
+}

@@ -1,4 +1,4 @@
-<nav
+<!-- <nav
   [class.hidden]="!(isMenuVisible$ | async)"
   [ngClass]="navAlign$ | async"
   cdkDrag
@@ -58,3 +58,38 @@
 <mg-instances-container
   [style.display]="rlaHome?.isActive ? '' : 'none'"
 ></mg-instances-container>
+ -->
+
+<mg-instances-container></mg-instances-container>
+
+<dt-container class="nav" fxLayout="column" fxLayoutGap="1rem">
+  <button
+    dt-icon-button
+    class="mg-no-shadow"
+    routerLink="home"
+    routerLinkActive="active"
+    #rlaHome="routerLinkActive"
+  >
+    <mat-icon>games</mat-icon>
+  </button>
+  <button
+    dt-icon-button
+    class="mg-no-shadow"
+    routerLink="accounts"
+    routerLinkActive="active"
+    #rlaAccounts="routerLinkActive"
+  >
+    <mat-icon>group</mat-icon>
+  </button>
+  <button
+    dt-icon-button
+    class="mg-no-shadow"
+    routerLink="settings"
+    routerLinkActive="active"
+    #rlaSettings="routerLinkActive"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
+</dt-container>
+
+<router-outlet></router-outlet>
