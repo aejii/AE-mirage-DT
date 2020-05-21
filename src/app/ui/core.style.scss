@@ -1,0 +1,48 @@
+@import './indicators/button/buttons.style.scss';
+@import './layout/container/container.component.scss';
+@import './forms/input/input.style.scss';
+@import './forms/select/select.component.scss';
+@import './forms/select/option/option.component.scss';
+
+@mixin dt-core {
+  body {
+    @include dtButton();
+    @include dtContainer();
+    @include dtInput();
+    @include dtSelect();
+    @include dtOption();
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+  }
+
+  .cdk-overlay-container {
+    &:empty {
+      display: none;
+    }
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    .cdk-overlay-backdrop {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      pointer-events: auto;
+    }
+    .cdk-overlay-connected-position-bounding-box {
+      position: absolute;
+      z-index: 1000;
+      .cdk-overlay-pane {
+        z-index: 1000;
+        position: absolute;
+      }
+    }
+  }
+}

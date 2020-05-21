@@ -2,7 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +18,10 @@ import { AccountsComponent } from './pages/accounts/accounts.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { PhoneService } from './providers/application/phone/phone.service';
+import { DtButtonModule } from './ui/indicators/button/button.module';
+import { DtContainerModule } from './ui/layout/container/container.module';
+import { DtInputModule } from './ui/forms/input/input.module';
+import { DtSelectModule } from './ui/forms/select/select.module';
 
 @NgModule({
   declarations: [
@@ -50,6 +54,11 @@ import { PhoneService } from './providers/application/phone/phone.service';
     MgCardModule,
     MgFormsModule,
     MgLogoModule,
+
+    DtButtonModule,
+    DtContainerModule,
+    DtInputModule,
+    DtSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

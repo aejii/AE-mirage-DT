@@ -1,0 +1,37 @@
+:host {
+  display: inline-block;
+}
+
+@mixin dtSelect {
+  .dt-select {
+    position: relative;
+    cursor: pointer;
+    padding: 4px 34px 4px 10px;
+    font-size: 14px;
+    background-color: #1a1a17;
+    border: 1px solid black;
+    box-shadow: 1px 1px 15px #59584f;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    box-sizing: border-box;
+    .dropdown {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 24px;
+      width: 24px;
+      &.inverted {
+        transform: rotate(180deg);
+      }
+    }
+  }
+  .dt-options {
+    background-color: rgba(0, 0, 0, 0.75);
+    border: solid 1px black;
+    overflow: hidden;
+    border-width: 1px;
+    border-radius: 0px 0px 7px 7px;
+  }
+}

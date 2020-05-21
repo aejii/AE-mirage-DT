@@ -1,0 +1,9 @@
+{{ (value$ | async) || placeholder }}
+
+<img src="assets/design/dropdown.png" class="dropdown">
+
+<ng-template #optionsPortal>
+  <div class="dt-options" fxLayout="column">
+    <ng-content select="dt-option"></ng-content>
+  </div>
+</ng-template>
