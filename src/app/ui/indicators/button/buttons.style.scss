@@ -1,4 +1,12 @@
 @mixin dtButton {
+  .dt-button,
+  .dt-icon-button {
+    &:active {
+      filter: brightness(80%);
+      transform: translateY(2px);
+    }
+  }
+
   .dt-button {
     color: #4d6100;
     font-size: 28px;

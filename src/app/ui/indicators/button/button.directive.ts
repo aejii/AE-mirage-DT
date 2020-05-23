@@ -1,11 +1,11 @@
 import { Directive, HostBinding, Input } from '@angular/core';
 
 @Directive({
-  selector: '[dt-button],[dt-icon-button]'
+  selector: '[dt-button],[dt-icon-button]',
 })
 export class DtButtonDirective {
-
   @Input('dt-button') dtButton = true;
+
   @HostBinding('class.dt-button') get dtButtonClass() {
     return !this.dtButton;
   }
@@ -15,6 +15,5 @@ export class DtButtonDirective {
     return !this.dtIconButton;
   }
 
-  constructor() { }
-
+  constructor() {}
 }

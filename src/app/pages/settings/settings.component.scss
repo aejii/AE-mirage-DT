@@ -1,9 +1,6 @@
-@import 'vars';
-
 :host {
   display: block;
   box-sizing: border-box;
-  padding: 2rem;
 }
 
 mg-card {
@@ -27,9 +24,9 @@ mg-card {
 
 .status {
   .error {
-    color: mat-color($warn, 500);
+    color: red;
   }
   .valid {
-    color: mat-color($primary, 500);
+    color: yellow;
   }
 }

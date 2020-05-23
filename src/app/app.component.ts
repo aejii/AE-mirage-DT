@@ -7,7 +7,6 @@ import { map } from 'rxjs/operators';
 import { InstallationService } from './core/installation/installation.service';
 import { UserInterfaceQuery } from './core/user-interface/user-interface.query';
 import { UserInterfaceStore } from './core/user-interface/user-interface.store';
-import { Router } from '@angular/router';
 import { UserPreferencesQuery } from './core/user-preferences/user-preferences.query';
 
 @Component({
@@ -29,15 +28,11 @@ export class AppComponent {
     private uiStore: UserInterfaceStore,
     private uiQuery: UserInterfaceQuery,
     private installation: InstallationService,
-    private router: Router,
     private preferences: UserPreferencesQuery,
   ) {
     this.installation.updateGame().subscribe(() => {
       console.log('Mirage is ready to run game instances');
     });
-
-    // Forces the app to start on home to avoid a routerLinkActive issue
-    this.router.navigate(['/home']);
   }
 
   toggleMenu(forceValue?: boolean) {

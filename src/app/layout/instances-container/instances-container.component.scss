@@ -1,4 +1,4 @@
-@import 'vars';
+@import 'theming';
 
 :host {
   display: flex;
@@ -9,50 +9,11 @@
 
   .container {
     position: relative;
-    order: 1;
-  }
-
-  .accounts-nav {
-    box-sizing: border-box;
-    overflow-y: auto;
-    button {
-      flex: 0 0 auto;
-    }
-    &.left {
-      order: 0;
-    }
-    &.right {
-      order: 2;
-    }
   }
 }
 
-.hidden {
-  display: none;
-}
-
-.account-button {
-  overflow: hidden;
-  display: block;
-
-  .account-container {
-    height: 100%;
-    width: 100%;
-    position: relative;
-    span,
-    ::ng-deep span {
-      font-size: 0.75rem;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
+mg-accounts-bar {
+  height: 100%;
 }
 
 mg-game-instance {

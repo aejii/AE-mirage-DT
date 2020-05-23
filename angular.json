@@ -37,12 +37,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "src/styles.scss",
-              "src/app/design/indicators/button/button.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/style"]
+              "includePaths": ["src/app/ui"]
             },
             "scripts": []
           },

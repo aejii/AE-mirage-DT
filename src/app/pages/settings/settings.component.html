@@ -1,20 +1,22 @@
-<h1>Paramètres</h1>
+<dt-container fxFlex>
+  <h1>Affichage</h1>
 
-<h2>Affichage</h2>
-
-<mg-card class="display">
-  <div class="step" *ngIf="!isCordova">
-    <span class="flexer">Appareil à simuler <small><i>(J'te conseille de prendre ton téléphone !)</i></small></span>
-    <mg-select [formControl]="deviceForm">
-      <mg-option
-        *ngFor="let device of devices$ | async"
-        [value]="device.device"
+  <div class="display">
+    <div class="step" *ngIf="!isCordova">
+      <span class="flexer"
+        >Appareil à simuler
+        <small><i>(J'te conseille de prendre ton téléphone !)</i></small></span
       >
-        {{ device.device }}
-      </mg-option>
-    </mg-select>
-  </div>
-  <div class="step">
+      <dt-select [formControl]="deviceForm" fxFlex="0 1 400px">
+        <dt-option
+          *ngFor="let device of devices$ | async"
+          [value]="device.device"
+        >
+          {{ device.device }}
+        </dt-option>
+      </dt-select>
+    </div>
+    <!-- <div class="step">
     <span class="flexer">Position du menu</span>
     <mg-radio-group
       [formControl]="navAlign"
@@ -37,71 +39,70 @@
       <mg-radio-button direction="right" value="left">Gauche</mg-radio-button>
       <mg-radio-button direction="right" value="right">Droite</mg-radio-button>
     </mg-radio-group>
+  </div> -->
   </div>
-</mg-card>
 
-<h2>Installation</h2>
+  <h1>Installation</h1>
 
-<mg-card class="installation">
-  <div class="step">
-    <span>Souci d'affichage ? Mets à jour les assets.</span>
-    <span class="flexer"></span>
-    <button
-      mg-icon-button
-      color="primary"
-      (click)="installAssets()"
-      [disabled]="fsBusy$ | async"
-    >
-      <mat-icon>image</mat-icon>
-    </button>
-  </div>
-  <div class="step">
-    <span>Jeu qui plante ? Rebuild-le.</span>
-    <span class="flexer"></span>
-    <button
-      mg-icon-button
-      color="primary"
-      (click)="installBuild()"
-      [disabled]="fsBusy$ | async"
-    >
-      <mat-icon>build</mat-icon>
-    </button>
-  </div>
-  <div class="step">
-    <span>Problème de connexion ? Met le jeu à jour.</span>
-    <span class="flexer"></span>
-    <button
-      mg-icon-button
-      color="primary"
-      (click)="updateGame()"
-      [disabled]="fsBusy$ | async"
-    >
-      <mat-icon>loop</mat-icon>
-    </button>
-  </div>
-  <p [style.margin-top.rem]="3">
-    Statut de l'installation
-  </p>
-  <div
-    [ngSwitch]="installStatus$ | async"
-    [class.installed]="(installStatus$ | async) === 2"
-    class="status step"
-  >
-    <ng-container *ngSwitchCase="0"
-      >Installe le jeu depuis les paramètres</ng-container
-    >
-    <ng-container *ngSwitchCase="1">Installation en cours ...</ng-container>
-    <ng-container *ngSwitchCase="2">
-      <span class="valid">Prêt à jouer !</span>
-    </ng-container>
-    <ng-container *ngSwitchCase="3">
-      <span class="error"
-        >Erreur d'installation : copie-la et envoie-la nous sur Discord 😅</span
-      >
+  <div class="installation">
+    <div class="step">
+      <span>Souci d'affichage ? Mets à jour les assets.</span>
       <span class="flexer"></span>
-      <button mg-icon-button color="error" (click)="copyError()">
-        <mat-icon>assignment</mat-icon>
+      <button
+        dt-icon-button
+        (click)="installAssets()"
+        [disabled]="fsBusy$ | async"
+      >
+        image
       </button>
-    </ng-container>
+    </div>
+    <div class="step">
+      <span>Jeu qui plante ? Rebuild-le.</span>
+      <span class="flexer"></span>
+      <button
+        dt-icon-button
+        (click)="installBuild()"
+        [disabled]="fsBusy$ | async"
+      >
+        build
+      </button>
+    </div>
+    <div class="step">
+      <span>Problème de connexion ? Met le jeu à jour.</span>
+      <span class="flexer"></span>
+      <button
+        dt-icon-button
+        (click)="updateGame()"
+        [disabled]="fsBusy$ | async"
+      >
+        loop
+      </button>
+    </div>
+    <h1>
+      Statut de l'installation
+    </h1>
+    <div
+      [ngSwitch]="installStatus$ | async"
+      [class.installed]="(installStatus$ | async) === 2"
+      class="status step"
+    >
+      <ng-container *ngSwitchCase="0"
+        >Installe le jeu depuis les paramètres</ng-container
+      >
+      <ng-container *ngSwitchCase="1">Installation en cours ...</ng-container>
+      <ng-container *ngSwitchCase="2">
+        <span class="valid">Prêt à jouer !</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="3">
+        <span class="error"
+          >Erreur d'installation : copie-la et envoie-la nous sur Discord
+          😅</span
+        >
+        <span class="flexer"></span>
+        <button dt-icon-button color="error" (click)="copyError()">
+          assignment
+        </button>
+      </ng-container>
+    </div>
   </div>
-</mg-card>
+</dt-container>

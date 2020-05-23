@@ -1,0 +1,39 @@
+<ng-container *ngIf="instances$ | async as instances">
+  <dt-container
+    class="accounts-nav"
+    fxLayout="column"
+    fxLayoutGap="1rem"
+  >
+    <button
+      dt-icon-button
+      (click)="addGame()"
+      [disabled]="!(gameReady$ | async)"
+    >
+      add
+    </button>
+    <ng-container *ngFor="let instance of instances; index as i">
+      <button
+        (click)="setActive(instance)"
+        (dblclick)="instance.refresh()"
+        (contextmenu)="removeInstance(instance)"
+        [class.active]="!!(instance === (active$ | async))"
+        class="account-button"
+      >
+        <div class="account-container" #accounts>
+          <span>{{ i + 1 }}</span>
+        </div>
+      </button>
+    </ng-container>
+
+    <span fxFlex></span>
+
+    <button
+      dt-icon-button
+      color="error"
+      (click)="removeAllInstances()"
+      *ngIf="instances.length"
+    >
+      delete
+    </button>
+  </dt-container>
+</ng-container>

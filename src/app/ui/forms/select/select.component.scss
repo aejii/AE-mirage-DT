@@ -33,5 +33,7 @@
     overflow: hidden;
     border-width: 1px;
     border-radius: 0px 0px 7px 7px;
+    overflow-y: auto;
+    max-height: 258px;
   }
 }
