@@ -1,0 +1,24 @@
+@import 'theming';
+
+:host {
+  box-sizing: border-box;
+  display: block;
+  height: 100%;
+}
+
+.new-account {
+  margin-bottom: 3rem;
+  box-sizing: border-box;
+}
+
+.account {
+  transition: color 300ms ease-in-out;
+}
+
+.connects {
+  color: dt-color('primary');
+}
+
+.actions {
+  margin-top: 2rem;
+}

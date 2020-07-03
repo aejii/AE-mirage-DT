@@ -4,42 +4,45 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChildren,
   ElementRef,
   forwardRef,
-  QueryList,
+  HostBinding,
+  HostListener,
+  Input,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { MgOptionComponent } from './option/option.component';
 
 @Component({
-  selector: 'mg-select',
+  selector: 'dt-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MgSelectComponent),
+      useExisting: forwardRef(() => DtSelectComponent),
       multi: true,
     },
   ],
 })
-export class MgSelectComponent implements ControlValueAccessor, AfterViewInit {
-  private _onTouched: (...args) => any;
-  private _onChange: (...args) => any;
-
-  value$ = new BehaviorSubject(undefined);
-
-  @ContentChildren(MgOptionComponent) options: QueryList<MgOptionComponent>;
+export class DtSelectComponent implements AfterViewInit, ControlValueAccessor {
+  @HostBinding('class.dt-select') readonly selectClass = true;
 
   @ViewChild('optionsPortal') optionsPortalContent: TemplateRef<any>;
   optionsPortal: TemplatePortal;
   overlayRef: OverlayRef;
+
+  private _changeFn: any;
+  private _touchFn: any;
+
+  @Input() placeholder = ' ';
+
+  _value = new BehaviorSubject<any>(undefined);
+  public value$ = this._value.asObservable();
 
   constructor(
     private viewRef: ViewContainerRef,
@@ -54,23 +57,23 @@ export class MgSelectComponent implements ControlValueAccessor, AfterViewInit {
     );
   }
 
-  writeValue(value: any): void {
-    this.value$.next(value);
-    this.overlayRef?.dispose();
+  registerOnChange(fn: any) {
+    this._changeFn = fn;
   }
 
-  registerOnChange(fn: any): void {
-    this._onChange = fn;
+  registerOnTouched(fn: any) {
+    this._touchFn = fn;
   }
 
-  registerOnTouched(fn: any): void {
-    this._onTouched = fn;
+  setDisabledState(value: boolean) {}
+
+  writeValue(value: any) {
+    this._changeFn?.(value);
+    this.overlayRef?.dispose?.();
+    value && this._value.next(value);
   }
 
-  setDisabledState?(isDisabled: boolean): void {
-    throw new Error('Method not implemented.');
-  }
-
+  @HostListener('click')
   openOptions() {
     this.overlayRef?.dispose();
     this.overlayRef = this.overlay.create({
@@ -91,7 +94,6 @@ export class MgSelectComponent implements ControlValueAccessor, AfterViewInit {
           },
         ]),
       hasBackdrop: true,
-      backdropClass: 'mg-options-overlay-backdrop',
     });
     this.overlayRef.backdropClick().subscribe(() => this.overlayRef?.dispose());
     this.overlayRef.attach(this.optionsPortal);

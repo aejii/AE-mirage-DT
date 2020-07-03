@@ -1,6 +1,4 @@
-@import 'theming';
-
-@import './app/ui/core.style.scss';
+@import 'core';
 
 @include dt-core();
 

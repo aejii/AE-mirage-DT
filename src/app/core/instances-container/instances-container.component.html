@@ -1,0 +1,8 @@
+<ng-container *ngIf="instances$ | async as instances">
+  <ng-container *ngFor="let instance of instances">
+    <mg-game-instance
+      [instance]="instance"
+      [class.active]="instance === (active$ | async)"
+    ></mg-game-instance>
+  </ng-container>
+</ng-container>

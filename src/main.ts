@@ -2,7 +2,7 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { persistState } from '@datorama/akita';
 import { AppModule } from './app/app.module';
-import { UserInterfaceState } from './app/core/user-interface/user-interface.store';
+import { UserPreferencesState } from './app/core/user-preferences/user-preferences.store';
 
 if (!window.cordova) bootstrapApp();
 else
@@ -13,7 +13,7 @@ else
 
 function bootstrapApp() {
   persistState({
-    include: ['user-interface', 'user-preferences'],
+    include: ['user-preferences'],
     preStorageUpdate,
   });
   platformBrowserDynamic()
@@ -24,11 +24,7 @@ function bootstrapApp() {
 function preStorageUpdate(name, state) {
   switch (name) {
     case 'user-interface':
-      const {
-        activeInstance,
-        instances,
-        ...uiState
-      } = state as UserInterfaceState;
+      const uiState = state as UserPreferencesState;
       return uiState;
     default:
       return state;

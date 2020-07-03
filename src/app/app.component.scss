@@ -1,26 +1,27 @@
-@import 'vars';
-
 :host {
   display: flex;
-  position: relative;
   height: 100%;
-  place-content: flex-start stretch;
   flex-flow: row;
-  box-sizing: border-box;
+}
+
+mg-menus-bar {
+  position: relative;
+  z-index: 2;
+}
+
+main {
+  position: relative;
 }
 
 mg-instances-container {
+  position: relative;
+}
+
+.games {
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
   top: 0;
   z-index: 0;
-}
-
-.nav {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
