@@ -1,95 +1,10 @@
-<!-- <nav
-  [class.hidden]="!(isMenuVisible$ | async)"
-  [ngClass]="navAlign$ | async"
-  cdkDrag
-  cdkDragLockAxis="y"
->
-  <div class="menu">
-    <div class="drawer" cdkDragHandle>
-      <mg-card
-        (click)="toggleMenu()"
-        [class.mg-no-shadow]="(hasInstances$ | async) && rlaHome.isActive"
-      >
-        <mat-icon [class.opened]="isMenuVisible$ | async">
-          chevron_right
-        </mat-icon>
-      </mg-card>
-    </div>
-
-    <mg-card [class.mg-no-shadow]="(hasInstances$ | async) && rlaHome.isActive">
-      <button
-        mg-icon-button
-        class="mg-no-shadow"
-        routerLink="home"
-        routerLinkActive="active"
-        #rlaHome="routerLinkActive"
-        [color]="rlaHome.isActive ? 'primary' : ''"
-      >
-        <mat-icon>games</mat-icon>
-      </button>
-      <button
-        mg-icon-button
-        class="mg-no-shadow"
-        routerLink="accounts"
-        routerLinkActive="active"
-        #rlaAccounts="routerLinkActive"
-        [color]="rlaAccounts.isActive ? 'primary' : ''"
-      >
-        <mat-icon>group</mat-icon>
-      </button>
-      <button
-        mg-icon-button
-        class="mg-no-shadow"
-        routerLink="settings"
-        routerLinkActive="active"
-        #rlaSettings="routerLinkActive"
-        [color]="rlaSettings.isActive ? 'primary' : ''"
-      >
-        <mat-icon>settings</mat-icon>
-      </button>
-    </mg-card>
-  </div>
-</nav>
-
-<main fxFlex>
-  <router-outlet></router-outlet>
+<mg-menus-bar></mg-menus-bar>
+<main fxFlex fxLayout="row">
+  <section fxFill class="games">
+    <mg-instances-container fxFlex></mg-instances-container>
+  </section>
 </main>
 
-<mg-instances-container
-  [style.display]="rlaHome?.isActive ? '' : 'none'"
-></mg-instances-container>
- -->
-
-<mg-instances-container></mg-instances-container>
-
-<dt-container class="nav" fxLayout="column" fxLayoutGap="1rem">
-  <button
-    dt-icon-button
-    class="mg-no-shadow"
-    routerLink="home"
-    routerLinkActive="active"
-    #rlaHome="routerLinkActive"
-  >
-    <mat-icon>games</mat-icon>
-  </button>
-  <button
-    dt-icon-button
-    class="mg-no-shadow"
-    routerLink="accounts"
-    routerLinkActive="active"
-    #rlaAccounts="routerLinkActive"
-  >
-    <mat-icon>group</mat-icon>
-  </button>
-  <button
-    dt-icon-button
-    class="mg-no-shadow"
-    routerLink="settings"
-    routerLinkActive="active"
-    #rlaSettings="routerLinkActive"
-  >
-    <mat-icon>settings</mat-icon>
-  </button>
-</dt-container>
-
-<router-outlet></router-outlet>
+<!-- <div fxFlex fxLayoutAlign="center center">
+  <mg-settings></mg-settings>
+</div> -->

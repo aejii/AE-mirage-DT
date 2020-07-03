@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+}
+
+mg-card {
+  padding: 2rem;
+  margin: 0;
+}
+
+.step {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}
+
+.flexer {
+  flex: 1 1 auto;
+}
+
+.status {
+  .error {
+    color: red;
+  }
+  .valid {
+    color: yellow;
+  }
+}

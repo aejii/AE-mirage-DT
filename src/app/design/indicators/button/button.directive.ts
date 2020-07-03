@@ -1,19 +1,19 @@
-import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
-import { MgButtonBase } from './button.base';
+import { Directive, HostBinding, Input } from '@angular/core';
 
 @Directive({
-  selector: '[mg-button]',
+  selector: '[dt-button],[dt-icon-button]',
 })
-export class ButtonDirective extends MgButtonBase {
-  // tslint:disable-next-line: no-input-rename
-  @Input('mg-icon-button') selectorInverter = false;
+export class DtButtonDirective {
+  @Input('dt-button') dtButton = true;
 
-  @HostBinding('class.mg-button')
-  get mgIconButton() {
-    return !this.selectorInverter;
+  @HostBinding('class.dt-button') get dtButtonClass() {
+    return !this.dtButton;
   }
 
-  constructor(protected el: ElementRef<HTMLButtonElement>) {
-    super(el);
+  @Input('dt-icon-button') dtIconButton = true;
+  @HostBinding('class.dt-icon-button') get dtIconButtonClass() {
+    return !this.dtIconButton;
   }
+
+  constructor() {}
 }

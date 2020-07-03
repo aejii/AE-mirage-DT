@@ -1,0 +1,84 @@
+<dt-container>
+  <h1>Affichage</h1>
+
+  <div class="display">
+    <div class="step" *ngIf="!isCordova">
+      <span class="flexer"
+        >Appareil à simuler
+        <small><i>(J'te conseille de prendre ton téléphone !)</i></small></span
+      >
+      <dt-select [formControl]="deviceForm" fxFlex="0 1 400px">
+        <dt-option
+          *ngFor="let device of devices$ | async"
+          [value]="device.device"
+        >
+          {{ device.device }}
+        </dt-option>
+      </dt-select>
+    </div>
+  </div>
+
+  <h1>Installation</h1>
+
+  <div class="installation">
+    <div class="step">
+      <span>Souci d'affichage ? Mets à jour les assets.</span>
+      <span class="flexer"></span>
+      <button
+        dt-icon-button
+        (click)="installAssets()"
+        [disabled]="fsBusy$ | async"
+      >
+        image
+      </button>
+    </div>
+    <div class="step">
+      <span>Jeu qui plante ? Rebuild-le.</span>
+      <span class="flexer"></span>
+      <button
+        dt-icon-button
+        (click)="installBuild()"
+        [disabled]="fsBusy$ | async"
+      >
+        build
+      </button>
+    </div>
+    <div class="step">
+      <span>Problème de connexion ? Met le jeu à jour.</span>
+      <span class="flexer"></span>
+      <button
+        dt-icon-button
+        (click)="updateGame()"
+        [disabled]="fsBusy$ | async"
+      >
+        loop
+      </button>
+    </div>
+    <h1>
+      Statut de l'installation
+    </h1>
+    <div
+      [ngSwitch]="installStatus$ | async"
+      [class.installed]="(installStatus$ | async) === 2"
+      class="status step"
+    >
+      <ng-container *ngSwitchCase="0"
+        >Installe le jeu depuis les paramètres</ng-container
+      >
+      <ng-container *ngSwitchCase="1">Installation en cours ...</ng-container>
+      <ng-container *ngSwitchCase="2">
+        <span class="valid">Prêt à jouer !</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="3">
+        <span class="error"
+          >Erreur d'installation : copie-la et envoie-la nous sur Discord
+          😅</span
+        >
+        <span class="flexer"></span>
+        <button dt-icon-button color="error" (click)="copyError()">
+          assignment
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</dt-container>

@@ -1,12 +1,14 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ButtonDirective } from './button.directive';
-import { IconButtonDirective } from './icon-button.directive';
-import { ToggleButtonDirective } from './toggle-button.directive';
+import { CommonModule } from '@angular/common';
+import { DtButtonDirective } from './button.directive';
+
+
 
 @NgModule({
-  declarations: [IconButtonDirective, ButtonDirective, ToggleButtonDirective],
-  exports: [IconButtonDirective, ButtonDirective, ToggleButtonDirective],
-  imports: [CommonModule],
+  declarations: [DtButtonDirective],
+  imports: [
+    CommonModule
+  ],
+  exports: [DtButtonDirective]
 })
-export class MgButtonModule {}
+export class DtButtonModule { }

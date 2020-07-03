@@ -1,24 +1,34 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Host,
+  HostBinding,
   HostListener,
   Input,
+  OnInit,
 } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { DtSelectComponent } from '../select.component';
 
 @Component({
-  selector: 'mg-option',
+  selector: 'dt-option',
   templateUrl: './option.component.html',
   styleUrls: ['./option.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MgOptionComponent {
+export class DtOptionComponent implements OnInit {
+  @HostBinding('class.dt-option') private readonly optionClass = true;
+
   @Input() value: any;
 
-  constructor(private ngControl: NgControl) {}
+  @HostBinding('class.selected') get isSelected() {
+    return this.select._value.value === this.value;
+  }
 
-  @HostListener('click')
-  valueChange() {
-    this.ngControl.control.setValue(this.value);
+  constructor(@Host() private select: DtSelectComponent) {}
+
+  ngOnInit(): void {}
+
+  @HostListener('click') onClick() {
+    this.select.writeValue(this.value);
   }
 }

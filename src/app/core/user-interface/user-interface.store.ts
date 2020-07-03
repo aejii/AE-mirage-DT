@@ -1,26 +1,20 @@
 import { Injectable } from '@angular/core';
-import {
-  arrayAdd,
-  arrayRemove,
-  arrayUpdate,
-  Store,
-  StoreConfig,
-} from '@datorama/akita';
-import { GameInstance } from '../model/game/instance.class';
+import { arrayAdd, arrayRemove, Store, StoreConfig } from '@datorama/akita';
+import { GameInstance } from '../instances-container/game-instance/game-instance.class';
 
 export interface UserInterfaceState {
-  accounts: AppAccount[];
   instances: GameInstance[];
   activeInstance: GameInstance;
-  isMenuVisible: boolean;
+  showSettings: boolean;
+  showAccounts: boolean;
 }
 
 export function createInitialState(): UserInterfaceState {
   return {
-    accounts: [],
     instances: [],
     activeInstance: undefined,
-    isMenuVisible: true,
+    showAccounts: false,
+    showSettings: false,
   };
 }
 
@@ -31,32 +25,15 @@ export class UserInterfaceStore extends Store<UserInterfaceState> {
     super(createInitialState());
   }
 
-  toggleMenu(forceValue?: boolean) {
-    this.update({
-      isMenuVisible: forceValue ?? !this.getValue().isMenuVisible,
-    });
-  }
-
-  addAccount(account: AppAccount) {
-    this.update((state) => ({ accounts: arrayAdd(state.accounts, account) }));
-  }
-
-  updateAccountConnect(account: AppAccount) {
+  toggleSettings(forceValue?: boolean) {
     this.update((state) => ({
-      accounts: arrayUpdate(
-        state.accounts,
-        (acc) => acc.username === account.username,
-        { doesConnect: !account.doesConnect },
-      ),
+      showSettings: forceValue ?? !state.showSettings,
     }));
   }
 
-  removeAccount(account: AppAccount) {
+  toggleAccounts(forceValue?: boolean) {
     this.update((state) => ({
-      accounts: arrayRemove(
-        state.accounts,
-        (acc) => acc.username === account.username,
-      ),
+      showAccounts: forceValue ?? !state.showAccounts,
     }));
   }
 

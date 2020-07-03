@@ -1,0 +1,45 @@
+@mixin dtButton {
+  .dt-button,
+  .dt-icon-button {
+    &:not(:disabled) {
+      cursor: pointer;
+      &:active {
+        filter: brightness(80%);
+        transform: translateY(2px);
+      }
+    }
+    &:disabled {
+      filter: brightness(50%);
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .dt-button, .dt-icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+    background: none;
+    color: dt-color('button-font');
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 2px 10px;
+    border-style: solid;
+    border-width: 5px 5px 14px 5px;
+    border-image: url('./assets/design/button.png') 10 14 25 14 fill;
+    box-sizing: border-box;
+    cursor: pointer;
+
+  }
+
+  .dt-icon-button {
+    height: 43px;
+    width: 36px;
+    font-family: 'Material Icons';
+    font-size: 20px;
+  }
+}

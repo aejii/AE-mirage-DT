@@ -1,0 +1,12 @@
+@mixin dtContainer {
+  .dt-container {
+    display: block;
+    overflow: hidden;
+    position: relative;
+    border-width: 14px 14px 14px 14px;
+    border-image: url('./assets/design/container.png') 26 26 70 26 fill;
+    border-style: solid;
+    box-sizing: border-box;
+    border-image-repeat: round stretch;
+  }
+}

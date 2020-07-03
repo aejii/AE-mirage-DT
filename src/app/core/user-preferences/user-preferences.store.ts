@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Store, StoreConfig } from '@datorama/akita';
+import {
+  arrayAdd,
+  arrayRemove,
+  arrayUpdate,
+  Store,
+  StoreConfig,
+} from '@datorama/akita';
 
 type CardinalPosition = /* 'top' | 'bottom' |  */ 'left' | 'right';
 
 export interface UserPreferencesState {
-  navAlign: CardinalPosition;
-  accountsNavAlign: CardinalPosition;
+  accounts: AppAccount[];
   availableDevices: Device[];
   selectedDevice: Device;
 }
 
 export function createInitialState(): UserPreferencesState {
   return {
-    navAlign: 'left',
-    accountsNavAlign: 'right',
+    accounts: [],
     availableDevices,
     selectedDevice: undefined,
   };
@@ -25,14 +29,6 @@ export class UserPreferencesStore extends Store<UserPreferencesState> {
   constructor() {
     super(createInitialState());
     this.update({ availableDevices });
-  }
-
-  setNavAlign(navAlign: CardinalPosition) {
-    this.update({ navAlign });
-  }
-
-  setAccountsNavAlign(accountsNavAlign: CardinalPosition) {
-    this.update({ accountsNavAlign });
   }
 
   updateDevice(selectedDevice: Device) {
@@ -47,6 +43,29 @@ export class UserPreferencesStore extends Store<UserPreferencesState> {
       (d) => d.device === deviceName,
     );
     this.updateDevice(device);
+  }
+
+  addAccount(account: AppAccount) {
+    this.update((state) => ({ accounts: arrayAdd(state.accounts, account) }));
+  }
+
+  updateAccountConnect(account: AppAccount) {
+    this.update((state) => ({
+      accounts: arrayUpdate(
+        state.accounts,
+        (acc) => acc.username === account.username,
+        { doesConnect: !account.doesConnect },
+      ),
+    }));
+  }
+
+  removeAccount(account: AppAccount) {
+    this.update((state) => ({
+      accounts: arrayRemove(
+        state.accounts,
+        (acc) => acc.username === account.username,
+      ),
+    }));
   }
 }
 

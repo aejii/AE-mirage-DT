@@ -1,60 +1,40 @@
-@import 'vars';
-
 :host {
-  display: block;
-  position: relative;
-  min-width: 20rem;
+  display: inline-block;
 }
 
-.select {
-  position: relative;
-  z-index: 1001; // Overlay is at 1000
-  color: mat-color($primary, 500);
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  .value {
-    flex: 1 1 auto;
+@mixin dtSelect {
+  .dt-select {
+    position: relative;
+    cursor: pointer;
+    padding: 4px 34px 4px 10px;
+    font-size: 12px;
+    background-color: dt-color('input-background');
+    border: 1px solid black;
+    box-shadow: 1px 1px 15px #59584f;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    box-sizing: border-box;
+
+    .dropdown {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 24px;
+      width: 24px;
+      &.inverted {
+        transform: rotate(180deg);
+      }
+    }
   }
-  .icon {
-    margin-left: 2rem;
-  }
-}
-
-.select,
-.options {
-  padding: 0rem;
-  padding-left: 0.75rem;
-  padding-right: 0.25rem;
-  margin: 0;
-}
-
-.options {
-  margin-top: -1rem;
-  width: 100%;
-  box-sizing: border-box;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  display: flex;
-  flex-flow: column;
-  max-height: 11rem;
-  overflow: hidden;
-
-  .spacer {
-    height: 1rem;
-    flex: 0 0 auto;
-    padding: 0;
-  }
-
-  .list {
-    flex: 1 1 100%;
-    display: flex;
-    flex-flow: column;
+  .dt-options {
+    background-color: rgba(0, 0, 0, 0.75);
+    border: solid 1px black;
+    overflow: hidden;
+    border-width: 1px;
+    border-radius: 0px 0px 7px 7px;
     overflow-y: auto;
-    padding-top: 1rem;
+    max-height: 258px;
   }
-}
-
-::ng-deep .mg-options-overlay-backdrop {
-  background: transparent;
 }

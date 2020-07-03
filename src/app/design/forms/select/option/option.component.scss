@@ -1,15 +1,18 @@
-@import 'vars';
-
-:host {
-  display: block;
-  flex: 0 0 auto;
-  padding: 0.5rem 1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  transition: color 250ms ease-in-out;
-  &:hover {
-    color: mat-color($primary, 500);
+@mixin dtOption {
+  .dt-options .dt-option {
+    flex: 0 0 29px;
+    height: 29px;
+    line-height: 29px;
+    padding: 7px 3px 7px 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    &.selected {
+      background-image: url('./assets/design/tick.png');
+      background-size: 10px 10px;
+      background-repeat: no-repeat;
+      background-position: 7px;
+    }
   }
 }
