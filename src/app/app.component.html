@@ -1,10 +1,14 @@
-<mg-menus-bar></mg-menus-bar>
-<main fxFlex fxLayout="row">
-  <section fxFill class="games">
-    <mg-instances-container fxFlex></mg-instances-container>
-  </section>
-</main>
+<ng-container
+  *ngIf="showInstaller$ | async; then installer; else game"
+></ng-container>
 
-<!-- <div fxFlex fxLayoutAlign="center center">
-  <mg-settings></mg-settings>
-</div> -->
+<ng-template #installer>
+  <mg-installer class="installer"></mg-installer>
+</ng-template>
+
+<ng-template #game>
+  <mg-game fxFill></mg-game>
+</ng-template>
+
+<!-- Dumpster used to load characters canvases and save them as images -->
+<div class="canvas-dumpster"></div>

@@ -3,10 +3,88 @@
     display: block;
     overflow: hidden;
     position: relative;
-    border-width: 14px 14px 14px 14px;
-    border-image: url('./assets/design/container.png') 26 26 70 26 fill;
-    border-style: solid;
-    box-sizing: border-box;
-    border-image-repeat: round stretch;
+    padding: 12px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      border-width: 14px 14px 14px 14px;
+      border-image: url('./assets/design/container.png') 26 26 70 26 fill;
+      border-style: solid;
+      box-sizing: border-box;
+      border-image-repeat: round stretch;
+      z-index: -1;
+    }
+
+    .header {
+      position: relative;
+      margin: 0 !important; // Useful for removing fxLayoutGaps
+
+      .close-button {
+        margin: -9px;
+        margin-left: 0;
+        margin-bottom: 12px;
+      }
+
+      .title {
+        font-family: berlin_sans_fb_demibold;
+        letter-spacing: 0.05em;
+        font-size: 18px;
+        text-align: center;
+        height: 40px;
+        white-space: nowrap;
+        color: #ced0bb;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+        z-index: 0;
+        box-sizing: border-box;
+        padding: 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: -9px;
+        margin-bottom: 12px;
+        margin-right: 0;
+        flex: 1 1 100%;
+
+        &::after {
+          content: '';
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: -1;
+          top: 0;
+          left: 0;
+          border-style: solid;
+          border-width: 20px 20px 20px 20px;
+          border-image: url(./assets/design/container-title.png) 40 40 40 40
+            fill;
+          border-image-repeat: round;
+          box-sizing: border-box;
+          border-image-outset: -1;
+        }
+      }
+    }
+
+    .handle {
+      position: absolute;
+      z-index: 3;
+      cursor: pointer;
+      margin: 0 !important; // Useful for removing fxLayoutGaps
+      padding: 0 !important;
+
+      &.expand {
+        bottom: 0;
+        right: 0;
+        transform: rotate(90deg);
+        height: 24px;
+        width: 24px;
+      }
+    }
   }
 }

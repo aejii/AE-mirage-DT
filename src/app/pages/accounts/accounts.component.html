@@ -1,0 +1,49 @@
+<dt-container (closed)="UI.toggleAccounts(false)">
+  <span dtContainerTitle>Connexion des comptes</span>
+
+  <div [style.padding.px]="12" fxLayout="column">
+    <div class="characters" fxLayout="row" fxLayoutAlign="center center">
+      <div
+        class="character"
+        fxLayout="column"
+        fxLayoutAlign="start center"
+        fxLayoutGap="12px"
+        *ngFor="let account of accounts$ | async"
+        (contextmenu)="service.removeAccount(account)"
+        [class.connects]="account.connects"
+        (click)="service.updateAccountConnectionStatus(account)"
+      >
+        <div class="image-container">
+          <img
+            fxFill
+            [src]="account.lastImage"
+            *ngIf="account.lastImage; else questionMark"
+            style="width: 256px; height: 256px;"
+          />
+          <ng-template #questionMark>
+            <div fxFill fxLayoutAlign="center center" class="no-image">?</div>
+          </ng-template>
+        </div>
+        <span class="username">{{ account.username }}</span>
+      </div>
+    </div>
+
+    <div fxLayoutAlign="center center" fxLayoutGap="24px" class="actions">
+      <button dt-button (click)="UI.toggleCreateAccount(true)">
+        Ajouter compte
+      </button>
+      <button
+        dt-button
+        (click)="connectAccounts()"
+        [disabled]="!(UI.canConnectAccounts$ | async)"
+      >
+        Connexion
+      </button>
+    </div>
+
+    <span class="helper">
+      Clic = connecter (ou non) le compte <br />
+      Appui long = supprimer le compte de la liste
+    </span>
+  </div>
+</dt-container>

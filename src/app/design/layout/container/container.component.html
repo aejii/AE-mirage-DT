@@ -1,1 +1,23 @@
+<img
+  src="assets/design/corner-more.png"
+  draggable="false"
+  class="expand handle"
+  (click)="expand.emit()"
+  *ngIf="showExpander"
+/>
+
+<div class="header" fxLayout="row">
+  <span fxFlex>
+    <ng-content select="[dtContainerTitle]"></ng-content>
+  </span>
+  <button
+    class="close-button"
+    dt-icon-button
+    *ngIf="showCloseButton"
+    (click)="closed.emit()"
+  >
+    clear
+  </button>
+</div>
+
 <ng-content></ng-content>

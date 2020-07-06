@@ -1,27 +1,27 @@
 :host {
-  display: flex;
   height: 100%;
-  flex-flow: row;
-}
-
-mg-menus-bar {
+  overflow: hidden;
   position: relative;
-  z-index: 2;
+  display: flex;
 }
 
-main {
-  position: relative;
-}
-
-mg-instances-container {
-  position: relative;
-}
-
-.games {
+.installer {
   position: absolute;
+  left: 0;
   right: 0;
   bottom: 0;
-  left: 0;
   top: 0;
-  z-index: 0;
+  transform-origin: bottom center;
+  z-index: 10;
+}
+
+.canvas-dumpster {
+  position: fixed;
+
+  top: 100vh;
+  left: 100vw;
+  z-index: -1;
+  opacity: 0;
+  transform: scale(0);
+  visibility: hidden;
 }

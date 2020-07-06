@@ -4,7 +4,8 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { UserInterfaceQuery } from 'src/app/core/user-interface/user-interface.query';
+import { InstancesService } from '@providers';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'mg-instances-container',
@@ -13,15 +14,15 @@ import { UserInterfaceQuery } from 'src/app/core/user-interface/user-interface.q
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InstancesContainerComponent implements OnInit {
-  instances$ = this.interfaceQuery.instances$;
-  active$ = this.interfaceQuery.activeInstance$;
+  instances$ = this.instancesService.instances$;
+  active$ = this.instancesService.activeInstance$.pipe(
+    tap(() => setTimeout(() => this.cdRef.detectChanges())),
+  );
 
   constructor(
-    private interfaceQuery: UserInterfaceQuery,
     private cdRef: ChangeDetectorRef,
+    private instancesService: InstancesService,
   ) {}
 
-  ngOnInit() {
-    this.active$.subscribe(() => setTimeout(() => this.cdRef.detectChanges()));
-  }
+  ngOnInit() {}
 }

@@ -1,0 +1,27 @@
+<dt-container>
+  <form
+    novalidate
+    [formGroup]="accountForm"
+    (ngSubmit)="addAccount()"
+    fxLayout="row"
+    fxLayoutGap="12px"
+    fxLayoutAlign="start center"
+  >
+    <input
+      #usernameInput
+      type="text"
+      dtInput
+      formControlName="username"
+      placeholder="Nom de compte"
+    />
+    <input
+      type="password"
+      dtInput
+      formControlName="password"
+      placeholder="Mot de passe"
+    />
+    <button dt-icon-button type="submit" [disabled]="!accountForm.valid">
+      add
+    </button>
+  </form>
+</dt-container>

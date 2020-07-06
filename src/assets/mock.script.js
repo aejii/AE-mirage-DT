@@ -5,6 +5,7 @@ window.buildVersion = '${window.buildVersion}';
 window.appVersion = '${window.appVersion}';
 
 // Override the user agent with the one from the parent window
+// Uses the function bound to the parent from the system provider
 window.parent.overrideUserAgent(window);
 
 window.appInfo = {
