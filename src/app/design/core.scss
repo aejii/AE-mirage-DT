@@ -4,7 +4,6 @@
 @import './forms/select/select.component.scss';
 @import './forms/select/option/option.component.scss';
 
-@import 'variables';
 @import 'theming';
 
 @mixin dt-core {
@@ -13,6 +12,21 @@
   @include dtInput();
   @include dtSelect();
   @include dtOption();
+
+  @font-face {
+    font-family: 'berlin_sans_fb_demibold';
+    src: url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.eot');
+    src: url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.eot?#iefix')
+        format('embedded-opentype'),
+      url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.woff')
+        format('woff'),
+      url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.ttf')
+        format('truetype'),
+      url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.svg#berlin_sans_fb_demibold')
+        format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
 
   $primary: dt-color('primary');
 
@@ -32,12 +46,12 @@
     font-size: 12px;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
-    background: #2e2d28;
+    background: dt-color('app-background');
     font-weight: 400;
   }
 
   h1 {
-    margin: 28px 0 10px;
+    margin: 10px 0;
     font-size: 16px;
     font-weight: bold;
     color: #aaa;
@@ -63,7 +77,10 @@
       z-index: 1000;
       pointer-events: auto;
     }
+
     .cdk-overlay-connected-position-bounding-box {
+      height: auto;
+      width: auto;
       position: absolute;
       z-index: 1000;
       .cdk-overlay-pane {

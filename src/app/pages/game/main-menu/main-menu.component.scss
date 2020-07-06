@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  width: auto;
+  position: relative;
+}
+
+.menu-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  z-index: 1;
+}
+
+.placeholder {
+  visibility: hidden;
+  transform: scale(0);
+  position: relative;
+  z-index: -1;
+  pointer-events: none;
+}

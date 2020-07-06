@@ -1,0 +1,14 @@
+<div class="menus" fxLayout="column">
+  <mg-main-menu></mg-main-menu>
+  <mg-accounts-menu fxFlex></mg-accounts-menu>
+</div>
+
+<div class="content" fxFlex>
+  <mg-instances-container class="instances" fxFill></mg-instances-container>
+  <mg-accounts class="overlay" *ngIf="UI.showAccounts$ | async"></mg-accounts>
+  <mg-settings class="overlay" *ngIf="UI.showSettings$ | async"> </mg-settings>
+  <mg-create-account
+    class="overlay create-account"
+    *ngIf="UI.showCreateAccount$ | async"
+  ></mg-create-account>
+</div>

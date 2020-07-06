@@ -1,0 +1,32 @@
+<div
+  class="splash"
+  fxFill
+  [style.background-image]="src$ | async"
+  fxLayout="column"
+  fxLayoutAlign="end center"
+  fxLayoutGap="24px"
+>
+  <div class="loading-bar" [class.error]="!!(error$ | async)">
+    <div class="progress" [style.width.%]="progress$ | async"></div>
+  </div>
+
+  <ng-container
+    *ngTemplateOutlet="
+      statusTpl;
+      context: { $implicit: currentStatus$ | async }
+    "
+  ></ng-container>
+
+  <ng-template #statusTpl let-current>
+    <div class="status">
+      <ng-container *ngIf="error$ | async as error; else noError">
+        <span class="error">{{ error }}</span>
+      </ng-container>
+      <ng-template #noError>
+        <ng-container *ngFor="let status of statuses; let i = index">
+          <span *ngIf="current === i">{{ status }}</span>
+        </ng-container>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

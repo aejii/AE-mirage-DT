@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  flex-flow: row;
+  height: 100%;
+}
+
+.menus {
+  position: relative;
+  z-index: 2;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  .overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    &.create-account {
+      top: 0;
+      transform: translateX(-50%);
+    }
+  }
+  .instances {
+    position: relative;
+    z-index: 1;
+  }
+}

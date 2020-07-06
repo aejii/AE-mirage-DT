@@ -3,6 +3,8 @@ import {
   Component,
   HostBinding,
   OnInit,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 
 @Component({
@@ -13,6 +15,17 @@ import {
 })
 export class DtContainerComponent implements OnInit {
   @HostBinding('class.dt-container') readonly containerClass = true;
+
+  @Output() expand = new EventEmitter();
+  @Output() closed = new EventEmitter();
+
+  get showExpander() {
+    return this.expand.observers.length > 0;
+  }
+
+  get showCloseButton() {
+    return this.closed.observers.length > 0;
+  }
 
   constructor() {}
 

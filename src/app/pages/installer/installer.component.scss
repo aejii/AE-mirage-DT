@@ -1,0 +1,62 @@
+@import 'theming';
+
+:host {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  width: 100%;
+  align-items: stretch;
+  justify-content: space-around;
+}
+
+.splash {
+  background-clip: border-box;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: local;
+  background-origin: border-box;
+  padding: 48px;
+}
+
+.loading-bar {
+  $height: 12px;
+  width: 50%;
+  height: $height;
+  border-radius: $height / 2;
+  overflow: hidden;
+
+  box-shadow: inset -1px -1px 2px 0px #274474, inset 1px 1px 2px 0px #274474;
+
+  transition: all 250ms ease-in-out;
+
+  &.error {
+    .progress {
+      background: #e2461e;
+      box-shadow: inset 2px 2px 4px 0px #eb8d76, inset -2px -2px 4px 0px #5f2618;
+  }
+    box-shadow: inset 2px 2px 4px 0px #f18c72, inset -2px -2px 4px 0px #6b210e;
+  }
+
+  .progress {
+    height: 100%;
+    width: 0%;
+    background: #2659ac;
+    transition: width 250ms ease-in-out;
+    border-radius: $height / 2;
+    box-shadow: inset 2px 2px 4px 0px #3a5f9c, inset -2px -2px 4px 0px #020b18;
+    transition: all 250ms ease-in-out;
+  }
+}
+
+.status {
+  position: relative;
+  span {
+    position: absolute;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    &.error {
+      color: #e2461e;
+    }
+  }
+}

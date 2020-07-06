@@ -19,7 +19,8 @@
       "dom"
     ],
     "paths": {
-      "@providers": ["src/app/providers/index.ts"]
+      "@providers": ["src/app/providers/index.ts"],
+      "@model": ["src/app/model/index.ts"]
     }
   },
   "angularCompilerOptions": {

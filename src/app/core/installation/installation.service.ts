@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  BehaviorSubject,
   combineLatest,
   concat,
   forkJoin,
@@ -9,6 +10,7 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  distinctUntilChanged,
   first,
   map,
   shareReplay,
@@ -27,17 +29,40 @@ export class InstallationService {
   private readonly scriptFilename = this.fileSystem.scriptFilename;
   private readonly styleFilename = this.fileSystem.styleFilename;
 
+  private readonly progress = new BehaviorSubject({
+    currentStep: 0,
+    totalStep: 100,
+    progress: 0,
+  });
+
+  public progress$ = this.progress.asObservable().pipe(
+    map((value) => value.progress),
+    distinctUntilChanged(),
+  );
+
   constructor(
     private fileSystem: FileSystemService,
     private store: InstallationStore,
   ) {}
 
   installAssets() {
+    this.progress.next({
+      currentStep: 0,
+      progress: 0,
+      totalStep: 2,
+    });
+
     this.store.setFileSystemBusiness(true);
     this.store.setAssetsReady(false);
 
-    const manifest = this.fileSystem.getRemoteAssetMap().pipe(shareReplay());
-    const assets = manifest.pipe(map((obj) => getMissingFiles(obj)));
+    const manifest = this.fileSystem.getRemoteAssetMap().pipe(
+      tap(() => this.updateProgress()),
+      shareReplay(),
+    );
+    const assets = manifest.pipe(
+      map((obj) => getMissingFiles(obj)),
+      tap((files) => this.updateProgress(0, files.length)),
+    );
 
     const assetsOperations = assets.pipe(
       switchMap((files) => this.installRemoteFiles(files)),
@@ -45,6 +70,7 @@ export class InstallationService {
 
     const manifestOperation = manifest.pipe(
       switchMap((content) => this.fileSystem.writeAssetMap(content)),
+      tap(() => this.updateProgress()),
     );
 
     return forkJoin([concat(assetsOperations, manifestOperation)]).pipe(
@@ -55,17 +81,29 @@ export class InstallationService {
   }
 
   installBuild() {
+    this.progress.next({
+      currentStep: 0,
+      progress: 0,
+      totalStep: 5,
+    });
+
     this.store.setFileSystemBusiness(true);
     this.store.setBuildReady(false);
-    const manifest = this.fileSystem.getRemoteManifest().pipe(shareReplay());
+    const manifest = this.fileSystem.getRemoteManifest().pipe(
+      tap(() => this.updateProgress()),
+      shareReplay(),
+    );
     const buildFiles = manifest.pipe(map((obj) => getMissingFiles(obj)));
 
     const operations = [
-      manifest.pipe(switchMap((v) => this.fileSystem.writeManifest(v))),
+      manifest.pipe(
+        switchMap((v) => this.fileSystem.writeManifest(v)),
+        tap(() => this.updateProgress()),
+      ),
       buildFiles.pipe(switchMap((files) => this.installRemoteFiles(files))),
-      this.fileSystem.editScript(),
-      this.fileSystem.editStyle(),
-      this.fileSystem.installMocks(),
+      this.fileSystem.editScript().pipe(tap(() => this.updateProgress())),
+      this.fileSystem.editStyle().pipe(tap(() => this.updateProgress())),
+      this.fileSystem.installMocks().pipe(tap(() => this.updateProgress())),
     ];
 
     return forkJoin([concat(...operations)]).pipe(
@@ -76,29 +114,41 @@ export class InstallationService {
   }
 
   updateGame() {
+    this.progress.next({
+      currentStep: 0,
+      totalStep: 9,
+      progress: 0,
+    });
+
     this.store.setFileSystemBusiness(true);
     const UNNEEDED_KEY = '#UNNEEDED';
 
-    const _remoteManifest = this.fileSystem
-      .getRemoteManifest()
-      .pipe(shareReplay());
-    const _remoteAssetMap = this.fileSystem
-      .getRemoteAssetMap()
-      .pipe(shareReplay());
+    const _remoteManifest = this.fileSystem.getRemoteManifest().pipe(
+      tap(() => this.updateProgress()),
+      shareReplay(),
+    );
+    const _remoteAssetMap = this.fileSystem.getRemoteAssetMap().pipe(
+      tap(() => this.updateProgress()),
+      shareReplay(),
+    );
 
-    const _localManifest = this.fileSystem
-      .getLocalManifest()
-      .pipe(shareReplay());
-    const _localAssetMap = this.fileSystem
-      .getLocalAssetMap()
-      .pipe(shareReplay());
+    const _localManifest = this.fileSystem.getLocalManifest().pipe(
+      tap(() => this.updateProgress()),
+      shareReplay(),
+    );
+    const _localAssetMap = this.fileSystem.getLocalAssetMap().pipe(
+      tap(() => this.updateProgress()),
+      shareReplay(),
+    );
 
     const _buildFiles = combineLatest([_remoteManifest, _localManifest]).pipe(
       map(([remote, local]) => getMissingFiles(remote, local)),
+      tap((files) => this.updateProgress(0, files.length)),
       shareReplay(),
     );
     const _assetFiles = combineLatest([_remoteAssetMap, _localAssetMap]).pipe(
       map(([remote, local]) => getMissingFiles(remote, local)),
+      tap((files) => this.updateProgress(0, files.length)),
       shareReplay(),
     );
 
@@ -108,6 +158,7 @@ export class InstallationService {
           ? this.fileSystem.editScript()
           : of(UNNEEDED_KEY),
       ),
+      tap(() => this.updateProgress()),
     );
 
     const _updateStyle = _buildFiles.pipe(
@@ -116,6 +167,7 @@ export class InstallationService {
           ? this.fileSystem.editStyle()
           : of(UNNEEDED_KEY),
       ),
+      tap(() => this.updateProgress()),
     );
 
     const downloadBuild = _buildFiles.pipe(
@@ -133,6 +185,7 @@ export class InstallationService {
           : of(UNNEEDED_KEY),
       ),
       first(),
+      tap(() => this.updateProgress()),
     );
 
     const updateAssetMap = combineLatest([_assetFiles, _remoteAssetMap]).pipe(
@@ -142,6 +195,7 @@ export class InstallationService {
           : of(UNNEEDED_KEY),
       ),
       first(),
+      tap(() => this.updateProgress()),
     );
 
     const installMocks = forkJoin([_updateScript, _updateStyle]).pipe(
@@ -150,6 +204,7 @@ export class InstallationService {
           ? of(UNNEEDED_KEY)
           : this.fileSystem.installMocks(),
       ),
+      tap(() => this.updateProgress()),
     );
 
     return forkJoin([
@@ -168,9 +223,11 @@ export class InstallationService {
   }
 
   private installRemoteFiles(files: FileItem[]) {
-    const fileUpdateOperations = files.map(
-      (file, index) => this.fileSystem.updateGameFile(file.filename)
-      .pipe(tap(() => console.log(`${index} - ${file.filename}`))),
+    const fileUpdateOperations = files.map((file, index) =>
+      this.fileSystem.updateGameFile(file.filename).pipe(
+        // tap(() => console.log(`${index} - ${file.filename}`)),
+        tap(() => this.updateProgress()),
+      ),
     );
 
     return forkJoin([concat(...fileUpdateOperations)]);
@@ -180,6 +237,17 @@ export class InstallationService {
     return catchError<T, Observable<T>>((error) => {
       this.store.setInstallError(error);
       return throwError(error);
+    });
+  }
+
+  private updateProgress(current = 1, total = 0) {
+    const currentStep = this.progress.value.currentStep + current;
+    const totalStep = this.progress.value.totalStep + total;
+
+    this.progress.next({
+      currentStep,
+      totalStep,
+      progress: Math.ceil((currentStep * 100) / (totalStep || 1)),
     });
   }
 }

@@ -4,4 +4,9 @@ $colors: (
   'primary-dark': #BBD564,
   'button-font': #412926,
   'input-background': #1a1a17,
+  'app-background': #2e2d28,
 );
+
+@function dt-color($key) {
+  @return map-get($colors, $key);
+}

@@ -1,0 +1,53 @@
+<dt-container (closed)="UI.toggleSettings(false)">
+  <span dtContainerTitle>Paramètres de Mirage</span>
+
+  <div class="container" fxLayout="column" fxFill fxLayoutGap="24px">
+    <h1>Système</h1>
+
+    <span>Appareil à simuler</span>
+
+    <div fxLayout="column">
+      <dt-select [formControl]="deviceForm">
+        <dt-option
+          *ngFor="let device of devices$ | async"
+          [value]="device.device"
+        >
+          {{ device.device }}
+        </dt-option>
+      </dt-select>
+      <small>
+        <i>
+          (Essaie de choisir ton propre device)
+        </i>
+      </small>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+      <span fxFlex>
+        Si le jeu a des problèmes d'affichage, essaie de réinstaller les assets
+        :
+      </span>
+      <button
+        dt-icon-button
+        (click)="installAssets()"
+        [disabled]="!(fsBusy$ | async)"
+      >
+        image
+      </button>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+      <span fxFlex>
+        Si le jeu plante de manière bizarre, essaie de réinstaller les fichiers
+        de build :
+      </span>
+      <button
+        dt-icon-button
+        (click)="installBuild()"
+        [disabled]="!(fsBusy$ | async)"
+      >
+        build
+      </button>
+    </div>
+  </div>
+</dt-container>
