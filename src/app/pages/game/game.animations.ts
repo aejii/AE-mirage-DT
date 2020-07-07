@@ -1,4 +1,4 @@
-import { group, query, transition, trigger } from '@angular/animations';
+import { group, query, transition, trigger, style } from '@angular/animations';
 import {
   bounceInAnimate,
   bounceOutAnimate,
@@ -8,6 +8,14 @@ import {
 
 export const overlayAnimation = trigger('overlays', [
   transition('* <=> *', [
+    query(
+      '.overlay:not(.create-account):enter',
+      style({ opacity: 0, transform: 'translate(-50%, -50%)' }),
+      {
+        optional: true,
+      },
+    ),
+
     group([
       query(
         '.overlay.create-account:leave',
