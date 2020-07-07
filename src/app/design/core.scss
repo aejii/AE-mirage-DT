@@ -18,8 +18,7 @@
     src: url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.eot');
     src: url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.eot?#iefix')
         format('embedded-opentype'),
-      url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.woff')
-        format('woff'),
+      url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.woff') format('woff'),
       url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.ttf')
         format('truetype'),
       url('./assets/fonts/berlin-sans-fb-demi-bold-webfont.svg#berlin_sans_fb_demibold')
@@ -33,6 +32,7 @@
   * {
     user-select: none;
     outline: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   html,

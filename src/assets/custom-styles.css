@@ -12,3 +12,8 @@ div.quantity.mirage-shortcut-chip {
   background: rgba(0, 0, 0, 0.5);
   padding: 5px;
 }
+
+.mirage-party-infos {
+  padding-bottom: 8px;
+  text-align: left;
+}

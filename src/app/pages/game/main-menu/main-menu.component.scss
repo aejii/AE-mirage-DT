@@ -10,6 +10,8 @@
   bottom: 0;
   height: 100%;
   z-index: 1;
+  right: 0;
+  transition: right 250ms ease-in-out;
 }
 
 .placeholder {

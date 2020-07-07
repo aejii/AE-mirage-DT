@@ -1,26 +1,22 @@
+import { query, style, transition, trigger } from '@angular/animations';
 import {
-  animate,
-  animateChild,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+  bounceInAnimate,
+  bounceOutAnimate,
+} from '@design';
 
-export const installerAnimation = trigger('installer', [
-  state(
-    'void',
-    style({
-      opacity: 0,
-      transform: 'scale(0)',
-    }),
-  ),
-  state(
-    '*',
-    style({
-      opacity: 1,
-      transform: '*',
-    }),
-  ),
-  transition(':enter, :leave', animate('750ms ease-in-out')),
+export const appAnimation = trigger('app', [
+  transition('true => false', [
+    query('mg-game', style({ opacity: 0 })),
+    query('mg-installer', bounceOutAnimate()),
+    query('mg-game', bounceInAnimate()),
+  ]),
+  transition('void => true', [
+    query('mg-installer', style({ opacity: 0 })),
+    query('mg-installer', bounceInAnimate()),
+  ]),
+  transition('false => true', [
+    query('mg-installer', style({ opacity: 0 })),
+    query('mg-game', bounceOutAnimate()),
+    query('mg-installer', bounceInAnimate()),
+  ]),
 ]);

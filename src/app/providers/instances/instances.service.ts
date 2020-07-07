@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { GameInstance } from '@model';
 import { EMPTY, of } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
 import { AccountsQuery } from './accounts.query';
 import { Account, AccountsStore } from './accounts.store';
 import { InstancesQuery } from './instances.query';
 import { InstancesStore } from './instances.store';
-import { GameInstance } from '@model';
 
 @Injectable({
   providedIn: 'root',
@@ -56,9 +56,9 @@ export class InstancesService {
 
     connectionProcess.subscribe(() => {
       followers.forEach((follower, index) => {
-        follower.events.acceptNextPartyInvite();
+        follower.groupManager.acceptNextPartyInvite();
         setTimeout(
-          () => leader.events.sendPartyInviteTo(follower.character.name),
+          () => leader.groupManager.sendPartyInviteTo(follower.character.name),
           500 * index,
         );
       });
@@ -93,7 +93,9 @@ export class InstancesService {
     return this.instancesQuery.getAll().indexOf(instance);
   }
 
-  // TODO Rewrite
+  /**
+   * Uses an HTML dumpster to load a canvas, and converts this canvas to base64 to bind it to an account
+   */
   private _attachPictureToAccount(instance: GameInstance) {
     const accountName = instance.account.username;
     const char = instance.gui.accountListImage;

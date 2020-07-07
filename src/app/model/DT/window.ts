@@ -18,7 +18,7 @@ export interface DTWindow extends Window {
     shortcutBar: {
       _panels: {
         spell: {
-          slotList: (EventReadyObject & DataHoldingObject<{ id: number }>)[];
+          slotList: (EventReadyObject & { data: { id: number } })[];
         };
       };
     };
@@ -29,10 +29,10 @@ export interface DTWindow extends Window {
     loginScreen: {
       showLoginForm: () => void;
       _loginForm: {
-        _inputLogin: { rootElement: HTMLInputElement };
-        _inputPassword: { rootElement: HTMLInputElement };
+        _inputLogin: GameGuiElement<HTMLInputElement>;
+        _inputPassword: GameGuiElement<HTMLInputElement>;
         _rememberName: {
-          rootElement: HTMLElement,
+          rootElement: HTMLElement;
           acitvate: () => void;
           deactivate: () => void;
         };
@@ -64,8 +64,9 @@ export interface DTWindow extends Window {
     party: {
       collapse: () => void;
       currentParty: {
-        _childrenList: { memberData: unknown }[];
+        _childrenList: { memberData: PartyMemberData }[];
       };
+      classicParty: GameGuiElement;
     };
   };
 
@@ -122,14 +123,36 @@ export interface EventReadyObject {
   _events: { [key: string]: any };
 }
 
-export interface DataHoldingObject<T> {
-  data: T;
-}
-
 export interface FightManagerFighter {
   data: {
     disposition: {
       cellId: number;
     };
   };
+}
+
+export interface PartyMemberData {
+  id: number;
+  level: number;
+  name: string;
+  entityLook: unknown;
+  breed: number;
+  sex: boolean;
+  lifePoints: number;
+  maxLifePoints: number;
+  prospecting: number;
+  regenRate: number;
+  initiative: number;
+  alignmentSide: number;
+  worldX: number;
+  worldY: number;
+  mapId: number;
+  subAreaId: number;
+  status: unknown;
+}
+
+export interface GameGuiElement<T = HTMLElement> {
+  rootElement: T;
+  _childrenList: GameGuiElement[];
+  _childrenMap: { [key: string]: GameGuiElement };
 }
