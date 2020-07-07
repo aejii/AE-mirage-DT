@@ -5,6 +5,7 @@ export class MgShortcutsHandler {
 
   constructor(private instance: GameInstance) {}
 
+  // TODO See if it can be ran only once on instance creation
   addSpellsDoubleTapListener() {
     const slots = this.instance.gui.spellsSlots;
     this.spellSlots = slots.map((slot) => {

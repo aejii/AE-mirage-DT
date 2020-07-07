@@ -35,6 +35,22 @@ export class MgGuiHandler {
     this.instance.window.gui?.party?.collapse?.();
   }
 
+  addPartyInfoPlaceHolder() {
+    const placeholderClass = 'mirage-party-infos';
+
+    const partyEl = this.instance.window.gui.party.classicParty;
+    const firstChild = partyEl._childrenList[0].rootElement;
+
+    if (partyEl.rootElement.querySelector(`.${placeholderClass}`))
+      return undefined;
+
+    const placeholder = document.createElement('div');
+    placeholder.classList.add(placeholderClass);
+
+    partyEl.rootElement.insertBefore(placeholder, firstChild);
+    return placeholder;
+  }
+
   get accountButtonImage() {
     try {
       const char = new this.instance.window.CharacterDisplay({

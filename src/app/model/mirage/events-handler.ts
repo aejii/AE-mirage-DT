@@ -1,4 +1,4 @@
-import { interval, Observable, Subject } from 'rxjs';
+import { interval, Observable } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
 
@@ -26,44 +26,10 @@ export class MgEventsHandler {
     'spellSlotSelected',
   ).pipe(filter(() => !!this.instance.character.isFighting));
 
-  constructor(private instance: GameInstance) {
-    this.characterLogin$.subscribe(() => {
-      this.instance.gui.removeShopButton();
-      this.preventInactivity();
-    });
-  }
+  constructor(private instance: GameInstance) {}
 
   preventInactivity() {
-    interval(30000).subscribe(() => {
-      this.instance.window?.mirageInactivity?.recordActivity?.();
-    });
-  }
-
-  sendPartyInviteTo(name: string) {
-    this.instance.window?.dofus?.connectionManager?.sendMessage?.(
-      'PartyInvitationRequestMessage',
-      { name },
-    );
-  }
-
-  acceptNextPartyInvite() {
-    const sub = new Subject<any>();
-
-    sub.pipe(first()).subscribe(({ partyId }) => {
-      this.instance.window?.dofus?.connectionManager?.sendMessage?.(
-        'PartyAcceptInvitationMessage',
-        {
-          partyId,
-        },
-      );
-      this.instance.gui.removeNotification('party' + partyId);
-      this.instance.gui.hidePartyDetails();
-    });
-
-    this.instance.window?.dofus?.connectionManager?.on?.(
-      'PartyInvitationMessage',
-      (response) => sub.next(response),
-    );
+    this.instance.window?.mirageInactivity?.recordActivity?.();
   }
 }
 

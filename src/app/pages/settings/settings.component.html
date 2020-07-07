@@ -4,22 +4,24 @@
   <div class="container" fxLayout="column" fxFill fxLayoutGap="24px">
     <h1>Système</h1>
 
-    <span>Appareil à simuler</span>
+    <div fxLayout="column" *ngIf="!isCordova" fxLayoutGap="24px">
+      <span>Appareil à simuler</span>
 
-    <div fxLayout="column">
-      <dt-select [formControl]="deviceForm">
-        <dt-option
-          *ngFor="let device of devices$ | async"
-          [value]="device.device"
-        >
-          {{ device.device }}
-        </dt-option>
-      </dt-select>
-      <small>
-        <i>
-          (Essaie de choisir ton propre device)
-        </i>
-      </small>
+      <div fxLayout="column" fxLayoutGap="4px">
+        <dt-select [formControl]="deviceForm">
+          <dt-option
+            *ngFor="let device of devices$ | async"
+            [value]="device.device"
+          >
+            {{ device.device }}
+          </dt-option>
+        </dt-select>
+        <small>
+          <i>
+            (Essaie de choisir ton propre device)
+          </i>
+        </small>
+      </div>
     </div>
 
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
