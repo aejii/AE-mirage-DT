@@ -1,9 +1,14 @@
 :host {
   display: block;
   height: 100%;
+  position: relative;
 }
 
 iframe {
   height: 100%;
   width: 100%;
+}
+
+.stash {
+  display: none;
 }

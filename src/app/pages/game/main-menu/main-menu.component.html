@@ -4,11 +4,21 @@
   fxLayoutAlign="start center"
   fxLayoutGap="12px"
   (expand)="isMenuOffset = !isMenuOffset"
-  [@mainMenu]="{ value: isMenuOffset, params: { offset: menuOffset } }"
   class="menu-container"
+  [style.right.px]="-menuOffset"
 >
-  <button dt-icon-button (click)="UI.toggleSettings(true); isMenuOffset = false">settings</button>
-  <button dt-icon-button (click)="UI.toggleAccounts(true); isMenuOffset = false">group</button>
+  <button
+    dt-icon-button
+    (click)="UI.toggleSettings(true); isMenuOffset = false"
+  >
+    settings
+  </button>
+  <button
+    dt-icon-button
+    (click)="UI.toggleAccounts(true); isMenuOffset = false"
+  >
+    group
+  </button>
 </dt-container>
 
 <!-- Single button menu to get the correct sizing for the menu -->

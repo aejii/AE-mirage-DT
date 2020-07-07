@@ -1,26 +1,34 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  HostBinding,
   HostListener,
   OnInit,
 } from '@angular/core';
-import { installerAnimation } from './app.animations';
-import { InstallationService } from './core/installation/installation.service';
 import { UIService } from '@providers';
+import { appAnimation } from './app.animations';
+import { InstallationService } from './core/installation/installation.service';
 
 @Component({
   selector: 'mg-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [installerAnimation],
+  animations: [appAnimation],
 })
 export class AppComponent implements OnInit {
   showInstaller$ = this.UI.showInstaller$;
 
+  @HostBinding('@app') get bounceAnim() {
+    return new AsyncPipe(this.cdRef).transform(this.showInstaller$);
+  }
+
   constructor(
     private installation: InstallationService,
     public UI: UIService,
+    private cdRef: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {

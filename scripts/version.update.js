@@ -67,8 +67,8 @@
     process.exit(1);
   }
 
+  console.log('\x1b[33m%s\x1b[0m', `\nTag v${newVersion} created for LAST COMMIT, and pushed to source control.`);
   console.log('\x1b[33m%s\x1b[0m', `\nBe sure to manually put the binaries in the version control !`);
-
   console.log('\x1b[33m%s\x1b[0m', `Updated version from ${configVersion} to ${newVersion}.`);
 
   process.exit(0);

@@ -1,25 +1,9 @@
 @mixin dtButton {
   .dt-button,
   .dt-icon-button {
-    &:not(:disabled) {
-      cursor: pointer;
-      &:active {
-        filter: brightness(80%);
-        transform: translateY(2px);
-      }
-    }
-    &:disabled {
-      filter: brightness(50%);
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  }
-
-  .dt-button, .dt-icon-button {
     display: flex;
     align-items: center;
     justify-content: center;
-
 
     background: none;
     color: dt-color('button-font');
@@ -35,6 +19,19 @@
     box-sizing: border-box;
     cursor: pointer;
     margin-bottom: -4px;
+
+    &:not(:disabled) {
+      cursor: pointer;
+      &:active {
+        filter: brightness(80%);
+        transform: translateY(2px);
+      }
+    }
+    &:disabled {
+      filter: brightness(50%);
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
 
   .dt-icon-button {

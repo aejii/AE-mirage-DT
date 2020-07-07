@@ -4,6 +4,7 @@ import { MgEventsHandler } from '../mirage/events-handler';
 import { MgFightHandler } from '../mirage/fights-handler';
 import { MgGuiHandler } from '../mirage/gui-handler';
 import { MgShortcutsHandler } from '../mirage/shortcuts-handler';
+import { MgGroupHandler } from '../mirage/group-handler';
 
 export class GameInstance {
   public readonly ID = Math.random().toString(36).slice(2);
@@ -15,6 +16,7 @@ export class GameInstance {
   public gui = new MgGuiHandler(this);
   public shortcuts = new MgShortcutsHandler(this);
   public fightManager = new MgFightHandler(this);
+  public groupManager = new MgGroupHandler(this);
 
   constructor(
     public account?: {

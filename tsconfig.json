@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@providers": ["src/app/providers/index.ts"],
-      "@model": ["src/app/model/index.ts"]
+      "@model": ["src/app/model/index.ts"],
+      "@design": ["src/app/design/index.ts"]
     }
   },
   "angularCompilerOptions": {

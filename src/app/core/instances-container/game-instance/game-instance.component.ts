@@ -1,12 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Input,
+  NgZone,
+  OnDestroy,
   OnInit,
+  Renderer2,
+  ViewChild,
 } from '@angular/core';
 import { GameInstance } from '@model';
 import { InstancesService } from '@providers';
-import { concat, forkJoin, of } from 'rxjs';
+import { concat, forkJoin, of, Subscription, timer } from 'rxjs';
 import { delay, switchMap, tap } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
 
@@ -17,53 +22,93 @@ import { InstallationService } from 'src/app/core/installation/installation.serv
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [],
 })
-export class GameInstanceComponent implements OnInit {
+export class GameInstanceComponent implements OnInit, OnDestroy {
   @Input() instance: GameInstance;
 
   src$ = this.installation.gamePath$;
 
+  private susbscriptions = new Subscription();
+
+  @ViewChild('partyInfoRef', { static: true }) partyInfoRef: ElementRef<
+    HTMLElement
+  >;
+
   constructor(
     private installation: InstallationService,
     private instancesService: InstancesService,
+    private renderer: Renderer2,
+    private zone: NgZone,
   ) {}
 
+  ngOnDestroy() {
+    this.susbscriptions.unsubscribe();
+  }
+
   ngOnInit(): void {
-    this._connectAccount();
-    this._setActiveOnTurnStart();
-    this.instance.events.characterLogin$.subscribe(() => {
-      this.instance.events.preventInactivity();
-      this.instance.gui.removeShopButton();
-      this.instance.shortcuts.addSpellsDoubleTapListener();
+    this.zone.run(() => {
+      this._connectAccount();
+      this._setActiveOnTurnStart();
+      this.susbscriptions.add(
+        this.instance.events.characterLogin$.subscribe(() => {
+          this.instance.events.preventInactivity();
+          this.instance.gui.removeShopButton();
+          this.instance.shortcuts.addSpellsDoubleTapListener();
+        }),
+      );
+
+      this.susbscriptions.add(
+        this.instance.events.characterLogin$
+          .pipe(switchMap(() => timer(60000, 60000)))
+          .subscribe(() => this.instance.events.preventInactivity()),
+      );
+
+      this.susbscriptions.add(
+        this.instance.events.characterLogin$
+          .pipe(switchMap(() => this.instance.groupManager.partyInfo$))
+          .subscribe(() => {
+            const host = this.instance.gui.addPartyInfoPlaceHolder();
+            // Either nowhere to put it, or already put
+            if (!host) return;
+            this.renderer.appendChild(host, this.partyInfoRef.nativeElement);
+          }),
+      );
     });
+
     // TODO (but not here) : create the finder in angular and let it act on the current instance
   }
 
   private _connectAccount(instance = this.instance) {
     if (!instance.account) return;
 
-    instance.events.gameInit$.pipe(delay(500)).subscribe(() => {
-      instance.window.gui.loginScreen.showLoginForm();
-
-      const setUsername = emulateUserTyping$(
-        this.instance.gui.loginForm.username,
-        instance.account.username,
-      );
-      const setPassword = emulateUserTyping$(
-        this.instance.gui.loginForm.password,
-        instance.account.password,
-      );
-
-      setUsername.pipe(switchMap(() => setPassword)).subscribe(() => {
-        this.instance.gui.loginForm.rememberName.deactivate();
-        this.instance.gui.loginForm.play();
+    instance.events.gameInit$
+      .pipe(
+        delay(500),
+        tap(() => instance.window.gui.loginScreen.showLoginForm()),
+        switchMap(() =>
+          emulateUserTyping$(
+            instance.gui.loginForm.username,
+            instance.account.username,
+          ),
+        ),
+        switchMap(() =>
+          emulateUserTyping$(
+            instance.gui.loginForm.password,
+            instance.account.password,
+          ),
+        ),
+      )
+      .subscribe(() => {
+        instance.gui.loginForm.rememberName.deactivate();
+        instance.gui.loginForm.play();
       });
-    });
   }
 
   private _setActiveOnTurnStart() {
-    this.instance.events.characterFightTurnStart$.subscribe(() => {
-      this.instancesService.setActiveInstance(this.instance);
-    });
+    this.susbscriptions.add(
+      this.instance.events.characterFightTurnStart$.subscribe(() => {
+        this.instancesService.setActiveInstance(this.instance);
+      }),
+    );
   }
 }
 

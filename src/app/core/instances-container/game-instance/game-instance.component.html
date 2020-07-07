@@ -5,3 +5,12 @@
   [src]="src$ | async | safe"
   (load)="instance.frameLoaded(frame)"
 ></iframe>
+
+<div class="stash">
+  <div #partyInfoRef fxLayout="row" fxLayoutAlign="center center">
+    <span *ngIf="instance?.groupManager.partyInfo$ | async as partyInfo">
+      🌟 {{ partyInfo.level }} <br />
+      🔎 {{ partyInfo.dropChance }}
+    </span>
+  </div>
+</div>
