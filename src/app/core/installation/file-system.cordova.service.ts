@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { concat, forkJoin, Observable, of, throwError } from 'rxjs';
-import { catchError, first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { commonEnvironment } from 'src/environments/environment.common';
 import { MirageFileSystemImplementation } from './file-system.implementation';
+import { InstallationQuery } from './installation.query';
 
 @Injectable({
   providedIn: 'root',
@@ -12,46 +13,55 @@ export class FileSystemService implements MirageFileSystemImplementation {
   public readonly scriptFilename = commonEnvironment.scriptFilename;
   public readonly styleFilename = commonEnvironment.styleFilename;
 
+  private get remoteProxy() {
+    return this.installationQuery.getValue().isElk
+      ? commonEnvironment.elkProxy
+      : commonEnvironment.dofusTouchProxy;
+  }
+
   // Local file system, the one used by the game itself
   private readonly fileSystem$: Observable<FileSystem> = new Observable<
     FileSystem
-  >(handler =>
+  >((handler) =>
     window.requestFileSystem(
       LocalFileSystem.PERSISTENT,
       0,
-      fs => handler.next(fs),
-      error => handler.error(error),
+      (fs) => handler.next(fs),
+      (error) => handler.error(error),
     ),
   ).pipe(shareReplay());
 
   // Directory where the game is going to be stored, along with the manifests
   private readonly dataDir$: Observable<DirectoryEntry> = this.fileSystem$.pipe(
-    switchMap(fs => this.openFolder(fs.root, 'data')),
+    switchMap((fs) => this.openFolder(fs.root, 'data')),
     shareReplay(),
   );
 
   // Directory of the game mocking files
-  private readonly assetsDir$ = new Observable<DirectoryEntry>(handler => {
+  private readonly assetsDir$ = new Observable<DirectoryEntry>((handler) => {
     window.resolveLocalFileSystemURL(
       cordova.file.applicationDirectory + 'www/assets',
       (fs: DirectoryEntry) => handler.next(fs),
-      error => handler.error(error),
+      (error) => handler.error(error),
     );
   }).pipe(shareReplay());
 
   // path of the index.html file to run a game instance
   public gamePath$ = this.dataDir$.pipe(
-    map(dir => dir.toURL() + 'index.html'),
+    map((dir) => dir.toURL() + 'index.html'),
   );
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private installationQuery: InstallationQuery,
+  ) {}
 
   getLocalManifest(): Observable<Manifest> {
     return this.dataDir$.pipe(
-      switchMap(dir => this.getFile(dir, commonEnvironment.manifestFilename)),
-      switchMap(file => this.readFileContent(file)),
-      map(fileContent => JSON.parse(fileContent)),
-      catchError(error =>
+      switchMap((dir) => this.getFile(dir, commonEnvironment.manifestFilename)),
+      switchMap((file) => this.readFileContent(file)),
+      map((fileContent) => JSON.parse(fileContent)),
+      catchError((error) =>
         error.code === commonEnvironment.cordovaErrors.files.notFound
           ? of<Manifest>({ files: {} })
           : throwError(error),
@@ -62,10 +72,10 @@ export class FileSystemService implements MirageFileSystemImplementation {
 
   getLocalAssetMap(): Observable<Manifest> {
     return this.dataDir$.pipe(
-      switchMap(dir => this.getFile(dir, commonEnvironment.assetMapFilename)),
-      switchMap(file => this.readFileContent(file)),
-      map(fileContent => JSON.parse(fileContent)),
-      catchError(error =>
+      switchMap((dir) => this.getFile(dir, commonEnvironment.assetMapFilename)),
+      switchMap((file) => this.readFileContent(file)),
+      map((fileContent) => JSON.parse(fileContent)),
+      catchError((error) =>
         error.code === commonEnvironment.cordovaErrors.files.notFound
           ? of<Manifest>({ files: {} })
           : throwError(error),
@@ -76,31 +86,31 @@ export class FileSystemService implements MirageFileSystemImplementation {
 
   getRemoteManifest() {
     return this.http.get<Manifest>(
-      commonEnvironment.dofusTouchProxy + commonEnvironment.manifestFilename,
+      this.remoteProxy + commonEnvironment.manifestFilename,
     );
   }
 
   getRemoteAssetMap() {
     return this.http.get<Manifest>(
-      commonEnvironment.dofusTouchProxy + commonEnvironment.assetMapFilename,
+      this.remoteProxy + commonEnvironment.assetMapFilename,
     );
   }
 
   updateGameFile(filename: string) {
     return this.getRemoteFileBlob(filename).pipe(
-      switchMap(blob => this.writeAssetFile(filename, blob)),
+      switchMap((blob) => this.writeAssetFile(filename, blob)),
     );
   }
 
   writeManifest(fileContent: Manifest): Observable<void> {
     return this.dataDir$.pipe(
-      switchMap(dir =>
+      switchMap((dir) =>
         this.getFile(dir, commonEnvironment.manifestFilename, {
           create: true,
           exclusive: false,
         }),
       ),
-      switchMap(file =>
+      switchMap((file) =>
         this.writeFile(file, JSON.stringify(fileContent, null, 4)),
       ),
       first(),
@@ -109,13 +119,13 @@ export class FileSystemService implements MirageFileSystemImplementation {
 
   writeAssetMap(fileContent: Manifest): Observable<void> {
     return this.dataDir$.pipe(
-      switchMap(dir =>
+      switchMap((dir) =>
         this.getFile(dir, commonEnvironment.assetMapFilename, {
           create: true,
           exclusive: false,
         }),
       ),
-      switchMap(file =>
+      switchMap((file) =>
         this.writeFile(file, JSON.stringify(fileContent, null, 4)),
       ),
       first(),
@@ -132,18 +142,20 @@ export class FileSystemService implements MirageFileSystemImplementation {
 
   installMocks() {
     const scriptContent$ = this.assetsDir$.pipe(
-      switchMap(entry => this.getFile(entry, commonEnvironment.scriptMockFile)),
-      switchMap(file => this.readFileContent(file)),
-      switchMap(content =>
+      switchMap((entry) =>
+        this.getFile(entry, commonEnvironment.scriptMockFile),
+      ),
+      switchMap((file) => this.readFileContent(file)),
+      switchMap((content) =>
         this.getAppVersion().pipe(
-          map(version =>
+          map((version) =>
             content.replace(commonEnvironment.appVersionPlaceholder, version),
           ),
         ),
       ),
-      switchMap(content =>
+      switchMap((content) =>
         this.getBuildVersion().pipe(
-          map(version =>
+          map((version) =>
             content.replace(commonEnvironment.buildVersionPlaceholder, version),
           ),
         ),
@@ -152,14 +164,18 @@ export class FileSystemService implements MirageFileSystemImplementation {
     );
 
     const indexContent$ = this.assetsDir$.pipe(
-      switchMap(entry => this.getFile(entry, commonEnvironment.indexMockFile)),
-      switchMap(file => this.readFileContent(file)),
+      switchMap((entry) =>
+        this.getFile(entry, commonEnvironment.indexMockFile),
+      ),
+      switchMap((file) => this.readFileContent(file)),
       first(),
     );
 
     const styleContent$ = this.assetsDir$.pipe(
-      switchMap(entry => this.getFile(entry, commonEnvironment.styleMockFile)),
-      switchMap(file => this.readFileContent(file)),
+      switchMap((entry) =>
+        this.getFile(entry, commonEnvironment.styleMockFile),
+      ),
+      switchMap((file) => this.readFileContent(file)),
       first(),
     );
 
@@ -167,9 +183,9 @@ export class FileSystemService implements MirageFileSystemImplementation {
       { filename: commonEnvironment.scriptMockFile, content$: scriptContent$ },
       { filename: commonEnvironment.indexMockFile, content$: indexContent$ },
       { filename: commonEnvironment.styleMockFile, content$: styleContent$ },
-    ].map(item =>
+    ].map((item) =>
       this.dataDir$.pipe(
-        switchMap(entry =>
+        switchMap((entry) =>
           forkJoin([
             this.getFile(entry, item.filename, {
               create: true,
@@ -189,17 +205,17 @@ export class FileSystemService implements MirageFileSystemImplementation {
   private getAppVersion() {
     return this.http
       .get<any>(commonEnvironment.iTunesManifestUrl)
-      .pipe(map(iTunesManifest => iTunesManifest.results[0].version));
+      .pipe(map((iTunesManifest) => iTunesManifest.results[0].version));
   }
 
   private getBuildVersion() {
     const [dir, file] = commonEnvironment.scriptFilename.split('/');
     return this.dataDir$.pipe(
-      switchMap(entry => this.openFolder(entry, dir)),
-      switchMap(entry => this.getFile(entry, file)),
-      switchMap(entry => this.readFileContent(entry)),
+      switchMap((entry) => this.openFolder(entry, dir)),
+      switchMap((entry) => this.getFile(entry, file)),
+      switchMap((entry) => this.readFileContent(entry)),
       map(
-        scriptContent =>
+        (scriptContent) =>
           commonEnvironment.scriptBuildRegex.exec(scriptContent)[1],
       ),
       first(),
@@ -207,7 +223,7 @@ export class FileSystemService implements MirageFileSystemImplementation {
   }
 
   private getRemoteFileBlob(filename: string): Observable<Blob> {
-    return this.http.get(commonEnvironment.dofusTouchProxy + filename, {
+    return this.http.get(this.remoteProxy + filename, {
       responseType: 'blob',
     });
   }
@@ -223,16 +239,16 @@ export class FileSystemService implements MirageFileSystemImplementation {
     // Go through all directories, and return the last entry
     const lastDirEntry$ = dirsToCreate.reduce(
       (acc, curr) =>
-        acc.pipe(switchMap(dirEntry => this.openFolder(dirEntry, curr))),
+        acc.pipe(switchMap((dirEntry) => this.openFolder(dirEntry, curr))),
       this.dataDir$,
     );
 
     // From the last directory, create the file
     const result$ = lastDirEntry$.pipe(
-      switchMap(entry =>
+      switchMap((entry) =>
         this.getFile(entry, filename, { create: true, exclusive: false }),
       ),
-      switchMap(file => this.writeFile(file, fileContent)),
+      switchMap((file) => this.writeFile(file, fileContent)),
       first(),
     );
 
@@ -244,17 +260,17 @@ export class FileSystemService implements MirageFileSystemImplementation {
     const [dirname, filename] = filePath.split('/');
 
     return this.dataDir$.pipe(
-      switchMap(entry => this.openFolder(entry, dirname)),
-      switchMap(entry => this.getFile(entry, filename)),
-      switchMap(entry => this.readFileContent(entry)),
-      map(content =>
+      switchMap((entry) => this.openFolder(entry, dirname)),
+      switchMap((entry) => this.getFile(entry, filename)),
+      switchMap((entry) => this.readFileContent(entry)),
+      map((content) =>
         regexes.reduce(
           (newContent, regex) =>
             newContent.replace(new RegExp(regex[0], 'g'), regex[1]),
           content,
         ),
       ),
-      switchMap(content =>
+      switchMap((content) =>
         this.writeAssetFile(
           filePath,
           new Blob([content], {
@@ -275,16 +291,16 @@ export class FileSystemService implements MirageFileSystemImplementation {
     currentFoler: DirectoryEntry,
     folderName: string,
   ): Observable<DirectoryEntry> {
-    return new Observable<DirectoryEntry>(handler => {
+    return new Observable<DirectoryEntry>((handler) => {
       const getDir = (create = false) =>
         currentFoler.getDirectory(
           folderName,
           { create, exclusive: false },
-          dir => {
+          (dir) => {
             handler.next(dir);
             handler.complete();
           },
-          error =>
+          (error) =>
             !create &&
             error.code === commonEnvironment.cordovaErrors.files.notFound
               ? getDir(true)
@@ -306,15 +322,15 @@ export class FileSystemService implements MirageFileSystemImplementation {
     filename: string,
     options: Flags = { create: false },
   ): Observable<FileEntry> {
-    return new Observable<FileEntry>(handler =>
+    return new Observable<FileEntry>((handler) =>
       currentFolder.getFile(
         filename,
         options,
-        file => {
+        (file) => {
           handler.next(file);
           handler.complete();
         },
-        error => handler.error(error),
+        (error) => handler.error(error),
       ),
     );
   }
@@ -324,18 +340,18 @@ export class FileSystemService implements MirageFileSystemImplementation {
    * @param fileEntry File entry of the wanted file to read
    */
   private readFileContent(fileEntry: FileEntry): Observable<string> {
-    return new Observable<string>(handler => {
+    return new Observable<string>((handler) => {
       fileEntry.file(
-        file => {
+        (file) => {
           const reader = new FileReader();
           reader.onloadend = () => {
             handler.next(reader.result as string);
             handler.complete();
           };
-          reader.onerror = error => handler.error(error);
+          reader.onerror = (error) => handler.error(error);
           reader.readAsText(file);
         },
-        error => handler.error(error),
+        (error) => handler.error(error),
       );
     });
   }
@@ -349,18 +365,18 @@ export class FileSystemService implements MirageFileSystemImplementation {
     fileEntry: FileEntry,
     fileContent: string | Blob,
   ): Observable<void> {
-    return new Observable<void>(handler =>
+    return new Observable<void>((handler) =>
       fileEntry.createWriter(
-        fileWriter => {
+        (fileWriter) => {
           fileWriter.onwriteend = () => {
             handler.next();
             handler.complete();
           };
-          fileWriter.onerror = error => handler.error(error);
+          fileWriter.onerror = (error) => handler.error(error);
 
           fileWriter.write(fileContent);
         },
-        error => handler.error(error),
+        (error) => handler.error(error),
       ),
     );
   }
@@ -373,7 +389,10 @@ const styleRegexes = [
 
 const scriptRegexes = [
   // Attaches the singletons manager to the window
-  ['(function (\\D)\\(n\\)\\{)(if\\(i\\[n\\]\\)return i\\[n\\]\\.exports;)', '$1window.singletons = $2;$3'],
+  [
+    '(function (\\D)\\(n\\)\\{)(if\\(i\\[n\\]\\)return i\\[n\\]\\.exports;)',
+    '$1window.singletons = $2;$3',
+  ],
   // Removes cordova filesystem
   // ['cdvfile://localhost/persistent/data/assets', '../assets'],
   // Remove analytics

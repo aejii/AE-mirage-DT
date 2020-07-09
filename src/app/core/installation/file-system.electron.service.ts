@@ -5,6 +5,7 @@ import { concat, forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { commonEnvironment } from '../../../environments/environment.common';
 import { MirageFileSystemImplementation } from './file-system.implementation';
+import { InstallationQuery } from './installation.query';
 
 // Workarounds the NG limitation of not using Node modules
 const nodePath: PlatformPath = window.require('path');
@@ -24,13 +25,22 @@ export class FileSystemService implements MirageFileSystemImplementation {
   private gamePath = nodePath.join(appDataPath, this.appDataFolderName);
   private assetsDir = nodePath.join(__dirname, 'assets');
 
+  private get remoteProxy() {
+    return this.installationQuery.getValue().isElk
+      ? commonEnvironment.elkProxy
+      : commonEnvironment.dofusTouchProxy;
+  }
+
   gamePath$ = of(nodePath.join(this.gamePath, 'index.html'));
   scriptFilename = commonEnvironment.scriptFilename;
   styleFilename = commonEnvironment.styleFilename;
 
-  constructor(private http: HttpClient) {
-    nodeFs.exists(this.gamePath, (exists) => {
-      if (!exists)
+  constructor(
+    private http: HttpClient,
+    private installationQuery: InstallationQuery,
+  ) {
+    nodeFs.stat(this.gamePath, (err, stats) => {
+      if (!stats?.isDirectory())
         nodeFs.mkdir(this.appDataFolderName, (error) => {
           if (error) throw error;
           console.log('Root directory created in user AppData folder');
@@ -61,13 +71,13 @@ export class FileSystemService implements MirageFileSystemImplementation {
   }
   getRemoteManifest() {
     return this.http.get<Manifest>(
-      commonEnvironment.dofusTouchProxy + commonEnvironment.manifestFilename,
+      this.remoteProxy + commonEnvironment.manifestFilename,
     );
   }
 
   getRemoteAssetMap() {
     return this.http.get<Manifest>(
-      commonEnvironment.dofusTouchProxy + commonEnvironment.assetMapFilename,
+      this.remoteProxy + commonEnvironment.assetMapFilename,
     );
   }
   writeManifest(fileContent: Manifest): Observable<void> {
@@ -159,12 +169,12 @@ export class FileSystemService implements MirageFileSystemImplementation {
   private _createDir(path: string, root = this.gamePath): Observable<void> {
     const fullPath = nodePath.join(root, path);
     return new Observable<void>((handler) => {
-      nodeFs.exists(fullPath, (exists) => {
-        if (exists) {
+      nodeFs.stat(fullPath, (error, stats) => {
+        if (stats?.isDirectory()) {
           handler.next();
           handler.complete();
         } else
-          nodeFs.mkdir(fullPath, { recursive: true }, (err, path) => {
+          nodeFs.mkdir(fullPath, { recursive: true }, (err) => {
             if (err) return handler.error(err);
             handler.next();
             handler.complete();
@@ -208,7 +218,7 @@ export class FileSystemService implements MirageFileSystemImplementation {
     return new Observable<void>((handler) => {
       const reader = new FileReader();
       reader.onload = () => {
-        const buffer = new Buffer(reader.result as string);
+        const buffer = Buffer.from(reader.result);
         nodeFs.writeFile(fullPath, buffer, (error) => {
           if (error) return handler.error(error);
           handler.next();
@@ -220,7 +230,7 @@ export class FileSystemService implements MirageFileSystemImplementation {
   }
 
   private _getRemoteFileBlob(filename: string): Observable<Blob> {
-    return this.http.get(commonEnvironment.dofusTouchProxy + filename, {
+    return this.http.get(this.remoteProxy + filename, {
       responseType: 'blob',
     });
   }

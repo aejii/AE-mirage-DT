@@ -51,5 +51,21 @@
         build
       </button>
     </div>
+
+    <h1>Serveur de jeu</h1>
+
+    <div fxLayout="row" fxLayoutAlign="space-around center">
+      <ng-container
+        *ngTemplateOutlet="gameChoice; context: { $implicit: isElk$ | async }"
+      ></ng-container>
+      <ng-template #gameChoice let-isElk>
+        <button dt-button (click)="setElkMode(false)" [disabled]="!isElk" class="server-button">
+          <img src="assets/pictures/dt-logo.png">
+        </button>
+        <button dt-button (click)="setElkMode(true)" [disabled]="isElk" class="server-button">
+          <img src="assets/pictures/elk-logo.png">
+        </button>
+      </ng-template>
+    </div>
   </div>
 </dt-container>

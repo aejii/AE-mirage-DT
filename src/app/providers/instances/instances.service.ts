@@ -11,7 +11,7 @@ import { InstancesStore } from './instances.store';
   providedIn: 'root',
 })
 export class InstancesService {
-  accounts$ = this.accountsQuery.selectAll();
+  accounts$ = this.accountsQuery.accounts$;
 
   instances$ = this.instancesQuery.selectAll();
   activeInstance$ = this.instancesQuery.selectActive();
@@ -24,7 +24,7 @@ export class InstancesService {
   ) {}
 
   addAccount(account: Account) {
-    this.accountsStore.add(account);
+    this.accountsStore.addAccount(account.username, account.password);
   }
 
   removeAccount(account: Account) {
@@ -38,10 +38,9 @@ export class InstancesService {
   }
 
   connectAccounts() {
-    const instances = this.accountsQuery
-      .getAll()
-      .filter((account) => account.connects)
-      .map((account) => new GameInstance(account));
+    const instances = this.accountsQuery.accountsToConnect.map(
+      (account) => new GameInstance(account),
+    );
 
     const [leader, ...followers] = instances;
 

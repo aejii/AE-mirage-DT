@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { SystemService, UIService } from '@providers';
 import { filter, first } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
+import { InstallationStore } from 'src/app/core/installation/installation.store';
 import { InstallationQuery } from '../../core/installation/installation.query';
 
 @Component({
@@ -27,10 +28,13 @@ export class SettingsComponent {
     return this.system.isCordova;
   }
 
+  isElk$ = this.installationQuery.select('isElk');
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private installationService: InstallationService,
     private installationQuery: InstallationQuery,
+    private installationStore: InstallationStore,
     private system: SystemService,
     public UI: UIService,
   ) {
@@ -41,6 +45,12 @@ export class SettingsComponent {
     this.deviceForm.valueChanges
       .pipe(filter(() => !this.isCordova))
       .subscribe((value: string) => this.system.setCurrentDevice(value));
+  }
+
+  setElkMode(value: boolean) {
+    this.installationStore.update({ isElk: value });
+    this.installBuild();
+    this.UI.toggleSettings(false);
   }
 
   updateGame() {
