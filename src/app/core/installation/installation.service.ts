@@ -176,6 +176,7 @@ export class InstallationService {
 
     const downloadAssets = _assetFiles.pipe(
       switchMap((files) => this.installRemoteFiles(files)),
+      this.manageError(true),
     );
 
     const updateManifest = combineLatest([_buildFiles, _remoteManifest]).pipe(
@@ -227,16 +228,20 @@ export class InstallationService {
       this.fileSystem.updateGameFile(file.filename).pipe(
         // tap(() => console.log(`${index} - ${file.filename}`)),
         tap(() => this.updateProgress()),
+        this.manageError(),
       ),
     );
 
     return forkJoin([concat(...fileUpdateOperations)]);
   }
 
-  private manageError<T>() {
+  private manageError<T>(ignore404s = false) {
     return catchError<T, Observable<T>>((error) => {
-      this.store.setInstallError(error);
-      return throwError(error);
+      if (ignore404s && error?.status !== 404)
+        this.store.setInstallError(JSON.stringify(error, null, 4));
+      return ignore404s && error?.status === 404
+        ? of<T>(false as any)
+        : throwError(error);
     });
   }
 

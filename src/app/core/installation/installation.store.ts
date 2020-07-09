@@ -7,6 +7,8 @@ export interface InstallationState {
   assetsReady: boolean;
   buildReady: boolean;
   installError: string;
+
+  isElk: boolean;
 }
 
 export function createInitialState(): InstallationState {
@@ -16,6 +18,8 @@ export function createInitialState(): InstallationState {
     installError: undefined,
     assetsReady: false,
     buildReady: false,
+
+    isElk: false,
   };
 }
 

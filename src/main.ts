@@ -12,7 +12,7 @@ else
 function bootstrapApp() {
   enableProdMode();
   persistState({
-    include: ['accounts', 'user-agent'],
+    include: ['accounts', 'user-agent', 'installation'],
     preStorageUpdate,
   });
   platformBrowserDynamic()
@@ -25,6 +25,9 @@ function preStorageUpdate(name, state) {
     case 'user-agent':
       const { active } = state;
       return { active };
+    case 'installation':
+      const { isElk } = state;
+      return { isElk };
     default:
       return state;
   }

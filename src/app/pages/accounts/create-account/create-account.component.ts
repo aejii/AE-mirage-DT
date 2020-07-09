@@ -38,7 +38,6 @@ export class CreateAccountComponent implements AfterViewInit {
     if (!this.accountForm.valid) return;
     this.service.addAccount({
       ...this.accountForm.value,
-      connects: true,
     });
     this.accountForm.reset();
     this.UI.toggleCreateAccount(false);
