@@ -1,0 +1,53 @@
+@import 'theming';
+
+:host {
+  display: block;
+}
+
+.shortcuts {
+  width: 100%;
+  border-collapse: collapse;
+  thead tr {
+    border-bottom: 1px solid #aaa;
+    th {
+      padding: 10px;
+      text-align: left;
+      text-transform: uppercase;
+      color: #aaa;
+      font-size: smaller;
+    }
+  }
+  tbody tr {
+    cursor: pointer;
+    transition: color 250ms ease-in-out;
+    &:hover {
+      color: dt-color('primary');
+      td:last-of-type span {
+        opacity: 1;
+      }
+    }
+    &:nth-of-type(odd) {
+      background: #2b2c27;
+    }
+    &:nth-of-type(even) {
+      background: #393a34;
+    }
+
+    td {
+      padding: 12px;
+      &:not(:nth-of-type(1)) {
+        width: 25%;
+      }
+      &:last-of-type {
+        width: 1%;
+        white-space: nowrap;
+        span {
+          font-family: 'Material Icons';
+          cursor: pointer;
+          opacity: 0;
+          transition: opacity 250ms ease-in-out;
+        }
+      }
+    }
+  }
+}

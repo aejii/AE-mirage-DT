@@ -31,7 +31,6 @@ export class SettingsComponent {
   isElk$ = this.installationQuery.select('isElk');
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private installationService: InstallationService,
     private installationQuery: InstallationQuery,
     private installationStore: InstallationStore,
@@ -54,23 +53,20 @@ export class SettingsComponent {
   }
 
   updateGame() {
-    this.installationService.updateGame().subscribe(() => {
-      console.log('GAME UPDATED');
-      this.cdRef.detectChanges();
-    });
+    this.installationService
+      .updateGame()
+      .subscribe(() => console.log('GAME UPDATED'));
   }
 
   installAssets() {
-    this.installationService.installAssets().subscribe(() => {
-      console.log('ASSETS INSTALLED');
-      this.cdRef.detectChanges();
-    });
+    this.installationService
+      .installAssets()
+      .subscribe(() => console.log('ASSETS INSTALLED'));
   }
 
   installBuild() {
-    this.installationService.installBuild().subscribe(() => {
-      console.log('BUILD INSTALLED');
-      this.cdRef.detectChanges();
-    });
+    this.installationService
+      .installBuild()
+      .subscribe(() => console.log('BUILD INSTALLED'));
   }
 }

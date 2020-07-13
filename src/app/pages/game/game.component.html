@@ -3,7 +3,12 @@
   <mg-accounts-menu fxFlex></mg-accounts-menu>
 </div>
 
-<div class="content" fxFlex [@overlays]="animationTrigger$ | async">
+<div
+  class="content"
+  fxFlex
+  [@overlays]="animationTrigger$ | async"
+  fxLayoutAlign="center center"
+>
   <mg-instances-container class="instances" fxFill></mg-instances-container>
   <mg-accounts class="overlay" *ngIf="UI.showAccounts$ | async"></mg-accounts>
   <mg-settings class="overlay" *ngIf="UI.showSettings$ | async"> </mg-settings>

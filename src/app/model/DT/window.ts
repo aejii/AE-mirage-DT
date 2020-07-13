@@ -10,15 +10,31 @@ export interface DTWindow extends Window {
     };
   };
   gui: {
+    timeline: {
+      fightControlButtons: {
+        _turnReadyBtn: GameGuiElement;
+        _fightReadyBtn: GameGuiElement;
+      }
+    };
+    menuBar: {
+      _icons: GameGuiElement & {
+        _childrenMap: {
+          [key in GameMenuBarIconsNames]: GameGuiElement;
+        };
+      };
+    };
     _resizeUi: () => void;
     notificationBar: { removeNotification: (id: string) => void };
     fightManager: {
+      fightState: -1 | 0 | 1; // Unknown | In preparation | Fighting
       _fighters: { [key: number]: FightManagerFighter };
     };
     shortcutBar: {
+      _currentPanelType: 'spell' | 'item';
       _panels: {
-        spell: {
-          slotList: (EventReadyObject & { data: { id: number } })[];
+        [key in 'spell' | 'item']: {
+          slotList: (EventReadyObject &
+            GameGuiElement & { data: { id: number } })[];
         };
       };
     };
@@ -118,9 +134,10 @@ export interface CharacterDisplayEntityLookConfiguration {
 }
 
 export interface EventReadyObject {
+  _events: { [key: string]: any };
   addListener: (verb: string, callback: (...args) => any) => any;
   removeListener: (verb: string, event: any) => void;
-  _events: { [key: string]: any };
+  emit: (verb: string) => any;
 }
 
 export interface FightManagerFighter {
@@ -130,6 +147,31 @@ export interface FightManagerFighter {
     };
   };
 }
+
+export type GameMenuBarIconsNames =
+  | 'Carac'
+  | 'Spell'
+  | 'Bag'
+  | 'BidHouse'
+  | 'Map'
+  | 'Friend'
+  | 'Book'
+  | 'Guild'
+  | 'Conquest'
+  | 'Goultine'
+  | 'Job'
+  | 'Alliance'
+  | 'Mount'
+  | 'Directory'
+  | 'Alignment'
+  | 'Bestiary'
+  | 'Title'
+  | 'Achievement'
+  | 'Almanax'
+  | 'Spouse'
+  | 'Shop'
+  | 'TOA'
+  | 'Help';
 
 export interface PartyMemberData {
   id: number;
@@ -155,4 +197,5 @@ export interface GameGuiElement<T = HTMLElement> {
   rootElement: T;
   _childrenList: GameGuiElement[];
   _childrenMap: { [key: string]: GameGuiElement };
+  tap?: () => void;
 }

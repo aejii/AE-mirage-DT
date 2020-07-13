@@ -1,9 +1,11 @@
 @mixin dtContainer {
   .dt-container {
-    display: block;
+    display: flex;
     overflow: hidden;
     position: relative;
-    padding: 12px;
+    padding: 3px;
+    flex-flow: column;
+    box-sizing: border-box;
 
     &::after {
       content: '';
@@ -20,15 +22,19 @@
       z-index: -1;
     }
 
+    .content-container {
+      padding: 9px;
+      overflow: hidden;
+      flex: 0 1 100%;
+      .content {
+        overflow: auto;
+        min-height: 24px;
+        min-width: 24px;
+      }
+    }
+
     .header {
       position: relative;
-      margin: 0 !important; // Useful for removing fxLayoutGaps
-
-      .close-button {
-        margin: -9px;
-        margin-left: 0;
-        margin-bottom: 12px;
-      }
 
       .title {
         font-family: berlin_sans_fb_demibold;
@@ -47,10 +53,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: -9px;
-        margin-bottom: 12px;
-        margin-right: 0;
-        flex: 1 1 100%;
 
         &::after {
           content: '';
@@ -66,7 +68,6 @@
             fill;
           border-image-repeat: round;
           box-sizing: border-box;
-          border-image-outset: -1;
         }
       }
     }
@@ -75,8 +76,6 @@
       position: absolute;
       z-index: 3;
       cursor: pointer;
-      margin: 0 !important; // Useful for removing fxLayoutGaps
-      padding: 0 !important;
 
       &.expand {
         bottom: 0;

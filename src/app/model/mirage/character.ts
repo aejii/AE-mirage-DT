@@ -1,6 +1,6 @@
 import { GameInstance } from '../classes/game-instance';
 
-export class MgCharacter {
+export class MgCharacterHandler {
   get id() {
     return this.instance?.window?.gui?.playerData?.id;
   }

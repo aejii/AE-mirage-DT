@@ -1,0 +1,81 @@
+<div fxLayout="column" fxLayoutGap="24px">
+  <h1>Raccourcis d'interface</h1>
+  
+          <ng-container
+            *ngTemplateOutlet="
+              shortcutsTable;
+              context: { $implicit: shortcuts.uiShortcuts$ | async }
+            "
+          ></ng-container>
+  
+          <h1>Raccourcis d'items / sorts</h1>
+  
+          <ng-container
+            *ngTemplateOutlet="
+              shortcutsTable;
+              context: { $implicit: shortcuts.slotShortcuts$ | async }
+            "
+          ></ng-container>
+  
+          <h1>Raccourcis des menus</h1>
+  
+          <ng-container
+            *ngTemplateOutlet="
+              shortcutsTable;
+              context: { $implicit: shortcuts.menuShortcuts$ | async }
+            "
+          ></ng-container>
+  
+          <h1>Raccourcis non utilisés</h1>
+  
+          <ng-container
+            *ngTemplateOutlet="
+              shortcutsTable;
+              context: { $implicit: shortcuts.unusedShortcuts$ | async }
+            "
+          ></ng-container>
+</div>
+
+
+
+<ng-template #shortcutsTable let-shortcuts>
+  <table class="shortcuts">
+    <thead>
+      <tr>
+        <th>Cible</th>
+        <th>Touche</th>
+        <th>Code touche</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let shortcut of shortcuts" (click)="setNewBinding(shortcut)">
+        <td>
+          {{ shortcut.target | titlecase }}
+          {{ shortcut.slotIndex == undefined ? '' : shortcut.slotIndex + 1 }}
+        </td>
+        <td>
+          {{
+            awaitingbinding === shortcut
+              ? '...'
+              : shortcut.name == undefined
+              ? '(vide)'
+              : shortcut.name
+          }}
+        </td>
+        <td>
+          {{
+            awaitingbinding === shortcut
+              ? '...'
+              : shortcut.code == undefined
+              ? '(vide)'
+              : shortcut.code
+          }}
+        </td>
+        <td>
+          <span (click)="removeShortcut(shortcut)">clear</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

@@ -7,6 +7,7 @@ import {
   DtButtonModule,
   DtContainerModule,
   DtInputModule,
+  DtListModule,
   DtSelectModule,
 } from '@design';
 import { SystemService } from '@providers';
@@ -21,6 +22,7 @@ import { GameComponent } from './pages/game/game.component';
 import { MainMenuComponent } from './pages/game/main-menu/main-menu.component';
 import { InstallerComponent } from './pages/installer/installer.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { KeyboardBindingsComponent } from './pages/settings/keyboard-bindings/keyboard-bindings.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
     InstanceRefDirective,
     AccountsComponent,
     CreateAccountComponent,
+    KeyboardBindingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,6 +56,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
     DtButtonModule,
     DtInputModule,
     DtSelectModule,
+    DtListModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

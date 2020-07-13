@@ -5,6 +5,7 @@ import {
   OnInit,
   Output,
   EventEmitter,
+  Input,
 } from '@angular/core';
 
 @Component({
@@ -18,6 +19,8 @@ export class DtContainerComponent implements OnInit {
 
   @Output() expand = new EventEmitter();
   @Output() closed = new EventEmitter();
+
+  @Input() label = '';
 
   get showExpander() {
     return this.expand.observers.length > 0;

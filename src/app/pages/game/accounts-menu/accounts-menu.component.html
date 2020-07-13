@@ -1,30 +1,32 @@
-<dt-container fxLayout="column" fxLayoutAlign="start center" class="container">
-  <button class="add-account-button" dt-icon-button (click)="addGame()" [disabled]="!(UI.canPlay$ | async)">
-    add
-  </button>
-
-  <div class="accounts" fxFlex fxLayout="column" fxLayoutGap="12px">
-    <ng-container
-      *ngTemplateOutlet="
-        accountsTemplate;
-        context: { instances: instances$ | async, active: active$ | async }
-      "
-    ></ng-container>
+<dt-container fxFill>
+  <div fxLayout="column" fxLayoutAlign="start center" fxFill class="container">
+    <button class="add-account-button" dt-icon-button (click)="addGame()" [disabled]="!(UI.canPlay$ | async)">
+      add
+    </button>
+  
+    <div class="accounts" fxFlex fxLayout="column" fxLayoutGap="12px">
+      <ng-container
+        *ngTemplateOutlet="
+          accountsTemplate;
+          context: { instances: instances$ | async, active: active$ | async }
+        "
+      ></ng-container>
+    </div>
+  
+    <ng-template #accountsTemplate let-instances="instances" let-active="active">
+      <ng-container *ngFor="let instance of instances; let i = index">
+        <div
+          [mgInstanceRef]="instance"
+          (init)="setAccountNumber(instance)"
+          (canvasReady)="setAccountImage(instance, $event)"
+          (logout)="setAccountNumber(instance)"
+          (click)="setActive(instance)"
+          (contextmenu)="removeInstance(instance)"
+          class="account-button"
+          [class.active]="instance === active"
+          #accountsRef
+        ></div>
+      </ng-container>
+    </ng-template>
   </div>
-
-  <ng-template #accountsTemplate let-instances="instances" let-active="active">
-    <ng-container *ngFor="let instance of instances; let i = index">
-      <div
-        [mgInstanceRef]="instance"
-        (init)="setAccountNumber(instance)"
-        (canvasReady)="setAccountImage(instance, $event)"
-        (logout)="setAccountNumber(instance)"
-        (click)="setActive(instance)"
-        (contextmenu)="removeInstance(instance)"
-        class="account-button"
-        [class.active]="instance === active"
-        #accountsRef
-      ></div>
-    </ng-container>
-  </ng-template>
 </dt-container>

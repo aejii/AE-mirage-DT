@@ -1,12 +1,14 @@
+@import 'theming';
+
 :host {
   display: block;
   box-sizing: border-box;
-  width: 300px;
+  height: 80%;
+  width: 75%;
 }
 
-.container {
+.settings-container {
   padding: 12px;
-  padding-top: 0;
 }
 
 .server-button {
@@ -18,4 +20,9 @@
     height: auto;
     width: auto;
   }
+}
+
+.elk-ad {
+  font-size: larger;
+  text-align: center;
 }

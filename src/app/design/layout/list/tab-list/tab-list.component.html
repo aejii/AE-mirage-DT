@@ -1,0 +1,14 @@
+<div class="tab-list-items">
+  <ng-container *ngFor="let tab of tabs; let i = index">
+    <span
+      class="dt-tab-list-item"
+      (click)="showTabContent(tab)"
+      [class.active]="tab.active"
+    >
+      {{ tab?.label }}
+    </span>
+  </ng-container>
+</div>
+<div class="dt-tab-list-content" fxFlex>
+  <div class="content" fxFill #contentRef></div>
+</div>

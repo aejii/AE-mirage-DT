@@ -10,4 +10,13 @@ export class MgFightHandler {
   get selfTarget() {
     return this.fightersList[this.instance.character.id];
   }
+
+  get readyButton() {
+    return this.instance.window?.gui?.timeline?.fightControlButtons?._fightReadyBtn;
+  }
+
+  get endTurnButton() {
+    return this.instance.window?.gui?.timeline?.fightControlButtons?._turnReadyBtn;
+
+  }
 }
