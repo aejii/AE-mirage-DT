@@ -1,28 +1,26 @@
 # Stop the script on error
 set -o errexit
 
-#Variables
-dirname="Mirage-win32-x64"
-
-# Build the Angular application
+# Build the application
 npx ng build -c electron-prod
 
-# Remove old version if it exists
-if test -f ./release/Mirage.zip; then
-  rm -rf release/Mirage.zip
-fi
-
-# Create a package.json for the package builder
+# Create a reference package.json
 touch electron/package.json && echo {} > electron/package.json
 
-# Package for Windows 64 bits
+# Build for Windows and Linux
 npx electron-packager electron Mirage --out electron/dist --platform=win32 --arch=x64 --asar --icon=electron/logo.ico
+npx electron-packager electron Mirage --out electron/dist --platform=linux --arch=x64 --asar --icon=electron/logo.ico
 
-# Move the artifacts into the release folder
-cp -r electron/dist/"$dirname" release
-
-# Create a zip for Windows
-cd  release && zip -r Mirage.zip "$dirname" && cd -
+# For each directory of the dist folder
+for dirpath in `find ./electron/dist/ -maxdepth 1 -mindepth 1 -type d`
+do
+  # Get only the dirname from the dirpath
+  dirname=$(basename "$dirpath")
+  # Zip the folder
+  cd electron/dist && zip -r "$dirname".zip "$dirname" && cd -
+  # Move the folder to dist (copy to avoid having file lock errors)
+  cp -r electron/dist/"$dirname".zip release/desktop
+done
 
 # Remove the artifacts
-rm -rf electron/dist electron/app electron/package.json release/"$dirname"
+rm -rf electron/dist electron/app electron/package.json

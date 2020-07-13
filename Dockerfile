@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 WORKDIR /tmp
 
 RUN apt update
-RUN apt install -y openjdk-8-jdk curl wget unzip make git python zip git
+RUN apt install -y openjdk-8-jdk curl wget unzip make git python zip git wine64
 # Run {  update-alternatives --config java  } and remove /bin/java from the desired java path 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/jre
 
