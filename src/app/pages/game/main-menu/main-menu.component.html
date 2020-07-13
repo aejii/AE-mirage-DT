@@ -1,27 +1,26 @@
 <dt-container
   #menu
-  fxLayout="row"
-  fxLayoutAlign="start center"
-  fxLayoutGap="12px"
   (expand)="isMenuOffset = !isMenuOffset"
   class="menu-container"
   [style.right.px]="-menuOffset"
 >
-  <button
-    dt-icon-button
-    (click)="UI.toggleSettings(true); isMenuOffset = false"
-  >
-    settings
-  </button>
-  <button
-    dt-icon-button
-    (click)="UI.toggleAccounts(true); isMenuOffset = false"
-  >
-    group
-  </button>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="12px">
+    <button
+      dt-icon-button
+      (click)="UI.toggleSettings(true); isMenuOffset = false"
+    >
+      settings
+    </button>
+    <button
+      dt-icon-button
+      (click)="UI.toggleAccounts(true); isMenuOffset = false"
+    >
+      group
+    </button>
+  </div>
 </dt-container>
 
 <!-- Single button menu to get the correct sizing for the menu -->
-<dt-container fxFill class="placeholder">
+<dt-container class="placeholder" (expand)="null">
   <button dt-icon-button>settings</button>
 </dt-container>

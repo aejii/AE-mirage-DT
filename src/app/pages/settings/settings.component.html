@@ -1,71 +1,108 @@
-<dt-container (closed)="UI.toggleSettings(false)">
-  <span dtContainerTitle>Paramètres de Mirage</span>
+<dt-container
+  (closed)="UI.toggleSettings(false)"
+  fxFill
+  label="Paramètres de Mirage"
+>
+  <dt-tab-list fxFill>
+    <dt-tab-list-item label="Système">
+      <div class="settings-container" fxLayout="column" fxLayoutGap="12px">
+        <ng-container *ngIf="!isCordova">
+          <h1>Appareil à simuler</h1>
 
-  <div class="container" fxLayout="column" fxFill fxLayoutGap="24px">
-    <h1>Système</h1>
+          <div fxLayout="column" fxLayoutGap="4px">
+            <dt-select [formControl]="deviceForm">
+              <dt-option
+                *ngFor="let device of devices$ | async"
+                [value]="device.device"
+              >
+                {{ device.device }}
+              </dt-option>
+            </dt-select>
+            <small>
+              <i>
+                (Essaie de choisir ton propre device)
+              </i>
+            </small>
+          </div>
+        </ng-container>
 
-    <div fxLayout="column" *ngIf="!isCordova" fxLayoutGap="24px">
-      <span>Appareil à simuler</span>
-
-      <div fxLayout="column" fxLayoutGap="4px">
-        <dt-select [formControl]="deviceForm">
-          <dt-option
-            *ngFor="let device of devices$ | async"
-            [value]="device.device"
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+          <span fxFlex>
+            Si le jeu a des problèmes d'affichage, essaie de réinstaller les
+            assets :
+          </span>
+          <button
+            dt-icon-button
+            (click)="installAssets()"
+            [disabled]="!(fsBusy$ | async)"
           >
-            {{ device.device }}
-          </dt-option>
-        </dt-select>
-        <small>
-          <i>
-            (Essaie de choisir ton propre device)
-          </i>
-        </small>
+            image
+          </button>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+          <span fxFlex>
+            Si le jeu plante de manière bizarre, essaie de réinstaller les
+            fichiers de build :
+          </span>
+          <button
+            dt-icon-button
+            (click)="installBuild()"
+            [disabled]="!(fsBusy$ | async)"
+          >
+            build
+          </button>
+        </div>
       </div>
-    </div>
+    </dt-tab-list-item>
+    <dt-tab-list-item label="Serveur de jeu">
+      <div class="settings-container" fxLayout="column" fxLayoutGap="12px">
+        <h1>Choix du serveur de jeu</h1>
 
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
-      <span fxFlex>
-        Si le jeu a des problèmes d'affichage, essaie de réinstaller les assets
-        :
-      </span>
-      <button
-        dt-icon-button
-        (click)="installAssets()"
-        [disabled]="!(fsBusy$ | async)"
-      >
-        image
-      </button>
-    </div>
+        <div fxLayout="row" fxLayoutAlign="space-around center">
+          <ng-container
+            *ngTemplateOutlet="
+              gameChoice;
+              context: { $implicit: isElk$ | async }
+            "
+          ></ng-container>
+          <ng-template #gameChoice let-isElk>
+            <button
+              dt-button
+              (click)="setElkMode(false)"
+              [disabled]="!isElk"
+              class="server-button"
+            >
+              <img src="assets/pictures/dt-logo.png" />
+            </button>
+            <button
+              dt-button
+              (click)="setElkMode(true)"
+              [disabled]="isElk"
+              class="server-button"
+            >
+              <img src="assets/pictures/elk-logo.png" />
+            </button>
+          </ng-template>
+        </div>
 
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
-      <span fxFlex>
-        Si le jeu plante de manière bizarre, essaie de réinstaller les fichiers
-        de build :
-      </span>
-      <button
-        dt-icon-button
-        (click)="installBuild()"
-        [disabled]="!(fsBusy$ | async)"
-      >
-        build
-      </button>
-    </div>
-
-    <h1>Serveur de jeu</h1>
-
-    <div fxLayout="row" fxLayoutAlign="space-around center">
-      <ng-container
-        *ngTemplateOutlet="gameChoice; context: { $implicit: isElk$ | async }"
-      ></ng-container>
-      <ng-template #gameChoice let-isElk>
-        <button dt-button (click)="setElkMode(false)" [disabled]="!isElk" class="server-button">
-          <img src="assets/pictures/dt-logo.png">
-        </button>
-        <button dt-button (click)="setElkMode(true)" [disabled]="isElk" class="server-button">
-          <img src="assets/pictures/elk-logo.png">
-        </button>
-      </ng-template>
-    </div>
-  </div>
+        <div class="elk-ad">
+          <p>🌟 🌟 🌟</p>
+          <p>
+            ElkTouch, le premier serveur privé de Dofus TOUCH.
+          </p>
+          <p>
+            Profitez de Dofus Touch gratuitement avec une stabilité et un
+            développement hors du commun !
+          </p>
+          <p>🌟 🌟 🌟</p>
+        </div>
+      </div>
+    </dt-tab-list-item>
+    <dt-tab-list-item label="Raccourcis" *ngIf="!isCordova">
+      <div class="settings-container" fxLayout="column" fxLayoutGap="24px">
+        <mg-keyboard-bindings></mg-keyboard-bindings>
+      </div>
+    </dt-tab-list-item>
+  </dt-tab-list>
 </dt-container>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { GameInstance } from '@model';
 import { EMPTY, of } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
@@ -16,11 +16,16 @@ export class InstancesService {
   instances$ = this.instancesQuery.selectAll();
   activeInstance$ = this.instancesQuery.selectActive();
 
+  get activeInstance() {
+    return this.instancesQuery.getActive();
+  }
+
   constructor(
     private accountsQuery: AccountsQuery,
     private accountsStore: AccountsStore,
     private instancesQuery: InstancesQuery,
     private instancesStore: InstancesStore,
+    private zone: NgZone,
   ) {}
 
   addAccount(account: Account) {
@@ -65,23 +70,41 @@ export class InstancesService {
   }
 
   addInstance(instance = new GameInstance()): GameInstance {
-    this.instancesStore.add(instance);
-    this.setActiveInstance(instance);
+    this.zone.run(() => {
+      this.instancesStore.add(instance);
+      this.setActiveInstance(instance);
+    });
     return instance;
   }
 
   setActiveInstance(instance?: GameInstance) {
-    this.instancesStore.setActive(instance?.ID ?? null);
+    this.zone.run(() => {
+      // To blur any input that might have the focus (closes the phone keyboard)
+      (document?.activeElement as HTMLElement)?.blur?.();
+      this.instancesStore.setActive(instance?.ID ?? null);
+    });
+  }
 
-    if (document.activeElement instanceof HTMLElement)
-      document.activeElement.blur();
+  previousInstance() {
+    this.zone.run(() => {
+      (document?.activeElement as HTMLElement)?.blur?.();
+      this.instancesStore.setActive({ prev: true });
+    });
+  }
+  nextInstance() {
+    this.zone.run(() => {
+      (document?.activeElement as HTMLElement)?.blur?.();
+      this.instancesStore.setActive({ next: true });
+    });
   }
 
   removeInstance(instance: GameInstance) {
-    this.instancesStore.remove(instance?.ID);
-    this.instancesStore.setActive(
-      this.instancesQuery.getAll()?.[0]?.ID ?? null,
-    );
+    this.zone.run(() => {
+      this.instancesStore.remove(instance?.ID);
+      this.instancesStore.setActive(
+        this.instancesQuery.getAll()?.[0]?.ID ?? null,
+      );
+    });
   }
 
   removeAllInstances() {

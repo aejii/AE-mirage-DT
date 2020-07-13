@@ -3,6 +3,8 @@
 @import './forms/input/input.style.scss';
 @import './forms/select/select.component.scss';
 @import './forms/select/option/option.component.scss';
+@import './layout/list/tab-list/tab-list.component.scss';
+@import './layout/list/tab-list/tab-list-item/tab-list-item.component.scss';
 
 @import 'theming';
 
@@ -12,6 +14,8 @@
   @include dtInput();
   @include dtSelect();
   @include dtOption();
+  @include dtTabList();
+  @include dtTabListItem();
 
   @font-face {
     font-family: 'berlin_sans_fb_demibold';
@@ -91,18 +95,23 @@
   }
 
   ::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
+    width: 2px;
+    height: 2px;
     overflow: auto;
   }
 
   ::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 2.5px;
+    background: black;
+    border-radius: 2px;
+    width: 2px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #666;
-    border-radius: 2.5px;
+    border-radius: 2px;
+    background: dt-color('scrollbar');
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 }

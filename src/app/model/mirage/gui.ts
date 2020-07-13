@@ -14,6 +14,32 @@ export class MgGuiHandler {
     };
   }
 
+  get placeholderPartyInfo() {
+    const placeholderClass = 'mirage-party-infos';
+
+    const partyEl = this.instance.window?.gui?.party?.classicParty;
+    const groupLeaderEl = partyEl?._childrenList[0]?.rootElement;
+    let placeholder: HTMLElement = partyEl?.rootElement?.querySelector?.(
+      `.${placeholderClass} span`,
+    );
+
+    if (!partyEl || !groupLeaderEl) return undefined;
+    else if (placeholder) return placeholder;
+    else {
+      placeholder = document.createElement('div');
+      placeholder.classList.add(placeholderClass);
+      placeholder.style.display = 'flex';
+      placeholder.style.flexFlow = 'row';
+      placeholder.style.alignItems = 'center';
+      placeholder.style.justifyContent = 'center';
+      const span = document.createElement('span');
+      placeholder.appendChild(span);
+      partyEl.rootElement.insertBefore(placeholder, groupLeaderEl);
+
+      return span;
+    }
+  }
+
   constructor(private instance: GameInstance) {}
 
   removeShopButton() {
@@ -39,7 +65,7 @@ export class MgGuiHandler {
     const placeholderClass = 'mirage-party-infos';
 
     const partyEl = this.instance.window.gui.party.classicParty;
-    const firstChild = partyEl._childrenList[0].rootElement;
+    const groupLeaderEl = partyEl._childrenList[0].rootElement;
 
     if (partyEl.rootElement.querySelector(`.${placeholderClass}`))
       return undefined;
@@ -47,7 +73,7 @@ export class MgGuiHandler {
     const placeholder = document.createElement('div');
     placeholder.classList.add(placeholderClass);
 
-    partyEl.rootElement.insertBefore(placeholder, firstChild);
+    partyEl.rootElement.insertBefore(placeholder, groupLeaderEl);
     return placeholder;
   }
 
@@ -109,7 +135,42 @@ export class MgGuiHandler {
     }
   }
 
+  addBindingsToShortcutSlots() {
+    const slots = [...this.spellsSlots, ...this.itemsSlots].map(
+      (v) => v.rootElement,
+    );
+
+    slots.forEach((slot) => {
+      const div = document.createElement('div');
+      div.className = 'mirage-shortcut-key quantity';
+      slot.appendChild(div);
+    });
+  }
+
+  setShortcutBindingOnSlot(index: number, key: string) {
+    this.spellsSlots[index].rootElement.querySelector(
+      '.mirage-shortcut-key',
+    ).innerHTML = key || '';
+    this.itemsSlots[index].rootElement.querySelector(
+      '.mirage-shortcut-key',
+    ).innerHTML = key || '';
+  }
+
   get spellsSlots() {
     return this.instance.window?.gui?.shortcutBar?._panels?.spell?.slotList;
+  }
+
+  get itemsSlots() {
+    return this.instance.window?.gui?.shortcutBar?._panels?.item?.slotList;
+  }
+
+  get currentPanelType() {
+    return this.instance.window?.gui?.shortcutBar?._currentPanelType;
+  }
+
+  get currentSlotsPanel() {
+    return this.instance.window?.gui?.shortcutBar?._panels?.[
+      this.instance.gui.currentPanelType
+    ];
   }
 }

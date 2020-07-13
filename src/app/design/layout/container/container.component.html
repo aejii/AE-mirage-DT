@@ -6,9 +6,9 @@
   *ngIf="showExpander"
 />
 
-<div class="header" fxLayout="row">
-  <span fxFlex>
-    <ng-content select="[dtContainerTitle]"></ng-content>
+<div class="header" fxLayout="row" *ngIf="!!label || !!closed.observers.length">
+  <span fxFlex class="title">
+    {{ label | titlecase }}
   </span>
   <button
     class="close-button"
@@ -20,4 +20,8 @@
   </button>
 </div>
 
-<ng-content></ng-content>
+<div class="content-container">
+  <div class="content" fxFill>
+    <ng-content></ng-content>
+  </div>
+</div>

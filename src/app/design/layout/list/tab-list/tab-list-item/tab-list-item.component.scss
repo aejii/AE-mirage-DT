@@ -1,0 +1,22 @@
+@mixin dtTabListItem {
+  .dt-tab-list-item {
+    display: block;
+    padding: 11px;
+    height: 40px;
+    box-sizing: border-box;
+    min-width: 150px;
+    &:nth-of-type(odd) {
+      background: dt-color('list-odd');
+    }
+    &:nth-of-type(even) {
+      background: dt-color('list-even');
+    }
+    &.active {
+      border-image: url('./assets/design/list-active.png') 0 fill;
+    }
+  }
+
+  .dt-tab-list-item-content {
+    
+  }
+}

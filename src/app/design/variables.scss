@@ -5,8 +5,8 @@ $colors: (
   'button-font': #412926,
   'input-background': #1a1a17,
   'app-background': #2e2d28,
-);
+  'scrollbar': #a3d52e,
 
-@function dt-color($key) {
-  @return map-get($colors, $key);
-}
+  'list-odd': #2b2c27,
+  'list-even': #393a34,
+);

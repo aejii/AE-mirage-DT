@@ -12,7 +12,7 @@ else
 function bootstrapApp() {
   enableProdMode();
   persistState({
-    include: ['accounts', 'user-agent', 'installation'],
+    include: ['accounts', 'user-agent', 'installation', 'keyboard-shortcuts'],
     preStorageUpdate,
   });
   platformBrowserDynamic()
@@ -23,9 +23,11 @@ function bootstrapApp() {
 function preStorageUpdate(name, state) {
   switch (name) {
     case 'user-agent':
+      // Keep only the active device, the list is held by the sotre itself
       const { active } = state;
       return { active };
     case 'installation':
+      // Keep the isElk status, the rest has a lifecycle based on the app itself (closed = must be reset)
       const { isElk } = state;
       return { isElk };
     default:

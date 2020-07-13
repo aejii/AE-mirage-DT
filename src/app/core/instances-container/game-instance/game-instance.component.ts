@@ -1,16 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   Input,
   NgZone,
   OnDestroy,
   OnInit,
-  Renderer2,
-  ViewChild,
 } from '@angular/core';
 import { GameInstance } from '@model';
-import { InstancesService } from '@providers';
+import {
+  InstancesService,
+  KeyboardShortcutsService,
+  MgKeyboardShortcut,
+} from '@providers';
 import { concat, forkJoin, of, Subscription, timer } from 'rxjs';
 import { delay, switchMap, tap } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
@@ -29,15 +30,11 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
 
   private susbscriptions = new Subscription();
 
-  @ViewChild('partyInfoRef', { static: true }) partyInfoRef: ElementRef<
-    HTMLElement
-  >;
-
   constructor(
     private installation: InstallationService,
     private instancesService: InstancesService,
-    private renderer: Renderer2,
     private zone: NgZone,
+    private shortcuts: KeyboardShortcutsService,
   ) {}
 
   ngOnDestroy() {
@@ -48,6 +45,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
     this.zone.run(() => {
       this._connectAccount();
       this._setActiveOnTurnStart();
+
       this.susbscriptions.add(
         this.instance.events.characterLogin$.subscribe(() => {
           this.instance.events.preventInactivity();
@@ -63,46 +61,65 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
       );
 
       this.susbscriptions.add(
+        this.instance.groupManager.partyInfo$.subscribe((infos) => {
+          const placeholder = this.instance.gui.placeholderPartyInfo;
+          if (!placeholder) return;
+          placeholder.innerHTML = `🌟 ${infos.level} <br /> 🔎 ${infos.dropChance}`;
+        }),
+      );
+
+      this.susbscriptions.add(
+        this.instance.events.keyboardShortcutPressed$.subscribe((event) =>
+          this.shortcuts.runShortcut(this.instance, event),
+        ),
+      );
+
+      this.susbscriptions.add(
         this.instance.events.characterLogin$
-          .pipe(switchMap(() => this.instance.groupManager.partyInfo$))
-          .subscribe(() => {
-            const host = this.instance.gui.addPartyInfoPlaceHolder();
-            // Either nowhere to put it, or already put
-            if (!host) return;
-            this.renderer.appendChild(host, this.partyInfoRef.nativeElement);
-          }),
+          .pipe(
+            tap(() => this.instance.gui.addBindingsToShortcutSlots()),
+            switchMap(() => this.shortcuts.slotShortcuts$),
+          )
+          .subscribe((shortcuts) => this._addShortcutsKeysToSlots(shortcuts)),
       );
     });
 
     // TODO (but not here) : create the finder in angular and let it act on the current instance
   }
 
-  private _connectAccount(instance = this.instance) {
-    if (!instance.account) return;
+  /**
+   * Connects the account provided in the instance.
+   * If none has been, ignores.
+   */
+  private _connectAccount() {
+    if (!this.instance.account) return;
 
-    instance.events.gameInit$
+    this.instance.events.gameInit$
       .pipe(
         delay(500),
-        tap(() => instance.window.gui.loginScreen.showLoginForm()),
+        tap(() => this.instance.window.gui.loginScreen.showLoginForm()),
         switchMap(() =>
           emulateUserTyping$(
-            instance.gui.loginForm.username,
-            instance.account.username,
+            this.instance.gui.loginForm.username,
+            this.instance.account.username,
           ),
         ),
         switchMap(() =>
           emulateUserTyping$(
-            instance.gui.loginForm.password,
-            instance.account.password,
+            this.instance.gui.loginForm.password,
+            this.instance.account.password,
           ),
         ),
       )
       .subscribe(() => {
-        instance.gui.loginForm.rememberName.deactivate();
-        instance.gui.loginForm.play();
+        this.instance.gui.loginForm.rememberName.deactivate();
+        this.instance.gui.loginForm.play();
       });
   }
 
+  /**
+   * On fight turn start, sets the instance as active
+   */
   private _setActiveOnTurnStart() {
     this.susbscriptions.add(
       this.instance.events.characterFightTurnStart$.subscribe(() => {
@@ -110,8 +127,28 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
       }),
     );
   }
+
+  /**
+   * Adds the shortcuts bindings on the slots
+   * @param shortcuts Shortcuts to bind to the slots
+   */
+  private _addShortcutsKeysToSlots(shortcuts: MgKeyboardShortcut[]) {
+    const [spellsSlotsEls, itemsSlotsEls] = [
+      this.instance.gui.spellsSlots.map((v) => v.rootElement),
+      this.instance.gui.itemsSlots.map((v) => v.rootElement),
+    ];
+
+    shortcuts.forEach((shortcut) =>
+      this.instance.gui.setShortcutBindingOnSlot(shortcut.slotIndex, shortcut.name),
+    );
+  }
 }
 
+/**
+ * Simulates a user typing in the input
+ * @param input HTML Input Element to type in
+ * @param content Content to type
+ */
 function emulateUserTyping$(input: HTMLInputElement, content: string) {
   return forkJoin([
     concat(

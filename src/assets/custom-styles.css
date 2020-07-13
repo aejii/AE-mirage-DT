@@ -17,3 +17,35 @@ div.quantity.mirage-shortcut-chip {
   padding-bottom: 8px;
   text-align: left;
 }
+
+.mirage-shortcut-key.quantity,
+.mirage-shortcut-key.quantity {
+  top: auto;
+  left: auto;
+  right: 3px;
+  bottom: 3px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0 6px;
+  font-size: 12px;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+  overflow: auto;
+}
+
+::-webkit-scrollbar-track {
+  background: black;
+  border-radius: 2px;
+  width: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background: #c6f152;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

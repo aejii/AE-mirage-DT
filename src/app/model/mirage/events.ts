@@ -1,4 +1,4 @@
-import { interval, Observable } from 'rxjs';
+import { interval, Observable, Subject } from 'rxjs';
 import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
 
@@ -26,7 +26,21 @@ export class MgEventsHandler {
     'spellSlotSelected',
   ).pipe(filter(() => !!this.instance.character.isFighting));
 
-  constructor(private instance: GameInstance) {}
+  // Emits everytime a user presses a keyboard key outside of an input
+  private _keyPressed = new Subject<KeyboardEvent>();
+  public keyboardShortcutPressed$ = this._keyPressed.asObservable().pipe(
+    filter((event) => event.target.constructor.name !== 'HTMLInputElement'),
+    filter((event) => event.target.constructor.name !== 'HTMLTextAreaElement'),
+    filter((event) => !event.ctrlKey && !event.altKey && !event.shiftKey),
+  );
+
+  constructor(private instance: GameInstance) {
+    waitForTruthiness$(() => this.instance.window, true).subscribe(() => {
+      this.instance.window.addEventListener('keyup', (event: KeyboardEvent) =>
+        this._keyPressed.next(event),
+      );
+    });
+  }
 
   preventInactivity() {
     this.instance.window?.mirageInactivity?.recordActivity?.();
