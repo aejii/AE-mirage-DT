@@ -13,6 +13,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
     },
+    icon: __dirname + '/app/assets/logo.ico'
   });
 
   const load = () => win.loadFile(appPath);
