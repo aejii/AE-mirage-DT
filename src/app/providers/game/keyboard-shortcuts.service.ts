@@ -87,13 +87,60 @@ export class KeyboardShortcutsService {
   }
 
   runShortcut(instance: GameInstance, event: KeyboardEvent) {
-    const shallContinue = this._runSpecialShortcut(instance, event);
-    if (!shallContinue) return;
+    if (!instance) return;
 
-    const shortcut = this._getShortcut(event);
+    const shortcut = this.query.getAll().find((s) => s.name === event.key);
 
-    if (!shortcut || !instance) return;
-    else if (shortcut.target === 'slot') {
+    if (shortcut) this._runCustomShortcut(instance, shortcut, event);
+    else this._runSystemShortcut(instance, event);
+  }
+
+  /**
+   * Checks if the provided keyboard event matches specific shortcuts :
+   * - Enter key should open the chat
+   * - Ctrl + W should close an account (and not the window)
+   * - Escape key should close in-game windows, and if none, open the settings
+   */
+  private _runSystemShortcut(instance: GameInstance, event: KeyboardEvent) {
+    if (event.key === 'w' && event.ctrlKey) {
+      event.preventDefault();
+      event.stopPropagation();
+      return this.instances.removeInstance(instance);
+    }
+    if (event.key === 'Enter' && event.code === 'Enter') {
+      return instance.gui.toggleChat(true);
+    }
+    if (event.key === 'Escape' && event.code === 'Escape') {
+      if (instance.gui.chatWindow.active) {
+        instance.gui.toggleChat(false);
+      } else {
+        // Close the last opened window
+        const lastOpenedMenu = instance.gui.lastOpenedMenu;
+        if (lastOpenedMenu) lastOpenedMenu.close?.();
+        // Show settings if no window opened
+        else instance.shortcuts.showSettings();
+      }
+      return;
+    }
+  }
+
+  private _runCustomShortcut(
+    instance: GameInstance,
+    shortcut: MgKeyboardShortcut,
+    event: KeyboardEvent,
+  ) {
+    if (
+      event.target instanceof HTMLInputElement ||
+      // Because it does a prototype comparison, it must check on the iframe, not the window
+      // tslint:disable-next-line: no-string-literal
+      event.target instanceof instance.window['HTMLInputElement'] ||
+      event.target instanceof HTMLTextAreaElement ||
+      // tslint:disable-next-line: no-string-literal
+      event.target instanceof instance.window['HTMLTextAreaElement']
+    )
+      return;
+
+    if (shortcut.target === 'slot') {
       instance.shortcuts.useSlotInCurrentPanel(shortcut.slotIndex);
     } else if (shortcut.target === 'next instance') {
       this.instances.nextInstance();
@@ -103,40 +150,8 @@ export class KeyboardShortcutsService {
       instance.shortcuts.clikOnReadyButton();
     } else {
       instance.shortcuts.clickOnMenuIcon(
-        shortcut?.target as GameMenuBarIconsNames,
+        shortcut.target as GameMenuBarIconsNames,
       );
     }
-  }
-
-  private _getShortcut(event: KeyboardEvent) {
-    return this.query.getAll().find((shortcut) => shortcut.code === event.code);
-  }
-
-  /**
-   * Checks if the provided keyboard event matches specific shortcuts :
-   * - Enter key should open the chat
-   * - Ctrl + W should close an account (and not the window)
-   * - Escape key should close in-game windows, and if none, open the settings
-   * @returns a boolean stating if a special shortcut has been ran : if true, the shortcut must be processed.
-   */
-  private _runSpecialShortcut(
-    instance: GameInstance,
-    event: KeyboardEvent,
-  ): boolean {
-    if (event.key === 'Escape' && event.code === 'Escape') {
-      // since chat is a top-window, always close it (if it's already closed, no effect)
-      instance.gui.toggleChat(false);
-      // Close the last opened window
-      const lastOpenedMenu = instance.gui.lastOpenedMenu;
-      if (lastOpenedMenu) lastOpenedMenu.close?.();
-      else instance.shortcuts.showSettings();
-      return false;
-    } else if (event.key === 'Enter' && event.code === 'Enter') {
-      instance.gui.toggleChat(true);
-      return false;
-    } else if (event.key === 'w' && event.ctrlKey) {
-      this.instances.removeInstance(instance);
-    }
-    return true;
   }
 }

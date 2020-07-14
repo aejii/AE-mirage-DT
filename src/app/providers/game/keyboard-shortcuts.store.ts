@@ -51,6 +51,7 @@ const defaultShortcuts: MgKeyboardShortcut[] = [
   createMenuShortcut('Almanax', 'x'),
   createMenuShortcut('Bag', 'i'),
   createMenuShortcut('Bestiary', 'b'),
+  createMenuShortcut('Book', 'q'),
   createMenuShortcut('BidHouse', 'k'),
   createMenuShortcut('Carac', 'c'),
   createMenuShortcut('Friend', 'f'),

@@ -11,9 +11,10 @@ import {
   InstancesService,
   KeyboardShortcutsService,
   MgKeyboardShortcut,
+  SystemService,
 } from '@providers';
 import { concat, forkJoin, of, Subscription, timer } from 'rxjs';
-import { delay, switchMap, tap } from 'rxjs/operators';
+import { delay, filter, switchMap, tap } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
 
 @Component({
@@ -35,6 +36,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
     private instancesService: InstancesService,
     private zone: NgZone,
     private shortcuts: KeyboardShortcutsService,
+    private system: SystemService,
   ) {}
 
   ngOnDestroy() {
@@ -69,14 +71,9 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
       );
 
       this.susbscriptions.add(
-        this.instance.events.keyboardShortcutPressed$.subscribe((event) =>
-          this.shortcuts.runShortcut(this.instance, event),
-        ),
-      );
-
-      this.susbscriptions.add(
         this.instance.events.characterLogin$
           .pipe(
+            filter(() => !this.system.isCordova),
             tap(() => this.instance.gui.addBindingsToShortcutSlots()),
             switchMap(() => this.shortcuts.slotShortcuts$),
           )
@@ -84,9 +81,11 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
       );
 
       this.susbscriptions.add(
-        this.instance.events.instanceCloseShortcut$.subscribe(() =>
-          this.instancesService.removeInstance(this.instance),
-        ),
+        this.instance.events.keyDown$
+          .pipe(filter(() => !this.system.isCordova))
+          .subscribe((event) =>
+            this.shortcuts.runShortcut(this.instance, event),
+          ),
       );
     });
 

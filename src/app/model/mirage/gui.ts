@@ -180,9 +180,13 @@ export class MgGuiHandler {
       ?.pop?.();
   }
 
+  get chatWindow() {
+    return this.instance.window?.gui?.chat;
+  }
+
   toggleChat(forceValue?: boolean) {
-    const shouldShow = forceValue ?? !this.instance.window?.gui?.chat?.active;
-    if (shouldShow) this.instance.window?.gui?.chat?.activate?.();
-    else this.instance.window?.gui?.chat?.deactivate?.();
+    const shouldShow = forceValue ?? !this.chatWindow?.active;
+    if (shouldShow) this.chatWindow?.activate?.();
+    else this.chatWindow?.deactivate?.();
   }
 }

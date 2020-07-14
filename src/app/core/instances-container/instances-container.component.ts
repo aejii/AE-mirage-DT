@@ -1,12 +1,10 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   HostListener,
   OnInit,
 } from '@angular/core';
 import { InstancesService, KeyboardShortcutsService } from '@providers';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'mg-instances-container',
@@ -26,8 +24,9 @@ export class InstancesContainerComponent implements OnInit {
   ngOnInit() {}
 
   // Because the activeElement is blurred on active instance change
-  @HostListener('window:keyup', ['$event'])
+  @HostListener('window:keydown', ['$event'])
   onKeyPressed(event: KeyboardEvent) {
+    if (event.repeat) return;
     // console.log('[MG] Keyboard event registered in the main window !');
     const activeInstance = this.instancesService.activeInstance;
     this.shortcuts.runShortcut(activeInstance, event);
