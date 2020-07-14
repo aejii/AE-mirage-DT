@@ -19,7 +19,6 @@
 # Electron build files
 electron/*
 !electron/index.js
-!electron/logo.ico
 
 # Game script file
 game.script.js
