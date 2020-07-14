@@ -44,4 +44,13 @@ export class AppComponent implements OnInit {
     // tslint:disable-next-line: no-string-literal
     navigator['app']['exitApp']();
   }
+
+  // Prevent the window from closing with a Ctrl + W keydown event
+  @HostListener('window:keydown', ['$event'])
+  onKeyDownEvent(event: KeyboardEvent) {
+    if (event.key === 'w' && event.ctrlKey) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
 }

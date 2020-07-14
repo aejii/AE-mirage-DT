@@ -10,11 +10,25 @@ export interface DTWindow extends Window {
     };
   };
   gui: {
+    mainControls: {
+      buttonBox: GameGuiElement;
+    }
+    windowsContainer: {
+      _childrenList: (GameGuiElement & {
+        isVisible(): boolean;
+        close(): void;
+      })[];
+    };
+    chat: {
+      active: boolean;
+      activate(): void;
+      deactivate(): void;
+    };
     timeline: {
       fightControlButtons: {
         _turnReadyBtn: GameGuiElement;
         _fightReadyBtn: GameGuiElement;
-      }
+      };
     };
     menuBar: {
       _icons: GameGuiElement & {
@@ -197,5 +211,6 @@ export interface GameGuiElement<T = HTMLElement> {
   rootElement: T;
   _childrenList: GameGuiElement[];
   _childrenMap: { [key: string]: GameGuiElement };
-  tap?: () => void;
+  tap(): void;
+  show(): void;
 }

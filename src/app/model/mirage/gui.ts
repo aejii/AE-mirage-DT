@@ -173,4 +173,16 @@ export class MgGuiHandler {
       this.instance.gui.currentPanelType
     ];
   }
+
+  get lastOpenedMenu() {
+    return this.instance.window?.gui?.windowsContainer?._childrenList
+      ?.filter?.((el) => el?.isVisible?.())
+      ?.pop?.();
+  }
+
+  toggleChat(forceValue?: boolean) {
+    const shouldShow = forceValue ?? !this.instance.window?.gui?.chat?.active;
+    if (shouldShow) this.instance.window?.gui?.chat?.activate?.();
+    else this.instance.window?.gui?.chat?.deactivate?.();
+  }
 }
