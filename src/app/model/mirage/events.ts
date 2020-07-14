@@ -60,6 +60,11 @@ export class MgEventsHandler {
     }),
   );
 
+  public keyDown$ = waitForTruthiness$(() => this.instance.window, true).pipe(
+    switchMap(() => fromEvent<KeyboardEvent>(this.instance.window, 'keydown')),
+    filter((event) => !event.repeat),
+  );
+
   constructor(private instance: GameInstance) {}
 
   preventInactivity() {
