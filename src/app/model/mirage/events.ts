@@ -1,5 +1,12 @@
-import { interval, Observable, Subject } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { fromEvent, interval, Observable } from 'rxjs';
+import {
+  filter,
+  first,
+  map,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
 
 export class MgEventsHandler {
@@ -27,20 +34,33 @@ export class MgEventsHandler {
   ).pipe(filter(() => !!this.instance.character.isFighting));
 
   // Emits everytime a user presses a keyboard key outside of an input
-  private _keyPressed = new Subject<KeyboardEvent>();
-  public keyboardShortcutPressed$ = this._keyPressed.asObservable().pipe(
+  public keyboardShortcutPressed$ = waitForTruthiness$(
+    () => this.instance.window,
+    true,
+  ).pipe(
+    switchMap(() => fromEvent<KeyboardEvent>(this.instance.window, 'keyup')),
     filter((event) => event.target.constructor.name !== 'HTMLInputElement'),
     filter((event) => event.target.constructor.name !== 'HTMLTextAreaElement'),
     filter((event) => !event.ctrlKey && !event.altKey && !event.shiftKey),
   );
 
-  constructor(private instance: GameInstance) {
-    waitForTruthiness$(() => this.instance.window, true).subscribe(() => {
-      this.instance.window.addEventListener('keyup', (event: KeyboardEvent) =>
-        this._keyPressed.next(event),
-      );
-    });
-  }
+  /**
+   * Ctrl + W on keydown shortcut = the user asked to close the account
+   * Bound on keydown because if on keyup, will close the main window !
+   */
+  public instanceCloseShortcut$ = waitForTruthiness$(
+    () => this.instance.window,
+    true,
+  ).pipe(
+    switchMap(() => fromEvent<KeyboardEvent>(this.instance.window, 'keydown')),
+    filter((event) => event.key === 'w' && event.ctrlKey),
+    tap((event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    }),
+  );
+
+  constructor(private instance: GameInstance) {}
 
   preventInactivity() {
     this.instance.window?.mirageInactivity?.recordActivity?.();

@@ -53,4 +53,11 @@ export class MgActionsHandler {
       this.instance.gui.currentPanelType === 'spell' ? 'tap' : 'doubletap',
     );
   }
+
+  showSettings() {
+    this.instance.window?.gui?.mainControls?.buttonBox?._childrenList
+      ?.slice(-1)
+      ?.pop()
+      ?.tap?.();
+  }
 }

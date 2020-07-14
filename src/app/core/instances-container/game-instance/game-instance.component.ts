@@ -82,6 +82,12 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
           )
           .subscribe((shortcuts) => this._addShortcutsKeysToSlots(shortcuts)),
       );
+
+      this.susbscriptions.add(
+        this.instance.events.instanceCloseShortcut$.subscribe(() =>
+          this.instancesService.removeInstance(this.instance),
+        ),
+      );
     });
 
     // TODO (but not here) : create the finder in angular and let it act on the current instance
@@ -139,7 +145,10 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
     ];
 
     shortcuts.forEach((shortcut) =>
-      this.instance.gui.setShortcutBindingOnSlot(shortcut.slotIndex, shortcut.name),
+      this.instance.gui.setShortcutBindingOnSlot(
+        shortcut.slotIndex,
+        shortcut.name,
+      ),
     );
   }
 }
