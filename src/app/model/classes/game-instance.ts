@@ -1,10 +1,12 @@
 import { DTWindow } from '../DT/window';
+import { MgActionsHandler } from '../mirage/actions';
 import { MgCharacterHandler } from '../mirage/character';
 import { MgEventsHandler } from '../mirage/events';
 import { MgFightHandler } from '../mirage/fights';
-import { MgGuiHandler } from '../mirage/gui';
-import { MgActionsHandler } from '../mirage/actions';
+import { MgFinder } from '../mirage/finder';
 import { MgGroupHandler } from '../mirage/group';
+import { MgGuiHandler } from '../mirage/gui';
+import { MgSingletons } from '../mirage/singletons';
 
 export class GameInstance {
   public readonly ID = Math.random().toString(36).slice(2);
@@ -17,6 +19,8 @@ export class GameInstance {
   public shortcuts = new MgActionsHandler(this);
   public fightManager = new MgFightHandler(this);
   public groupManager = new MgGroupHandler(this);
+  public finder = new MgFinder(this);
+  public singletons = new MgSingletons(this);
 
   constructor(
     public account?: {

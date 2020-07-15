@@ -81,6 +81,8 @@ export class InstancesService {
     this.zone.run(() => {
       // To blur any input that might have the focus (closes the phone keyboard)
       (document?.activeElement as HTMLElement)?.blur?.();
+      this.activeInstance?.singletons.audioManager?.setMute?.(true);
+      instance?.singletons.audioManager?.setMute?.(false);
       this.instancesStore.setActive(instance?.ID ?? null);
     });
   }
@@ -88,13 +90,17 @@ export class InstancesService {
   previousInstance() {
     this.zone.run(() => {
       (document?.activeElement as HTMLElement)?.blur?.();
+      this.activeInstance?.singletons.audioManager?.setMute?.(true);
       this.instancesStore.setActive({ prev: true });
+      this.activeInstance?.singletons.audioManager?.setMute?.(false);
     });
   }
   nextInstance() {
     this.zone.run(() => {
       (document?.activeElement as HTMLElement)?.blur?.();
+      this.activeInstance?.singletons.audioManager?.setMute?.(true);
       this.instancesStore.setActive({ next: true });
+      this.activeInstance?.singletons.audioManager?.setMute?.(false);
     });
   }
 

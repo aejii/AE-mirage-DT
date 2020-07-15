@@ -12,7 +12,7 @@ export interface DTWindow extends Window {
   gui: {
     mainControls: {
       buttonBox: GameGuiElement;
-    }
+    };
     windowsContainer: {
       _childrenList: (GameGuiElement & {
         isVisible(): boolean;
@@ -111,6 +111,16 @@ export interface DTWindow extends Window {
   CharacterDisplay: new (
     configuration: CharacterDisplayConfiguration,
   ) => CharacterDisplay;
+
+  // singletons(
+  //   index: number,
+  // ): {
+  //   c: { [key: number]: any };
+  // };
+
+  singletons: ((index: number) => any) & {
+      c: { [key: number]: any };
+    };
 }
 
 export interface CharacterDisplay {
