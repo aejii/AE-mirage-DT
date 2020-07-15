@@ -21,13 +21,23 @@ export class InstancesContainerComponent implements OnInit {
     private shortcuts: KeyboardShortcutsService,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // tslint:disable-next-line: no-string-literal
+    window['wFind'] = (matcher, depth, override) => {
+      const instance = this.instancesService.activeInstance;
+      return instance.finder.findKeyInWindow(matcher, depth, override);
+    };
+    // tslint:disable-next-line: no-string-literal
+    window['sFind'] = (matcher, depth) => {
+      const instance = this.instancesService.activeInstance;
+      return instance.finder.findKeyInSingleton(matcher, depth);
+    };
+  }
 
   // Because the activeElement is blurred on active instance change
   @HostListener('window:keydown', ['$event'])
   onKeyPressed(event: KeyboardEvent) {
     if (event.repeat) return;
-    // console.log('[MG] Keyboard event registered in the main window !');
     const activeInstance = this.instancesService.activeInstance;
     this.shortcuts.runShortcut(activeInstance, event);
   }

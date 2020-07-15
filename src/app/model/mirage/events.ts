@@ -65,7 +65,17 @@ export class MgEventsHandler {
     filter((event) => !event.repeat),
   );
 
-  constructor(private instance: GameInstance) {}
+  constructor(private instance: GameInstance) {
+    // Bind the finders to the instance window
+    waitForTruthiness$(() => this.instance.window, true).subscribe(() => {
+      this.instance.window['wFind'] = this.instance.finder.findKeyInWindow.bind(
+        this.instance.finder,
+      );
+      this.instance.window[
+        'sFind'
+      ] = this.instance.finder.findKeyInSingleton.bind(this.instance.finder);
+    });
+  }
 
   preventInactivity() {
     this.instance.window?.mirageInactivity?.recordActivity?.();

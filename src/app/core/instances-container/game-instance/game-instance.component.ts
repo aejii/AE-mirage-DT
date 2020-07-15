@@ -59,7 +59,9 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
       this.susbscriptions.add(
         this.instance.events.characterLogin$
           .pipe(switchMap(() => timer(60000, 60000)))
-          .subscribe(() => this.instance.events.preventInactivity()),
+          .subscribe(() =>
+            this.instance.singletons.activityRecorder.recordActivity(),
+          ),
       );
 
       this.susbscriptions.add(
@@ -88,8 +90,6 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
           ),
       );
     });
-
-    // TODO (but not here) : create the finder in angular and let it act on the current instance
   }
 
   /**
