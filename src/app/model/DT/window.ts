@@ -102,6 +102,11 @@ export interface DTWindow extends Window {
 
   isoEngine: {
     _castSpellImmediately: (id: number) => void;
+    mapScene: {
+      camera: {
+        maxZoom: number;
+      };
+    };
   };
 
   CharacterDisplay: new (
@@ -115,8 +120,8 @@ export interface DTWindow extends Window {
   // };
 
   singletons: ((index: number) => any) & {
-      c: { [key: number]: any };
-    };
+    c: { [key: number]: any };
+  };
 }
 
 export interface CharacterDisplay {
