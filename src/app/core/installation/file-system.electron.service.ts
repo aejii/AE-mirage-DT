@@ -263,8 +263,6 @@ const scriptRegexes = [
     '(function (\\D)\\(n\\)\\{)(if\\(i\\[n\\]\\)return i\\[n\\]\\.exports;)',
     '$1window.singletons = $2;$3',
   ],
-  // Remove analytics
-  ['window\\.Config\\.analytics', 'null'],
   // Removes the console override
   [
     '(\\w{1,2}\\.overrideConsole\\s?=)\\s?(function\\(\\))',
@@ -274,11 +272,6 @@ const scriptRegexes = [
   [
     ',\\s*(\\w+\\.logUncaughtExceptions)\\s*=\\s*function\\(([^(]*)\\)',
     ',$1=function($2) { top.console.log($2); }, !1 && function($2)',
-  ],
-  // Adds the character display function from the inventory to the window to be used to identify accounts
-  [
-    '(\\w{1,2}\\.exports\\s?=\\s?(\\w{1,2}),\\s?)(\\w{1,2}\\.prototype\\.setLook)',
-    '$1window.CharacterDisplay = $2, $3',
   ],
   // Logs the fetches to the top frame
   ['(,window\\.fetch\\((\\w)+\\+"\\/logger")', ',top.console.log($2)$1'],

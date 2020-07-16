@@ -4,7 +4,13 @@ import { DTWindow } from '../DT/window';
 export class MgFinder {
   constructor(private instance: GameInstance) {}
 
-  findKeyInWindow(
+  /**
+   * Looks for a key matching the matcher in the Ankama's window objects
+   * @param matcher Matcher to look for
+   * @param maxDepth Maximum depth allowed
+   * @param targetOverride Sets the target to search in (defaults to window)
+   */
+  searchForKeyInWindowObjects(
     matcher: string | RegExp,
     maxDepth: number = 5,
     targetOverride: (window: DTWindow) => any,
@@ -51,7 +57,12 @@ export class MgFinder {
     return results;
   }
 
-  findKeyInSingleton(matcher: string | RegExp, maxDepth: number = 5) {
+  /**
+   * Looks for a key matching the matcher in the Ankama's singleton objects
+   * @param matcher Matcher to look for
+   * @param maxDepth Maximum depth allowed
+   */
+  searchForKeyInSingletonObjects(matcher: string | RegExp, maxDepth: number = 5) {
     const singletons = Object.entries<any>(
       this.instance.window?.singletons?.c ?? {},
     )
@@ -77,7 +88,45 @@ export class MgFinder {
     return results;
   }
 
-  findSingletonForKey<T>(matcher: keyof T, maxDepth: number = 5) {
+  /**
+   * Looks for a singleton constructor with a given (set of) key(s)
+   */
+  searchForSingletonConstructorWithKey(keys: string | string[]) {
+    const singletons = Object.entries<any>(
+      this.instance.window?.singletons?.c ?? {},
+    )
+      .map(([k, v]) => [k, v.exports])
+      .filter(([k, v]) => typeof v === 'function');
+
+    const results = singletons.filter(([, value]) => {
+      const proto = value?.prototype;
+      if (!proto) return false;
+      return typeof keys === 'string'
+        ? keys in proto
+        : keys.every((key) => Object.keys(proto).includes(key));
+    });
+
+    return results;
+  }
+
+  /**
+   * Returns the singleton constructor matching the given (set of) key(s)
+   */
+  getSingletonConstructorWithKey(key: string | string[]): new (...args) => any {
+    const results = this.searchForSingletonConstructorWithKey(key);
+
+    if (results.length > 1)
+      console.error(`[MIRAGE] More than one singleton class found !`);
+
+    return results.pop().pop();
+  }
+
+  /**
+   * Returns the singleton object (or on of its children) matching the given matcher
+   * @param matcher Matcher to look for
+   * @param maxDepth Maximum depth allowed
+   */
+  getSingletonObjectWithKey<T>(matcher: keyof T, maxDepth: number = 5) {
     const singletons = Object.entries<any>(
       this.instance.window?.singletons?.c ?? {},
     )

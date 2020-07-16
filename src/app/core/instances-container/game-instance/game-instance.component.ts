@@ -58,9 +58,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
       this.susbscriptions.add(
         this.instance.events.characterLogin$
           .pipe(switchMap(() => timer(60000, 60000)))
-          .subscribe(() =>
-            this.instance.events.preventInactivity(),
-          ),
+          .subscribe(() => this.instance.events.preventInactivity()),
       );
 
       this.susbscriptions.add(
