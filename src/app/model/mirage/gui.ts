@@ -85,7 +85,7 @@ export class MgGuiHandler {
 
   get accountButtonImage() {
     try {
-      const char = new this.instance.window.CharacterDisplay({
+      const char = new this.instance.singletons.characterDisplay({
         scale: 'fitin',
         horizontalAlign: 'center',
         verticalAlign: 'top',
@@ -114,7 +114,7 @@ export class MgGuiHandler {
 
   get accountListImage() {
     try {
-      const char = new this.instance.window.CharacterDisplay({
+      const char = new this.instance.singletons.characterDisplay({
         scale: 'fitin',
         horizontalAlign: 'center',
         verticalAlign: 'center',

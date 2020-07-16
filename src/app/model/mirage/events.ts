@@ -69,12 +69,18 @@ export class MgEventsHandler {
   constructor(private instance: GameInstance) {
     // Bind the finders to the instance window
     waitForTruthiness$(() => this.instance.window, true).subscribe(() => {
-      this.instance.window['wFind'] = this.instance.finder.findKeyInWindow.bind(
+      this.instance.window['wFind'] = this.instance.finder.searchForKeyInWindowObjects.bind(
         this.instance.finder,
       );
       this.instance.window[
         'sFind'
-      ] = this.instance.finder.findKeyInSingleton.bind(this.instance.finder);
+      ] = this.instance.finder.searchForKeyInSingletonObjects.bind(this.instance.finder);
+
+      this.instance.window[
+        'mgTest'
+      ] = this.instance.finder.getSingletonConstructorWithKey.bind(
+        this.instance.finder,
+      );
 
       fromEvent<UIEvent>(this.instance.window, 'resize')
         .pipe(debounceTime(100))

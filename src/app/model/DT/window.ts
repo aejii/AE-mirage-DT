@@ -109,53 +109,9 @@ export interface DTWindow extends Window {
     };
   };
 
-  CharacterDisplay: new (
-    configuration: CharacterDisplayConfiguration,
-  ) => CharacterDisplay;
-
-  // singletons(
-  //   index: number,
-  // ): {
-  //   c: { [key: number]: any };
-  // };
-
   singletons: ((index: number) => any) & {
     c: { [key: number]: any };
   };
-}
-
-export interface CharacterDisplay {
-  rootElement: HTMLDivElement;
-  canvas: {
-    width: number;
-    height: number;
-    rootElement: HTMLCanvasElement;
-  };
-  setLook: (
-    entityLook: CharacterDisplayEntityLook,
-    configuration: CharacterDisplayEntityLookConfiguration,
-  ) => CharacterDisplay;
-  _render: () => void;
-  resize: () => void;
-}
-
-export interface CharacterDisplayConfiguration {
-  scale: number | 'fitin' | 'cover' | 'width' | 'height' | '%';
-  horizontalAlign: 'left' | 'center' | 'right';
-  verticalAlign: 'top' | 'center' | 'bottom';
-}
-
-export interface CharacterDisplayEntityLook {
-  displayType: 'characters' | 'timeline';
-  direction: number;
-}
-
-export interface CharacterDisplayEntityLookConfiguration {
-  riderOnly: boolean;
-  direction: number;
-  animation?: 'AnimArtwork' | 'AnimStatique';
-  boneType: 'characters/' | 'timeline/';
-  skinType: 'characters/' | 'timeline/';
 }
 
 export interface EventReadyObject {
