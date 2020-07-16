@@ -48,7 +48,9 @@ export class MgGuiHandler {
   }
 
   refreshInterface() {
-    this.instance.window?.gui?._resizeUi?.();
+    try {
+      this.instance.window?.gui?._resizeUi?.();
+    } catch (e) {}
   }
 
   removeNotification(notificationId: string) {

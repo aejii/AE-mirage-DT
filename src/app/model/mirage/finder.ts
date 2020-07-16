@@ -77,7 +77,7 @@ export class MgFinder {
     return results;
   }
 
-  findSingletonForKey(matcher: string, maxDepth: number = 5) {
+  findSingletonForKey<T>(matcher: keyof T, maxDepth: number = 5) {
     const singletons = Object.entries<any>(
       this.instance.window?.singletons?.c ?? {},
     )
@@ -180,7 +180,7 @@ export class MgFinder {
             ...this._recursiveSearch(
               subValue,
               matcher,
-              `${path}[${index}]`,
+              `${path}.${key}[${index}]`,
               alreadySeenRefs,
               maxDepth,
               currentDepth + 1,

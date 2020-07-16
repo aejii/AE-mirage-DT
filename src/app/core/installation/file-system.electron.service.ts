@@ -275,11 +275,6 @@ const scriptRegexes = [
     ',\\s*(\\w+\\.logUncaughtExceptions)\\s*=\\s*function\\(([^(]*)\\)',
     ',$1=function($2) { top.console.log($2); }, !1 && function($2)',
   ],
-  // Binds the inactivity object to the window
-  [
-    '(var\\s*t\\s*=\\s*this\\s*,\\s*(\\w)+\\s*=\\s*window.dofus.connectionManager;\\s*(\\w)+\\s*\\.on\\("ServersListMessage",)',
-    `window.${commonEnvironment.gameInactivityObjectName} = this;$1`, // STUB inactivity
-  ],
   // Adds the character display function from the inventory to the window to be used to identify accounts
   [
     '(\\w{1,2}\\.exports\\s?=\\s?(\\w{1,2}),\\s?)(\\w{1,2}\\.prototype\\.setLook)',

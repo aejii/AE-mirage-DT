@@ -1,11 +1,11 @@
 import { fromEvent, interval, Observable } from 'rxjs';
 import {
-  filter,
+  debounceTime, filter,
   first,
   map,
   shareReplay,
   switchMap,
-  tap,
+  tap
 } from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
 
@@ -74,11 +74,21 @@ export class MgEventsHandler {
       this.instance.window[
         'sFind'
       ] = this.instance.finder.findKeyInSingleton.bind(this.instance.finder);
+
+      fromEvent<UIEvent>(this.instance.window, 'resize')
+      .pipe(
+        debounceTime(100)
+      ).subscribe(() => {
+        this.instance.singletons.dimensionsManager.dimensions.viewportWidth = 0;
+        this.instance.singletons.dimensionsManager.dimensions.viewportHeight = 0;
+        this.instance.singletons.dimensionsManager.updateScreen();
+        this.instance.gui.refreshInterface();
+      });
     });
   }
 
   preventInactivity() {
-    this.instance.window?.mirageInactivity?.recordActivity?.();
+    this.instance.singletons.activityRecorder?.recordActivity?.();
   }
 }
 

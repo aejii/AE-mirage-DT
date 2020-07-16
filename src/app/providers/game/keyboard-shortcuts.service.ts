@@ -108,6 +108,15 @@ export class KeyboardShortcutsService {
       return this.instances.removeInstance(instance);
     }
     if (event.key === 'Enter' && event.code === 'Enter') {
+      // Don't open if already in an input field
+      if (
+        // tslint:disable-next-line: no-string-literal
+        event.target instanceof instance.window['HTMLInputElement'] ||
+        // tslint:disable-next-line: no-string-literal
+        event.target instanceof instance.window['HTMLTextAreaElement']
+      )
+        return;
+
       return instance.gui.toggleChat(true);
     }
     if (event.key === 'Escape' && event.code === 'Escape') {
