@@ -1,8 +1,4 @@
 export interface DTWindow extends Window {
-  // TODO Remove this from the regexes and use the singleton
-  mirageInactivity: {
-    recordActivity: () => void;
-  };
   dofus: {
     connectionManager: {
       sendMessage: (verb: string, payload: any) => any;

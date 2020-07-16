@@ -28,6 +28,4 @@ export const commonEnvironment = {
       exists: 12,
     },
   },
-
-  gameInactivityObjectName: 'mirageInactivity',
 };

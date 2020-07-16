@@ -50,7 +50,6 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
 
       this.susbscriptions.add(
         this.instance.events.characterLogin$.subscribe(() => {
-          this.instance.events.preventInactivity();
           this.instance.gui.removeShopButton();
           this.instance.shortcuts.addSpellsDoubleTapListener();
         }),
@@ -60,7 +59,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
         this.instance.events.characterLogin$
           .pipe(switchMap(() => timer(60000, 60000)))
           .subscribe(() =>
-            this.instance.singletons.activityRecorder.recordActivity(),
+            this.instance.events.preventInactivity(),
           ),
       );
 
