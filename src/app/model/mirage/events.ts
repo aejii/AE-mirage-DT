@@ -7,6 +7,7 @@ import {
   shareReplay,
   switchMap,
   tap,
+  delay,
 } from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
 
@@ -81,6 +82,10 @@ export class MgEventsHandler {
       ] = this.instance.finder.getSingletonConstructorWithKey.bind(
         this.instance.finder,
       );
+
+      this.characterLogin$.pipe(delay(5000)).subscribe(() => {
+        this.instance.gui.refreshInterface();
+      });
 
       fromEvent<UIEvent>(this.instance.window, 'resize')
         .pipe(debounceTime(100))
