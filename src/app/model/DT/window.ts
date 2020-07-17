@@ -6,6 +6,11 @@ export interface DTWindow extends Window {
     };
   };
   gui: {
+    numberInputPad: GameGuiElement & {
+      _doDigit(digit: number): void;
+      _doEnter(): void;
+      _doBackspace(): void;
+    };
     mainControls: {
       buttonBox: GameGuiElement;
     };
@@ -180,4 +185,6 @@ export interface GameGuiElement<T = HTMLElement> {
   _childrenMap: { [key: string]: GameGuiElement };
   tap(): void;
   show(): void;
+  isVisible(): boolean;
+  hide(): void;
 }
