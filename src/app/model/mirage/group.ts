@@ -46,8 +46,8 @@ export class MgGroupHandler {
           partyId,
         },
       );
-      this.instance.gui.removeNotification('party' + partyId);
-      this.instance.gui.hidePartyDetails();
+      this.instance.actions.removeNotification('party' + partyId);
+      this.instance.actions.hidePartyDetails();
     });
 
     this.instance.window?.dofus?.connectionManager?.on?.(

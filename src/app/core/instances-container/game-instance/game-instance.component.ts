@@ -13,8 +13,8 @@ import {
   MgKeyboardShortcut,
   SystemService,
 } from '@providers';
-import { concat, forkJoin, of, Subscription, timer } from 'rxjs';
-import { delay, filter, switchMap, tap } from 'rxjs/operators';
+import { Subscription, timer } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
 
 @Component({
@@ -45,25 +45,26 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.zone.run(() => {
-      this._connectAccount();
+      this.instance.actions.connectAccount();
+
       this._setActiveOnTurnStart();
 
       this.susbscriptions.add(
         this.instance.events.characterLogin$.subscribe(() => {
-          this.instance.gui.removeShopButton();
-          this.instance.shortcuts.addSpellsDoubleTapListener();
+          this.instance.actions.removeShopButton();
+          this.instance.injecter.addSpellsDoubleTapListener();
         }),
       );
 
       this.susbscriptions.add(
         this.instance.events.characterLogin$
           .pipe(switchMap(() => timer(60000, 60000)))
-          .subscribe(() => this.instance.events.preventInactivity()),
+          .subscribe(() => this.instance.actions.preventInactivity()),
       );
 
       this.susbscriptions.add(
         this.instance.groupManager.partyInfo$.subscribe((infos) => {
-          const placeholder = this.instance.gui.placeholderPartyInfo;
+          const placeholder = this.instance.injecter.placeholderPartyInfo;
           if (!placeholder) return;
           placeholder.innerHTML = `🌟 ${infos.level} <br /> 🔎 ${infos.dropChance}`;
         }),
@@ -73,7 +74,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
         this.instance.events.characterLogin$
           .pipe(
             filter(() => !this.system.isCordova),
-            tap(() => this.instance.gui.addBindingsToShortcutSlots()),
+            tap(() => this.instance.injecter.addBindingsToShortcutSlots()),
             switchMap(() => this.shortcuts.slotShortcuts$),
           )
           .subscribe((shortcuts) => this._addShortcutsKeysToSlots(shortcuts)),
@@ -87,36 +88,6 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
           ),
       );
     });
-  }
-
-  /**
-   * Connects the account provided in the instance.
-   * If none has been, ignores.
-   */
-  private _connectAccount() {
-    if (!this.instance.account) return;
-
-    this.instance.events.gameInit$
-      .pipe(
-        delay(500),
-        tap(() => this.instance.window.gui.loginScreen.showLoginForm()),
-        switchMap(() =>
-          emulateUserTyping$(
-            this.instance.gui.loginForm.username,
-            this.instance.account.username,
-          ),
-        ),
-        switchMap(() =>
-          emulateUserTyping$(
-            this.instance.gui.loginForm.password,
-            this.instance.account.password,
-          ),
-        ),
-      )
-      .subscribe(() => {
-        this.instance.gui.loginForm.rememberName.deactivate();
-        this.instance.gui.loginForm.play();
-      });
   }
 
   /**
@@ -147,17 +118,4 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
       ),
     );
   }
-}
-
-/**
- * Simulates a user typing in the input
- * @param input HTML Input Element to type in
- * @param content Content to type
- */
-function emulateUserTyping$(input: HTMLInputElement, content: string) {
-  return forkJoin([
-    concat(
-      ...content.split('').map((letter) => of(letter).pipe(delay(50))),
-    ).pipe(tap((letter) => (input.value += letter))),
-  ]);
 }

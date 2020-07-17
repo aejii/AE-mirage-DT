@@ -1,3 +1,5 @@
+import { fromEvent } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
 import { DTWindow } from '../DT/window';
 import { MgActionsHandler } from '../mirage/actions';
 import { MgCharacterHandler } from '../mirage/character';
@@ -6,6 +8,7 @@ import { MgFightHandler } from '../mirage/fights';
 import { MgFinder } from '../mirage/finder';
 import { MgGroupHandler } from '../mirage/group';
 import { MgGuiHandler } from '../mirage/gui';
+import { MgInjecter } from '../mirage/injecter';
 import { MgSingletons } from '../mirage/singletons';
 
 export class GameInstance {
@@ -13,21 +16,24 @@ export class GameInstance {
 
   public window: DTWindow;
 
-  public events = new MgEventsHandler(this);
-  public character = new MgCharacterHandler(this);
+  public finder = new MgFinder(this);
   public gui = new MgGuiHandler(this);
-  public shortcuts = new MgActionsHandler(this);
+  public injecter = new MgInjecter(this);
+  public events = new MgEventsHandler(this);
+  public singletons = new MgSingletons(this);
+  public actions = new MgActionsHandler(this);
   public fightManager = new MgFightHandler(this);
   public groupManager = new MgGroupHandler(this);
-  public finder = new MgFinder(this);
-  public singletons = new MgSingletons(this);
+  public character = new MgCharacterHandler(this);
 
   constructor(
     public account?: {
       username: string;
       password: string;
     },
-  ) {}
+  ) {
+    this._enableUiResizingOnWindowResizing();
+  }
 
   /**
    * Attaches a frame window to the instance
@@ -35,5 +41,14 @@ export class GameInstance {
    */
   frameLoaded(frame: HTMLIFrameElement) {
     this.window = frame.contentWindow as DTWindow;
+  }
+
+  private _enableUiResizingOnWindowResizing() {
+    this.events.gameInit$
+      .pipe(
+        switchMap(() => fromEvent(this.window, 'resize')),
+        debounceTime(100),
+      )
+      .subscribe(() => this.actions.refreshInterface());
   }
 }
