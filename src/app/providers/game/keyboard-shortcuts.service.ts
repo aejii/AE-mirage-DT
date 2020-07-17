@@ -89,9 +89,14 @@ export class KeyboardShortcutsService {
   runShortcut(instance: GameInstance, event: KeyboardEvent) {
     if (!instance) return;
 
+    if (instance.window.gui.numberInputPad.isVisible()) {
+      return this._runNumpadShortcut(instance, event);
+    }
+
     const shortcut = this.query.getAll().find((s) => s.name === event.key);
 
-    if (shortcut) this._runCustomShortcut(instance, shortcut, event);
+    if (shortcut && !event.ctrlKey && !event.shiftKey && !event.altKey)
+      this._runCustomShortcut(instance, shortcut, event);
     else this._runSystemShortcut(instance, event);
   }
 
@@ -163,5 +168,13 @@ export class KeyboardShortcutsService {
         shortcut.target as GameMenuBarIconsNames,
       );
     }
+  }
+
+  private _runNumpadShortcut(instance: GameInstance, event: KeyboardEvent) {
+    const numpad = instance.window.gui.numberInputPad;
+    if (!isNaN(+event.key)) numpad._doDigit(+event.key);
+    if (event.key === 'Enter') numpad._doEnter();
+    if (event.key === 'Escape') numpad.hide();
+    if (event.key === 'Backspace') numpad._doBackspace();
   }
 }
