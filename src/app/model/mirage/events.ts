@@ -1,13 +1,13 @@
 import { fromEvent, interval, Observable } from 'rxjs';
 import {
   debounceTime,
+  delay,
   filter,
   first,
   map,
   shareReplay,
   switchMap,
   tap,
-  delay,
 } from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
 
@@ -70,16 +70,17 @@ export class MgEventsHandler {
   constructor(private instance: GameInstance) {
     // Bind the finders to the instance window
     waitForTruthiness$(() => this.instance.window, true).subscribe(() => {
-      this.instance.window['wFind'] = this.instance.finder.searchForKeyInWindowObjects.bind(
+      (this.instance
+        .window as any).wFind = this.instance.finder.searchForKeyInWindowObjects.bind(
         this.instance.finder,
       );
-      this.instance.window[
-        'sFind'
-      ] = this.instance.finder.searchForKeyInSingletonObjects.bind(this.instance.finder);
+      (this.instance
+        .window as any).sFind = this.instance.finder.searchForKeyInSingletonObjects.bind(
+        this.instance.finder,
+      );
 
-      this.instance.window[
-        'mgTest'
-      ] = this.instance.finder.getSingletonConstructorWithKey.bind(
+      (this.instance
+        .window as any).mgTest = this.instance.finder.getSingletonConstructorWithKey.bind(
         this.instance.finder,
       );
 
