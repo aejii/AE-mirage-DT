@@ -51,7 +51,7 @@ export class MgGuiHandler {
     try {
       this.instance.singletons.dimensionsManager.dimensions.viewportWidth = 0;
       this.instance.singletons.dimensionsManager.dimensions.viewportHeight = 0;
-      this.instance.window.isoEngine.mapScene.camera.maxZoom = 10;
+      this.instance.window.isoEngine.mapScene.camera.maxZoom = 2;
       this.instance.singletons.dimensionsManager.updateScreen();
       this.instance.window?.gui?._resizeUi?.();
     } catch (e) {}
