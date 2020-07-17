@@ -2,14 +2,12 @@ import { GameInstance } from '../classes/game-instance';
 import { GameMenuBarIconsNames } from '../DT/window';
 
 export class MgActionsHandler {
-  private spellSlots: any[];
-
   constructor(private instance: GameInstance) {}
 
   // TODO See if it can be ran only once on instance creation
   addSpellsDoubleTapListener() {
     const slots = this.instance.gui.spellsSlots;
-    this.spellSlots = slots.map((slot) => {
+    slots.map((slot) => {
       slot.addListener('doubletap', () => {
         if (!this.instance.character.isFighting) return;
 
@@ -46,9 +44,12 @@ export class MgActionsHandler {
     }
   }
 
-  /** Uses a spell/item in the currently displayed panel  */
+  /** Uses a spell/item in the currently displayed panel and the current tab  */
   useSlotInCurrentPanel(slotIndex: number) {
-    this.instance.gui.currentSlotsPanel?.slotList?.[slotIndex]?.emit?.(
+    const index = this.instance.gui.currentSlotsPanel?.index;
+    this.instance.gui.currentSlotsPanel?.slotList?.[
+      slotIndex + index * 30
+    ]?.emit?.(
       // Select instead of use if in fight
       this.instance.gui.currentPanelType === 'spell' ? 'tap' : 'doubletap',
     );

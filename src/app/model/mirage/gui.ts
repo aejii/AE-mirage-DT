@@ -154,12 +154,17 @@ export class MgGuiHandler {
   }
 
   setShortcutBindingOnSlot(index: number, key: string) {
-    this.spellsSlots[index].rootElement.querySelector(
-      '.mirage-shortcut-key',
-    ).innerHTML = key || '';
-    this.itemsSlots[index].rootElement.querySelector(
-      '.mirage-shortcut-key',
-    ).innerHTML = key || '';
+    // Do it on all tabs
+    const targets = [index, index + 30, index + 60];
+
+    targets.forEach((target) => {
+      this.spellsSlots[target].rootElement.querySelector(
+        '.mirage-shortcut-key',
+      ).innerHTML = key || '';
+      this.itemsSlots[target].rootElement.querySelector(
+        '.mirage-shortcut-key',
+      ).innerHTML = key || '';
+    });
   }
 
   get spellsSlots() {

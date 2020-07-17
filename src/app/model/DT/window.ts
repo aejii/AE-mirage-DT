@@ -47,9 +47,10 @@ export interface DTWindow extends Window {
     shortcutBar: {
       _currentPanelType: 'spell' | 'item';
       _panels: {
-        [key in 'spell' | 'item']: {
+        [key in 'spell' | 'item']: EventReadyObject & {
           slotList: (EventReadyObject &
             GameGuiElement & { data: { id: number } })[];
+          index: number;
         };
       };
     };
