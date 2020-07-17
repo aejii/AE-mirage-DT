@@ -1,6 +1,13 @@
 import { GameInstance } from '../classes/game-instance';
+import {
+  CharacterDisplayConfiguration,
+  CharacterDisplayEntityLookConfiguration,
+} from './singletons';
 
 export class MgGuiHandler {
+  constructor(private instance: GameInstance) {}
+
+  /** Login form displayed when the user starts the game */
   get loginForm() {
     return {
       username: this.instance.window.gui?.loginScreen?._loginForm?._inputLogin
@@ -14,157 +21,43 @@ export class MgGuiHandler {
     };
   }
 
-  get placeholderPartyInfo() {
-    const placeholderClass = 'mirage-party-infos';
-
-    const partyEl = this.instance.window?.gui?.party?.classicParty;
-    const groupLeaderEl = partyEl?._childrenList[0]?.rootElement;
-    let placeholder: HTMLElement = partyEl?.rootElement?.querySelector?.(
-      `.${placeholderClass} span`,
-    );
-
-    if (!partyEl || !groupLeaderEl) return undefined;
-    else if (placeholder) return placeholder;
-    else {
-      placeholder = document.createElement('div');
-      placeholder.classList.add(placeholderClass);
-      placeholder.style.display = 'flex';
-      placeholder.style.flexFlow = 'row';
-      placeholder.style.alignItems = 'center';
-      placeholder.style.justifyContent = 'center';
-      const span = document.createElement('span');
-      placeholder.appendChild(span);
-      partyEl.rootElement.insertBefore(placeholder, groupLeaderEl);
-
-      return span;
-    }
-  }
-
-  constructor(private instance: GameInstance) {}
-
-  removeShopButton() {
-    // Timeout because on connection, might not be declared yet
-    setTimeout(() => this.instance.window?.gui?.shopFloatingToolbar?.hide?.());
-  }
-
-  refreshInterface() {
-    try {
-      this.instance.singletons.dimensionsManager.dimensions.viewportWidth = 0;
-      this.instance.singletons.dimensionsManager.dimensions.viewportHeight = 0;
-      this.instance.window.isoEngine.mapScene.camera.maxZoom = 2;
-      this.instance.singletons.dimensionsManager.updateScreen();
-      this.instance.window?.gui?._resizeUi?.();
-    } catch (e) {}
-  }
-
-  removeNotification(notificationId: string) {
-    this.instance.window?.gui?.notificationBar?.removeNotification?.(
-      notificationId,
-    );
-  }
-
-  hidePartyDetails() {
-    this.instance.window.gui?.party?.collapse?.();
-  }
-
-  addPartyInfoPlaceHolder() {
-    const placeholderClass = 'mirage-party-infos';
-
-    const partyEl = this.instance.window.gui.party.classicParty;
-    const groupLeaderEl = partyEl._childrenList[0].rootElement;
-
-    if (partyEl.rootElement.querySelector(`.${placeholderClass}`))
-      return undefined;
-
-    const placeholder = document.createElement('div');
-    placeholder.classList.add(placeholderClass);
-
-    partyEl.rootElement.insertBefore(placeholder, groupLeaderEl);
-    return placeholder;
-  }
-
   get accountButtonImage() {
-    try {
-      const char = new this.instance.singletons.characterDisplay({
+    const char = getCharacterImage(
+      this.instance,
+      {
         scale: 'fitin',
         horizontalAlign: 'center',
         verticalAlign: 'top',
-      });
-      char?.setLook?.(this.instance.character.entityLook, {
+      },
+      {
         riderOnly: true,
         direction: 4,
         animation: 'AnimArtwork',
         boneType: 'timeline/',
         skinType: 'timeline/',
-      });
-
-      char.canvas.width = 128;
-      char.canvas.height = 128;
-
-      char._render?.();
-
-      return char.rootElement;
-    } catch (error) {
-      console.error(
-        'An error occured during character image rendering for Mirage',
-      );
-      return undefined;
-    }
+      },
+      128,
+    );
+    return char.rootElement;
   }
 
   get accountListImage() {
-    try {
-      const char = new this.instance.singletons.characterDisplay({
+    return getCharacterImage(
+      this.instance,
+      {
         scale: 'fitin',
         horizontalAlign: 'center',
         verticalAlign: 'center',
-      });
-      char?.setLook?.(this.instance.character.entityLook, {
+      },
+      {
         riderOnly: true,
         direction: 2,
         animation: 'AnimStatique',
         boneType: 'characters/',
         skinType: 'characters/',
-      });
-
-      char.canvas.width = 256;
-      char.canvas.height = 256;
-
-      char._render?.();
-
-      return char;
-    } catch (error) {
-      console.error(
-        'An error occured during character image rendering for Mirage',
-      );
-      return undefined;
-    }
-  }
-
-  addBindingsToShortcutSlots() {
-    const slots = [...this.spellsSlots, ...this.itemsSlots].map(
-      (v) => v.rootElement,
+      },
+      256,
     );
-
-    slots.forEach((slot) => {
-      const div = document.createElement('div');
-      div.className = 'mirage-shortcut-key quantity';
-      slot.appendChild(div);
-    });
-  }
-
-  setShortcutBindingOnSlot(index: number, key: string) {
-    // Do it on all tabs
-    const targets = [index, index + 30, index + 60];
-
-    targets.forEach((target) => {
-      this.spellsSlots[target].rootElement.querySelector(
-        '.mirage-shortcut-key',
-      ).innerHTML = key || '';
-      this.itemsSlots[target].rootElement.querySelector(
-        '.mirage-shortcut-key',
-      ).innerHTML = key || '';
-    });
   }
 
   get spellsSlots() {
@@ -195,9 +88,41 @@ export class MgGuiHandler {
     return this.instance.window?.gui?.chat;
   }
 
-  toggleChat(forceValue?: boolean) {
-    const shouldShow = forceValue ?? !this.chatWindow?.active;
-    if (shouldShow) this.chatWindow?.activate?.();
-    else this.chatWindow?.deactivate?.();
+  setShortcutBindingOnSlot(index: number, key: string) {
+    // Do it on all tabs (30 slots per tab)
+    const targets = [index, index + 30, index + 60];
+
+    targets.forEach((target) => {
+      this.spellsSlots[target].rootElement.querySelector(
+        '.mirage-shortcut-key',
+      ).innerHTML = key || '';
+      this.itemsSlots[target].rootElement.querySelector(
+        '.mirage-shortcut-key',
+      ).innerHTML = key || '';
+    });
+  }
+}
+
+function getCharacterImage(
+  instance: GameInstance,
+  displayConfig: CharacterDisplayConfiguration,
+  lookConfig: CharacterDisplayEntityLookConfiguration,
+  size: number,
+) {
+  try {
+    const char = new instance.singletons.characterDisplay(displayConfig);
+    char?.setLook?.(instance.character.entityLook, lookConfig);
+
+    char.canvas.width = size;
+    char.canvas.height = size;
+
+    char._render?.();
+
+    return char;
+  } catch (error) {
+    console.error(
+      'An error occured during character image rendering for Mirage',
+    );
+    return undefined;
   }
 }

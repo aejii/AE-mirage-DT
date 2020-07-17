@@ -88,8 +88,10 @@ export class KeyboardShortcutsService {
 
   runShortcut(instance: GameInstance, event: KeyboardEvent) {
     if (!instance) return;
+    // Ignore if the target is in the main window
+    if (event.target instanceof HTMLElement || event.target instanceof HTMLTextAreaElement) return;
 
-    if (instance.window.gui.numberInputPad.isVisible()) {
+    if (instance.window.gui.numberInputPad?.isVisible?.()) {
       return this._runNumpadShortcut(instance, event);
     }
 
@@ -122,18 +124,18 @@ export class KeyboardShortcutsService {
       )
         return;
 
-      return instance.gui.toggleChat(true);
+      return instance.actions.toggleChat(true);
     }
     if (event.key === 'Escape' && event.code === 'Escape') {
       if (instance.gui.chatWindow.active) {
-        instance.gui.toggleChat(false);
+        instance.actions.toggleChat(false);
       } else {
         // Close the last opened window
         const lastOpenedMenu = instance.gui.lastOpenedMenu;
         if (lastOpenedMenu && lastOpenedMenu.rootElement.id !== 'recaptcha')
           lastOpenedMenu.close?.();
         // Show settings if no window opened
-        else instance.shortcuts.showSettings();
+        else instance.actions.showSettings();
       }
       return;
     }
@@ -156,15 +158,15 @@ export class KeyboardShortcutsService {
       return;
 
     if (shortcut.target === 'slot') {
-      instance.shortcuts.useSlotInCurrentPanel(shortcut.slotIndex);
+      instance.actions.useSlotInCurrentPanel(shortcut.slotIndex);
     } else if (shortcut.target === 'next instance') {
       this.instances.nextInstance();
     } else if (shortcut.target === 'previous instance') {
       this.instances.previousInstance();
     } else if (shortcut.target === 'skip turn / ready') {
-      instance.shortcuts.clikOnReadyButton();
+      instance.fightManager.clickOnTimelineButton();
     } else {
-      instance.shortcuts.clickOnMenuIcon(
+      instance.actions.clickOnMenuIcon(
         shortcut.target as GameMenuBarIconsNames,
       );
     }

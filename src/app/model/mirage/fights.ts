@@ -11,12 +11,29 @@ export class MgFightHandler {
     return this.fightersList[this.instance.character.id];
   }
 
-  get readyButton() {
-    return this.instance.window?.gui?.timeline?.fightControlButtons?._fightReadyBtn;
+  private get readyButton() {
+    return this.instance.window?.gui?.timeline?.fightControlButtons
+      ?._fightReadyBtn;
   }
 
-  get endTurnButton() {
-    return this.instance.window?.gui?.timeline?.fightControlButtons?._turnReadyBtn;
+  private get endTurnButton() {
+    return this.instance.window?.gui?.timeline?.fightControlButtons
+      ?._turnReadyBtn;
+  }
 
+  get fightState() {
+    return this.instance.window?.gui?.fightManager?.fightState ?? -1;
+  }
+
+  get timelineButton() {
+    return this.fightState === 0
+      ? this.readyButton
+      : this.fightState === 1
+      ? this.endTurnButton
+      : undefined;
+  }
+
+  clickOnTimelineButton() {
+    this.timelineButton.tap();
   }
 }

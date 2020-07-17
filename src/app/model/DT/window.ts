@@ -1,8 +1,8 @@
 export interface DTWindow extends Window {
   dofus: {
     connectionManager: {
-      sendMessage: (verb: string, payload: any) => any;
-      on: (verb: string, callback: (...args) => any) => any;
+      sendMessage(verb: string, payload: any): any;
+      on(verb: string, callback: (...args) => any): any;
     };
   };
   gui: {
@@ -14,12 +14,7 @@ export interface DTWindow extends Window {
     mainControls: {
       buttonBox: GameGuiElement;
     };
-    windowsContainer: {
-      _childrenList: (GameGuiElement & {
-        isVisible(): boolean;
-        close(): void;
-      })[];
-    };
+    windowsContainer: GameGuiElement;
     chat: {
       active: boolean;
       activate(): void;
@@ -39,7 +34,7 @@ export interface DTWindow extends Window {
       };
     };
     _resizeUi: () => void;
-    notificationBar: { removeNotification: (id: string) => void };
+    notificationBar: { removeNotification(id: string): void };
     fightManager: {
       fightState: -1 | 0 | 1; // Unknown | In preparation | Fighting
       _fighters: { [key: number]: FightManagerFighter };
@@ -55,26 +50,25 @@ export interface DTWindow extends Window {
       };
     };
     shopFloatingToolbar: {
-      hide: () => void;
-      show: () => void;
+      hide(): void;
+      show(): void;
     };
     loginScreen: {
-      showLoginForm: () => void;
       _loginForm: {
         _inputLogin: GameGuiElement<HTMLInputElement>;
         _inputPassword: GameGuiElement<HTMLInputElement>;
         _rememberName: {
           rootElement: HTMLElement;
-          acitvate: () => void;
-          deactivate: () => void;
+          activate(): void;
+          deactivate(): void;
         };
         _btnPlay: {
-          tap: () => void;
+          tap(): void;
         };
-        _play: () => void;
+        _play(): void;
       };
+      showLoginForm(): void;
     };
-    on: (verb: string, callback: (...args: any) => any) => any;
     playerData: {
       id: number;
       isFighting: boolean;
@@ -94,25 +88,26 @@ export interface DTWindow extends Window {
       };
     };
     party: {
-      collapse: () => void;
       currentParty: {
         _childrenList: { memberData: PartyMemberData }[];
       };
       classicParty: GameGuiElement;
+      collapse(): void;
     };
+    on(verb: string, callback: (...args: any) => any): any;
   };
 
   foreground: {
-    selectSpell: (id: number) => void;
+    selectSpell(id: number): void;
   };
 
   isoEngine: {
-    _castSpellImmediately: (id: number) => void;
     mapScene: {
       camera: {
         maxZoom: number;
       };
     };
+    _castSpellImmediately(id: number): void;
   };
 
   singletons: ((index: number) => any) & {
@@ -122,9 +117,9 @@ export interface DTWindow extends Window {
 
 export interface EventReadyObject {
   _events: { [key: string]: any };
-  addListener: (verb: string, callback: (...args) => any) => any;
-  removeListener: (verb: string, event: any) => void;
-  emit: (verb: string) => any;
+  addListener(verb: string, callback: (...args) => any): any;
+  removeListener(verb: string, event: any): void;
+  emit(verb: string): any;
 }
 
 export interface FightManagerFighter {
@@ -188,4 +183,5 @@ export interface GameGuiElement<T = HTMLElement> {
   show(): void;
   isVisible(): boolean;
   hide(): void;
+  close(): void;
 }
