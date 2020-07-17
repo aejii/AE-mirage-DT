@@ -125,7 +125,8 @@ export class KeyboardShortcutsService {
       } else {
         // Close the last opened window
         const lastOpenedMenu = instance.gui.lastOpenedMenu;
-        if (lastOpenedMenu) lastOpenedMenu.close?.();
+        if (lastOpenedMenu && lastOpenedMenu.rootElement.id !== 'recaptcha')
+          lastOpenedMenu.close?.();
         // Show settings if no window opened
         else instance.shortcuts.showSettings();
       }
