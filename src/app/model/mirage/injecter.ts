@@ -1,4 +1,7 @@
+import { first } from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
+import { EventReadyObject } from '../DT/window';
+import { ExchangeWindowSlot } from './singletons';
 
 export class MgInjecter {
   get placeholderPartyInfo() {
@@ -59,11 +62,101 @@ export class MgInjecter {
         }
       });
 
-      this.instance.events.characterLogout$.subscribe(() =>
-        slot?.removeListener?.('doubletap', slot._events.doubletap),
+      this.instance.events.subscriptions.add(
+        this.instance.events.characterLogout$.subscribe(() =>
+          slot?.removeListener?.('doubletap', slot._events.doubletap),
+        ),
       );
 
       return slot;
     });
+  }
+
+  /** Manages listeners on the exchange/storage windows, to allow Ctrl + click to send all selected objects at once */
+  manageQuickExchange() {
+    this._manageDoubletapOnExchangeSlot(
+      this.instance.gui.characterExchangeInventory,
+      true,
+    );
+    this._manageDoubletapOnExchangeSlot(
+      this.instance.gui.exchangeInventoryWindow,
+      true,
+    );
+    this._manageDoubletapOnExchangeSlot(
+      this.instance.gui.exchangeStorageWindow,
+      false,
+    );
+
+    /**
+     * Edits the doubletap listener for objects added into the exchange interface
+     */
+    this.instance.window.gui.on('ExchangeObjectAddedMessage', (event) => {
+      const slot = this.instance.gui.characterExchangeInterface._myTradeSpace
+        ._allSlots._childrenMap['slot' + event.object.objectUID];
+      if (!slot) return;
+      this._manageDoubletapOnExchangeSlotInExchange(slot, false);
+    });
+  }
+
+  /**
+   * On ctrl + double click, sends the selected object to the other window.
+   * The other window is internally managed, so no need to know it.
+   * Also, the events are destroyed when the window is closed, so no need to delete them by hand.
+   */
+  private _manageDoubletapOnExchangeSlot(
+    target: EventReadyObject,
+    fromInventory: boolean,
+  ) {
+    if (!target) return;
+    target.addListener('opened', () => {
+      const originalListener = target?._events?.['slot-doubletap']?.bind(
+        target,
+      );
+
+      // Don't know why by the remove listener does not work on this event, doing it by hand
+      // target.removeListener('slot-doubletap', originalListener);
+      delete target._events['slot-doubletap'];
+
+      target.addListener(
+        'slot-doubletap',
+        (item: ExchangeWindowSlot, ...args) =>
+          this.instance.events.isCtrlPressed$
+            .pipe(first())
+            .subscribe((ctrlKey) =>
+              !ctrlKey
+                ? originalListener(item, ...args)
+                : this.instance.actions.TransferObjectForExchange(
+                    item?.itemInstance?.objectUID,
+                    item?.getQuantity?.(),
+                    fromInventory,
+                  ),
+            ),
+      );
+    });
+  }
+
+  /**
+   * On ctrl + double click, sends every item in the trade window to the inventory window.
+   * The trade window has a different behavior than the other ones, hence the specific method.
+   */
+  private _manageDoubletapOnExchangeSlotInExchange(
+    slot: ExchangeWindowSlot,
+    fromInventory: boolean,
+  ) {
+    const originalListener = slot?._events?.doubletap?.bind(slot);
+    slot?.removeListener?.('doubletap', slot._events.doubletap);
+    slot?.addListener?.('doubletap', (event) =>
+      this.instance.events.isCtrlPressed$
+        .pipe(first())
+        .subscribe((ctrlKey) =>
+          !ctrlKey
+            ? originalListener(event)
+            : this.instance.actions.TransferObjectForExchange(
+                slot?.itemInstance?.objectUID,
+                slot?.getQuantity?.(),
+                fromInventory,
+              ),
+        ),
+    );
   }
 }

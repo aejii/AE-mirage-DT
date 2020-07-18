@@ -1,8 +1,19 @@
-import { fromEvent, interval, Observable } from 'rxjs';
-import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { fromEvent, interval, merge, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import {
+  filter,
+  first,
+  map,
+  mapTo,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
+import { WindowGuiEventVerb } from '../DT/window';
 
 export class MgEventsHandler {
+  public subscriptions = new Subscription();
+
   /** Triggers once, when the game has loaded its loading screen */
   gameInit$ = waitForTruthiness$(
     () => this.instance?.window?.gui?.loginScreen?._loginForm,
@@ -32,7 +43,32 @@ export class MgEventsHandler {
     filter((event) => !event.repeat),
   );
 
-  constructor(private instance: GameInstance) {}
+  /** Emits when the user releases a key pressed on his keyboard */
+  public keyUp$ = waitForTruthiness$(() => this.instance.window, true).pipe(
+    switchMap(() => fromEvent<KeyboardEvent>(this.instance.window, 'keyup')),
+  );
+
+  private _ctrlPressed = new BehaviorSubject(false);
+  public isCtrlPressed$ = this._ctrlPressed.asObservable();
+
+  constructor(private instance: GameInstance) {
+    this.subscriptions.add(
+      this.keyDown$
+        .pipe(
+          filter((event) => event.key === 'Control'),
+          mapTo(true),
+        )
+        .subscribe(v => this._ctrlPressed.next(v)),
+    );
+    this.subscriptions.add(
+      this.keyUp$
+        .pipe(
+          filter((event) => event.key === 'Control'),
+          mapTo(false),
+        )
+        .subscribe(v => this._ctrlPressed.next(v)),
+    );
+  }
 }
 
 /**
@@ -57,7 +93,7 @@ function waitForTruthiness$<T>(
  */
 function fromGuiCallback$<T>(
   instance: GameInstance,
-  verb: string,
+  verb: WindowGuiEventVerb,
   listenOnce = false,
   returnValue?: T,
 ) {

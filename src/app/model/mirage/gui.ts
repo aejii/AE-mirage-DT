@@ -88,6 +88,30 @@ export class MgGuiHandler {
     return this.instance.window?.gui?.chat;
   }
 
+  /** Window displayed during a trade, showing the inventory */
+  get characterExchangeInventory() {
+    return this.instance.singletons.windowManager.getWindow(
+      'tradeWithPlayerAndNPCInventory',
+    );
+  }
+
+  /** Interface displayed during a thread, showing the currently traded items */
+  get characterExchangeInterface() {
+    return this.instance.singletons.windowManager.getWindow('tradeWithPlayer');
+  }
+
+  /** Window displayed during a storage operation, showing the inventory */
+  get exchangeInventoryWindow() {
+    return this.instance.singletons.windowManager.getWindow(
+      'exchangeInventory',
+    );
+  }
+
+  /** Window displayed during a storage operation, showing the storage content */
+  get exchangeStorageWindow() {
+    return this.instance.singletons.windowManager.getWindow('exchangeStorage');
+  }
+
   setShortcutBindingOnSlot(index: number, key: string) {
     // Do it on all tabs (30 slots per tab)
     const targets = [index, index + 30, index + 60];

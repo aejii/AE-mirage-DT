@@ -1,4 +1,5 @@
 import { GameInstance } from '../classes/game-instance';
+import { EventReadyObject } from '../DT/window';
 
 export class MgSingletons {
   private _audioManager: AudioManager;
@@ -26,6 +27,15 @@ export class MgSingletons {
         DimensionsManager
       >('updateScreen');
     return this._dimensionsManager;
+  }
+
+  private _windowManager: WindowManager;
+  get windowManager(): WindowManager {
+    if (!this._windowManager)
+      this._windowManager = this.instance.finder.getSingletonObjectWithKey<
+        WindowManager
+      >('addWindow');
+    return this._windowManager;
   }
 
   private _characterDisplay: new (
@@ -95,6 +105,12 @@ interface DimensionsManager {
   resizeNarrowScreen(menuBarSizeInFight: boolean): void;
 }
 
+interface WindowManager {
+  addWindow(): unknown;
+  getWindow(id: 'tradeWithPlayer'): EventReadyObject & ExchangeWindowInterface;
+  getWindow(id: WindowManagerIds): EventReadyObject;
+}
+
 export interface CharacterDisplayConfiguration {
   scale: number | 'fitin' | 'cover' | 'width' | 'height' | '%';
   horizontalAlign: 'left' | 'center' | 'right';
@@ -133,4 +149,121 @@ export interface CharacterDisplayEntityLookConfiguration {
   animation?: 'AnimArtwork' | 'AnimStatique';
   boneType: 'characters/' | 'timeline/';
   skinType: 'characters/' | 'timeline/';
+}
+
+export type WindowManagerIds =
+  | 'adminConsole'
+  | 'allianceCard'
+  | 'arena'
+  | 'bidHouseShop'
+  | 'birthdayLimit'
+  | 'breedDetail'
+  | 'breeding'
+  | 'buyHardCurrencyConfirm'
+  | 'cancel'
+  | 'characterCreation'
+  | 'characteristics'
+  | 'characterSelection'
+  | 'characUpdate'
+  | 'cleanAssets'
+  | 'confirm'
+  | 'connectionQueue'
+  | 'crafter'
+  | 'craftersList'
+  | 'crafting'
+  | 'craftingMulti'
+  | 'craftInventory'
+  | 'craftMagus'
+  | 'craftMagusMulti'
+  | 'craftPayment'
+  | 'deleteCharacterConfirm'
+  | 'document'
+  | 'equipment'
+  | 'estateForSale'
+  | 'estateInformation'
+  | 'exchangeInventory'
+  | 'exchangeStorage'
+  | 'familyTree'
+  | 'feed'
+  | 'fightEnd'
+  | 'fightEndRewards'
+  | 'fightList'
+  | 'giftSelection'
+  | 'global'
+  | 'grimoire'
+  | 'guildCard'
+  | 'guildHouseInfo'
+  | 'guildHouseSetting'
+  | 'guildMemberRights'
+  | 'hardcoreDeath'
+  | 'help'
+  | 'houseBuySell'
+  | 'itemAppearance'
+  | 'itemBox'
+  | 'itemManage'
+  | 'itemPicking'
+  | 'itemRecipes'
+  | 'itemSets'
+  | 'jobOptions'
+  | 'legalAgreement'
+  | 'levelUp'
+  | 'market'
+  | 'marketingWindow'
+  | 'mimicry'
+  | 'mount'
+  | 'mountRename'
+  | 'nickname'
+  | 'options'
+  | 'paddockBuy'
+  | 'padlock'
+  | 'partyInviteDetails'
+  | 'popup'
+  | 'preloadMap'
+  | 'presetChooseIcon'
+  | 'prismVulnerabilityDate'
+  | 'PromotionPopupWindow'
+  | 'purchasesPending'
+  | 'ratingWindow'
+  | 'recaptcha'
+  | 'register'
+  | 'rewardsPending'
+  | 'serverDetails'
+  | 'serverListSelection'
+  | 'serverSelection'
+  | 'serverSimpleSelection'
+  | 'ShieldSelectionWindow'
+  | 'shieldWindow'
+  | 'shopConfirm'
+  | 'social'
+  | 'socialGroupCreation'
+  | 'spellForget'
+  | 'teleporterList'
+  | 'toa'
+  | 'toaRetryPopup'
+  | 'tradeInventory'
+  | 'tradeItem'
+  | 'tradeItemConfirm'
+  | 'tradeMode'
+  | 'tradeStorage'
+  | 'tradeWithNPC'
+  | 'tradeWithPlayer'
+  | 'tradeWithPlayerAndNPCInventory'
+  | 'wallet'
+  | 'worldMap';
+
+export interface ExchangeWindowInterface {
+  _myTradeSpace: {
+    _allSlots: {
+      _childrenMap: {
+        [key: number]: ExchangeWindowSlot;
+      };
+    };
+  };
+}
+
+export interface ExchangeWindowSlot extends EventReadyObject {
+  itemInstance: {
+    objectUID: number;
+  };
+  getQuantity(): number;
 }
