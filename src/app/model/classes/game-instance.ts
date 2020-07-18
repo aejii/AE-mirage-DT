@@ -33,6 +33,12 @@ export class GameInstance {
     },
   ) {
     this._enableUiResizingOnWindowResizing();
+
+    this.events.subscriptions.add(
+      this.events.characterLogin$.subscribe(() => {
+        this.injecter.manageQuickExchange();
+      }),
+    );
   }
 
   /**
@@ -49,6 +55,9 @@ export class GameInstance {
         switchMap(() => fromEvent(this.window, 'resize')),
         debounceTime(100),
       )
-      .subscribe(() => this.actions.refreshInterface());
+      .subscribe(() => {
+        this.actions.refreshInterface();
+        this.actions.removeShopButton();
+      });
   }
 }

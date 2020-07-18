@@ -40,6 +40,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnDestroy() {
+    this.instance.events.subscriptions.unsubscribe();
     this.susbscriptions.unsubscribe();
   }
 

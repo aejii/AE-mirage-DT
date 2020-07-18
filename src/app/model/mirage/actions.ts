@@ -105,6 +105,20 @@ export class MgActionsHandler {
         this.instance.gui.loginForm.play();
       });
   }
+
+  /**
+   * Transfers an object from the inventory to the exchange interface (or vice versa)
+   */
+  TransferObjectForExchange(
+    objectUID: number,
+    quantity: number,
+    fromInventory: boolean,
+  ) {
+    this.instance.window?.dofus?.sendMessage('ExchangeObjectMoveMessage', {
+      objectUID,
+      quantity: fromInventory ? quantity : -quantity,
+    });
+  }
 }
 
 /**
