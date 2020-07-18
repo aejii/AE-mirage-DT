@@ -119,6 +119,10 @@ export class MgActionsHandler {
       quantity: fromInventory ? quantity : -quantity,
     });
   }
+
+  closeContextualMenu() {
+    this.instance.window.gui.closeContextualMenu();
+  }
 }
 
 /**

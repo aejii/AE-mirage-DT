@@ -89,7 +89,11 @@ export class KeyboardShortcutsService {
   runShortcut(instance: GameInstance, event: KeyboardEvent) {
     if (!instance) return;
     // Ignore if the target is in the main window
-    if (event.target instanceof HTMLElement || event.target instanceof HTMLTextAreaElement) return;
+    if (
+      event.target instanceof HTMLInputElement ||
+      event.target instanceof HTMLTextAreaElement
+    )
+      return;
 
     if (instance.window.gui.numberInputPad?.isVisible?.()) {
       return this._runNumpadShortcut(instance, event);
@@ -129,6 +133,8 @@ export class KeyboardShortcutsService {
     if (event.key === 'Escape' && event.code === 'Escape') {
       if (instance.gui.chatWindow.active) {
         instance.actions.toggleChat(false);
+      } else if (instance.gui.isContextualMenuOpened) {
+        instance.actions.closeContextualMenu();
       } else {
         // Close the last opened window
         const lastOpenedMenu = instance.gui.lastOpenedMenu;

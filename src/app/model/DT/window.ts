@@ -8,6 +8,7 @@ export interface DTWindow extends Window {
     on(verb: string, callback: (...args) => any): any;
   };
   gui: {
+    wBody: GameGuiElement;
     numberInputPad: GameGuiElement & {
       _doDigit(digit: number): void;
       _doEnter(): void;
@@ -101,6 +102,7 @@ export interface DTWindow extends Window {
     ): any;
     on(verb: WindowGuiEventVerb, callback: (...args: any) => any): any;
     _resizeUi(): void;
+    closeContextualMenu(): void;
   };
 
   foreground: {

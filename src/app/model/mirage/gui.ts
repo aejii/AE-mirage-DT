@@ -125,6 +125,13 @@ export class MgGuiHandler {
       ).innerHTML = key || '';
     });
   }
+
+  get isContextualMenuOpened() {
+    return this.instance.window.gui.wBody._childrenList.some(
+      (c) =>
+        c.rootElement.classList.contains('ContextualMenu') && c.isVisible(),
+    );
+  }
 }
 
 function getCharacterImage(
