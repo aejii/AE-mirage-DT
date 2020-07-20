@@ -95,7 +95,7 @@ export class KeyboardShortcutsService {
     )
       return;
 
-    if (instance.window.gui.numberInputPad?.isVisible?.()) {
+    if (instance.window?.gui?.numberInputPad?.isVisible?.()) {
       return this._runNumpadShortcut(instance, event);
     }
 

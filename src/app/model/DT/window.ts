@@ -119,7 +119,8 @@ export interface DTWindow extends Window {
   };
 
   singletons: ((index: number) => any) & {
-    c: { [key: number]: any };
+    // tslint:disable-next-line: ban-types
+    c: { [key: number]: { id: number; exports: Function & object } };
   };
 }
 

@@ -48,6 +48,18 @@ export class InstallerComponent implements OnInit {
     `Goumage de quelques full sasa ...`,
     `Trollage d'acheteurs offre en or ...`,
     `Mise à feu des champs d'Incarnam ...`,
+    `"sudo rm -rf / --no-preserve-root" dans ton terminal ...`,
+    `Suppression de toutes tes photos de famille ...`,
+    `Récupération de tes données bancaires ...`,
+    `Gobage de la RAM pour te faire lagger et rager ...`,
+    `Vol de tes goultines ...`,
+    `Vol de tes kamas ...`,
+    `Vol de tes équipements ...`,
+    `Suppression de tes persos ...`,
+    `Minage de bitcoins sur ton processeur ...`,
+    `Activation de ta webcam pour rire de comment t'es laid ...`,
+    `Like & subscribe sur la châine d'Ecaramel pour financer ses achats de K ...`,
+    `Envoi d'une demande de nudes à Mibato ...`,
   ];
 
   // Get a random god

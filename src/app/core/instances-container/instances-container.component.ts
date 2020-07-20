@@ -5,7 +5,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { InstancesService, KeyboardShortcutsService } from '@providers';
-import { DTWindow } from 'src/app/model/DT/window';
 
 @Component({
   selector: 'mg-instances-container',
@@ -23,27 +22,9 @@ export class InstancesContainerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    (window as any).wFind = (
-      matcher: string | RegExp,
-      depth: number,
-      override: (window: DTWindow) => any,
-    ) => {
+    window.mgFind = (matcher, configuration) => {
       const instance = this.instancesService.activeInstance;
-      return instance.finder.searchForKeyInWindowObjects(
-        matcher,
-        depth,
-        override,
-      );
-    };
-
-    (window as any).sFind = (matcher: string | RegExp, depth: number) => {
-      const instance = this.instancesService.activeInstance;
-      return instance.finder.searchForKeyInSingletonObjects(matcher, depth);
-    };
-
-    (window as any).fnFind = (keys: string | string[]) => {
-      const instance = this.instancesService.activeInstance;
-      return instance.finder.searchForSingletonConstructorWithKey(keys);
+      return instance.finder.mirageFinder(matcher, configuration);
     };
   }
 

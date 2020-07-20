@@ -1,197 +1,228 @@
 import { GameInstance } from '../classes/game-instance';
-import { DTWindow } from '../DT/window';
+
+/* tslint:disable: forin */
 
 export class MgFinder {
-  constructor(private instance: GameInstance) {}
+  private defaultSearchConfiguration: SearchConfiguration = {
+    window: true,
+    singletons: true,
+    protos: true,
+    isValue: false,
+    depth: 2,
+  };
 
-  /**
-   * Looks for a key matching the matcher in the Ankama's window objects
-   * @param matcher Matcher to look for
-   * @param maxDepth Maximum depth allowed
-   * @param targetOverride Sets the target to search in (defaults to window)
-   */
-  searchForKeyInWindowObjects(
-    matcher: string | RegExp,
-    maxDepth: number = 5,
-    targetOverride: (window: DTWindow) => any,
-  ) {
-    let target = this.instance.window;
-    target = targetOverride?.(target) ?? target;
-
-    if (!target) return;
-
-    const results = [];
-    const alreadySeenRefs = [];
-
-    if (target === this.instance.window) {
-      const entries = this._getAnkamaPayload();
-
-      results.push(
-        ...Array.prototype.concat(
-          [],
-          ...entries.map(([key, value]) =>
-            this._recursiveSearch(
-              value,
-              matcher,
-              key,
-              alreadySeenRefs,
-              maxDepth,
-              0,
-            ),
-          ),
-        ),
-      );
-    } else {
-      results.push(
-        ...this._recursiveSearch(
-          target,
-          matcher,
-          `[TARGET]`,
-          alreadySeenRefs,
-          maxDepth,
-          0,
-        ),
-      );
-    }
-
-    return results;
+  constructor(private instance: GameInstance) {
+    this.instance.events.gameInit$.subscribe(
+      () => (this.instance.window.mgFind = this.mirageFinder.bind(this)),
+    );
   }
 
-  /**
-   * Looks for a key matching the matcher in the Ankama's singleton objects
-   * @param matcher Matcher to look for
-   * @param maxDepth Maximum depth allowed
-   */
-  searchForKeyInSingletonObjects(matcher: string | RegExp, maxDepth: number = 5) {
-    const singletons = Object.entries<any>(
-      this.instance.window?.singletons?.c ?? {},
-    )
-      .map(([key, value]) => [key, value.exports])
-      .filter(([key, value]) => this._isTargetWorthBrowsing(value, key));
+  getSingleton<T>(
+    matcher: SearchMatcher,
+    configuration: SearchConfiguration,
+    isPrototype = false,
+  ) {
+    const findings = this.mirageFinder<any, T>(matcher, configuration);
 
-    if (!singletons?.length) return;
+    if (findings.length > 1)
+      console.error(
+        `[MIRAGE | Finder] More than one result found for matcher : `,
+        matcher,
+      );
 
-    const results = Array.prototype.concat(
-      [],
-      ...singletons.map(([key, value]) =>
-        this._recursiveSearch(
-          value,
-          matcher,
-          `singletons(${key})`,
-          [],
-          maxDepth,
-          0,
-        ),
+    return findings.shift?.()?.[isPrototype ? 'value' : 'parent'];
+  }
+
+  mirageFinder<Value = any, Parent = any>(
+    matcher: SearchMatcher,
+    _configuration: SearchConfiguration = {},
+  ): SearchResult<Value, Parent>[] {
+    const configuration = {
+      ...this.defaultSearchConfiguration,
+      ..._configuration,
+    };
+
+    const wTargets = configuration.window ? this.getWindowTargets() : [];
+    const sTargets = configuration.singletons
+      ? this.getSingletonsTargets()
+      : [];
+
+    const mustSearchOnValue = this.mustSearchOnValue(matcher, configuration);
+
+    if (mustSearchOnValue === null)
+      throw new Error(
+        '[MIRAGE | Finder] matcher must be either a string, RegExp, or memory reference (with isValue = true)',
+      );
+
+    const windowRefs = [];
+    const wResults = wTargets.map(([key, value]) =>
+      this.deepSearch(
+        value,
+        matcher,
+        { current: 0, max: configuration.depth },
+        `window.${key}`,
+        windowRefs,
+        mustSearchOnValue,
+      ),
+    );
+    const fnResults =
+      configuration.protos && !configuration.isValue
+        ? this.protoSearch(matcher)
+        : [];
+
+    const singletonsRef = [];
+    const sResults = sTargets.map(([key, value]) =>
+      this.deepSearch(
+        value.exports,
+        matcher,
+        { current: 0, max: configuration.depth },
+        `singletons(${key})`,
+        singletonsRef,
+        mustSearchOnValue,
       ),
     );
 
-    return results;
+    return Array.prototype.concat.apply(
+      [],
+      [...wResults, ...sResults, ...fnResults],
+    );
   }
 
-  /**
-   * Looks for a singleton constructor with a given (set of) key(s)
-   */
-  searchForSingletonConstructorWithKey(keys: string | string[]) {
-    const singletons = Object.entries<any>(
-      this.instance.window?.singletons?.c ?? {},
-    )
-      .map(([k, v]) => [k, v.exports])
-      .filter(([k, v]) => typeof v === 'function');
+  protoSearch(matcher: SearchMatcher): SearchResult[] {
+    const protoSingletons = this.getProtosTargets();
 
-    const results = singletons.filter(([, value]) => {
-      const proto = value?.prototype;
-      if (!proto) return false;
-      return typeof keys === 'string'
-        ? keys in proto
-        : keys.every((key) => Object.keys(proto).includes(key));
+    const results: SearchResult[] = [];
+
+    protoSingletons.forEach(([id, value]) => {
+      const proto = value?.exports.prototype;
+      if (!proto) return null;
+      for (const key in proto) {
+        if (this.keyMatches(matcher, key))
+          results.push({
+            key,
+            path: `new singletons(${id})(${new Array(value.exports.length)
+              .fill(0)
+              .map((_, i) => `arg${i}`)
+              .join(', ')})`,
+            value: value.exports,
+          });
+      }
     });
 
     return results;
   }
 
-  /**
-   * Returns the singleton constructor matching the given (set of) key(s)
-   */
-  getSingletonConstructorWithKey(key: string | string[]): new (...args) => any {
-    const results = this.searchForSingletonConstructorWithKey(key);
+  deepSearch(
+    target: any,
+    matcher: SearchMatcher,
+    depths: { current: number; max: number },
+    path: string,
+    references: any[],
+    searchOnValue = false,
+  ): SearchResult[] {
+    const results: SearchResult[] = [];
 
-    if (results.length > 1)
-      console.error(`[MIRAGE] More than one singleton class found !`);
+    if (
+      !target ||
+      !(target?.length ?? Object.keys(target).length) ||
+      references.includes(target) ||
+      depths.current > depths.max ||
+      target instanceof (this.instance.window as any).Element ||
+      typeof target !== 'object' ||
+      target === window ||
+      target === this.instance.window
+    )
+      return [];
 
-    return results.pop().pop();
+    references.push(target);
+
+    if (Array.isArray(target))
+      target.forEach((nexTarget, index) =>
+        results.push(
+          ...this.deepSearch(
+            nexTarget,
+            matcher,
+            { current: depths.current + 1, max: depths.max },
+            `${path}[${index}]`,
+            references,
+            searchOnValue,
+          ),
+        ),
+      );
+    else
+      for (const key in target) {
+        if (['self', '_parent'].includes(key)) continue;
+
+        const nextTarget = target[key];
+        const nextPath = `${path}.${key}`;
+
+        if (
+          (!searchOnValue && this.keyMatches(matcher, key)) ||
+          (searchOnValue && matcher === nextTarget)
+        )
+          results.push({
+            key,
+            path: nextPath,
+            value: nextTarget,
+            parent: target,
+          });
+
+        results.push(
+          ...this.deepSearch(
+            nextTarget,
+            matcher,
+            { current: depths.current + 1, max: depths.max },
+            `${nextPath}`,
+            references,
+            searchOnValue,
+          ),
+        );
+      }
+
+    return results;
   }
 
-  /**
-   * Returns the singleton object (or on of its children) matching the given matcher
-   * @param matcher Matcher to look for
-   * @param maxDepth Maximum depth allowed
-   */
-  getSingletonObjectWithKey<T>(matcher: keyof T, maxDepth: number = 5) {
-    const singletons = Object.entries<any>(
-      this.instance.window?.singletons?.c ?? {},
-    )
-      .map(([key, value]) => [key, value.exports])
-      .filter(([key, value]) => this._isTargetWorthBrowsing(value, key));
-
-    if (!singletons?.length) return;
-
-    const results = Array.prototype
-      .concat(
-        [],
-        ...singletons.map(([key, value]) =>
-          this._recursiveSearch(
-            value,
-            new RegExp(`^${matcher}$`),
-            `singletons(${key})`,
-            [],
-            maxDepth,
-            0,
-          ).map(() => value),
-        ),
+  mustSearchOnValue(
+    matcher: any,
+    configuration: SearchConfiguration,
+  ): boolean | null {
+    if (configuration.isValue) return true;
+    else if (typeof matcher === 'string') return false;
+    else if (matcher instanceof RegExp) return false;
+    else if (matcher instanceof (this.instance.window as any).HTMLElement)
+      return true;
+    else if (
+      Array.isArray(matcher) &&
+      matcher.every(
+        (_matcher) =>
+          typeof _matcher === 'string' || _matcher instanceof RegExp,
       )
-      .filter((v, i, a) => a.indexOf(v) === i);
-
-    if (results.length > 1)
-      console.error(`[MIRAGE] More than one singleton found !`);
-
-    return results.pop();
+    )
+      return false;
+    else return undefined;
   }
 
   /** Gets the Ankama payload added to a window object */
-  private _getAnkamaPayload(target = this.instance.window): [string, any][] {
-    if (!target) return;
-    return Object.entries(target)
+  private getWindowTargets(): [string, any][] {
+    return Object.entries(this.instance.window || {})
       .filter(([key]) => !(key in window))
-      .filter(([key]) => key !== 'singletons')
-      .filter(([key, value]) => this._isTargetWorthBrowsing(value, key, []));
+      .filter(([key]) => !['singletons', 'cordova'].includes(key))
+      .filter(([, value]) => typeof value === 'object');
   }
 
-  /**
-   * Checks if an object is worth browsing.
-   * (For instance, an HTML Element, a function or an already seen reference aren't worth)
-   */
-  private _isTargetWorthBrowsing(
-    target: any,
-    key: string,
-    alreadySeenRefs: any[] = [],
-  ) {
-    return (
-      !!target &&
-      (!!target.length || !!Object.keys(target)?.length) &&
-      typeof target === 'object' &&
-      !alreadySeenRefs.includes(target) &&
-      !(target instanceof Element) &&
-      !['self', '_parent'].includes(key) &&
-      !['rootElement'].includes(key)
+  private getSingletonsTargets() {
+    return Object.entries(this.instance.window?.singletons?.c || {}).filter(
+      (entry) => typeof entry?.[1]?.exports !== 'function',
     );
   }
 
-  /**
-   * Checks if a matcher can be matched against a value
-   * @param matcher the search criteria. Either a string or a RegExp.
-   * @param valueToCheck The value to apply the matcher to
-   */
-  private _matches(matcher: string | RegExp, valueToCheck: string): boolean {
+  private getProtosTargets() {
+    return Object.entries(this.instance.window?.singletons?.c || {}).filter(
+      (entry) => typeof entry?.[1]?.exports === 'function',
+    );
+  }
+
+  private keyMatches(matcher: string | RegExp, valueToCheck: string): boolean {
     return (
       (!!valueToCheck?.match?.(matcher) ||
         valueToCheck
@@ -200,56 +231,24 @@ export class MgFinder {
       false
     );
   }
-
-  /**
-   * Recursively finds a matching key in the provided target and its children
-   */
-  private _recursiveSearch(
-    target: any,
-    matcher: string | RegExp,
-    path: string,
-    alreadySeenRefs: any[],
-    maxDepth: number,
-    currentDepth: number,
-  ): string[] {
-    const results = [];
-    // tslint:disable-next-line: forin
-    for (const key in target) {
-      const value = target[key];
-      const currentPath = `${path}.${key}`;
-
-      if (this._matches(matcher, key)) results.push(currentPath);
-
-      if (!this._isTargetWorthBrowsing(value, key, alreadySeenRefs)) continue;
-      if (currentDepth >= maxDepth) continue;
-
-      if (Array.isArray(value)) {
-        value.forEach((subValue, index) =>
-          results.push(
-            ...this._recursiveSearch(
-              subValue,
-              matcher,
-              `${path}.${key}[${index}]`,
-              alreadySeenRefs,
-              maxDepth,
-              currentDepth + 1,
-            ),
-          ),
-        );
-      } else {
-        results.push(
-          ...this._recursiveSearch(
-            value,
-            matcher,
-            currentPath,
-            alreadySeenRefs,
-            maxDepth,
-            currentDepth + 1,
-          ),
-        );
-      }
-    }
-    alreadySeenRefs.push(target);
-    return results;
-  }
 }
+
+interface SearchConfiguration {
+  window?: boolean;
+  singletons?: boolean;
+  protos?: boolean;
+  isValue?: boolean;
+  depth?: number;
+}
+
+interface SearchResult<Value = any, Parent = any> {
+  key: string;
+  path: string;
+  value: Value;
+  parent?: Parent;
+}
+
+// tslint:disable-next-line: class-name
+interface _SearchMatcher extends RegExp, HTMLElement {}
+
+type SearchMatcher = _SearchMatcher | string;

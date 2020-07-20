@@ -1,20 +1,20 @@
-declare var cordova: Cordova;
+import { MgFinder } from './app/model/mirage/finder';
 
-declare type ManifestName = 'manifest' | 'assetMap';
+declare global {
+  type ManifestName = 'manifest' | 'assetMap';
 
-declare interface Manifest {
-  files: {
-    [filename: string]: FileItem;
-  };
-}
+  interface Manifest {
+    files: {
+      [filename: string]: FileItem;
+    };
+  }
 
-declare interface FileItem {
-  filename: string;
-  version: string;
-}
+  interface FileItem {
+    filename: string;
+    version: string;
+  }
 
-declare interface AppAccount {
-  username: string;
-  password: string;
-  doesConnect: boolean;
+  interface Window {
+    mgFind: typeof MgFinder.prototype.mirageFinder;
+  }
 }
