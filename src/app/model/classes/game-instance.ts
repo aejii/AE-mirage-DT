@@ -16,15 +16,15 @@ export class GameInstance {
 
   public window: DTWindow;
 
-  public finder = new MgFinder(this);
-  public gui = new MgGuiHandler(this);
-  public injecter = new MgInjecter(this);
   public events = new MgEventsHandler(this);
   public singletons = new MgSingletons(this);
+  public injecter = new MgInjecter(this);
+  public gui = new MgGuiHandler(this);
   public actions = new MgActionsHandler(this);
   public fightManager = new MgFightHandler(this);
   public groupManager = new MgGroupHandler(this);
   public character = new MgCharacterHandler(this);
+  public finder = new MgFinder(this);
 
   constructor(
     public account?: {

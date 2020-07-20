@@ -5,36 +5,42 @@ export class MgSingletons {
   private _audioManager: AudioManager;
   get audioManager(): AudioManager {
     if (!this._audioManager)
-      this._audioManager = this.instance.finder.getSingletonObjectWithKey<
-        AudioManager
-      >('setMute');
+      this._audioManager = this.instance.finder.getSingleton<AudioManager>(
+        'setMute',
+        {
+          window: false,
+          protos: false,
+          depth: 1,
+        },
+      );
     return this._audioManager;
   }
 
   private _activityRecorder: ActivityRecorder;
   get activityRecorder(): ActivityRecorder {
     if (!this._activityRecorder)
-      this._activityRecorder = this.instance.finder.getSingletonObjectWithKey<
+      this._activityRecorder = this.instance.finder.getSingleton<
         ActivityRecorder
-      >('recordActivity');
+      >('recordActivity', { window: false, protos: false });
     return this._activityRecorder;
   }
 
   private _dimensionsManager: DimensionsManager;
   get dimensionsManager(): DimensionsManager {
     if (!this._dimensionsManager)
-      this._dimensionsManager = this.instance.finder.getSingletonObjectWithKey<
+      this._dimensionsManager = this.instance.finder.getSingleton<
         DimensionsManager
-      >('updateScreen');
+      >('updateScreen', { window: false, protos: false });
     return this._dimensionsManager;
   }
 
   private _windowManager: WindowManager;
   get windowManager(): WindowManager {
     if (!this._windowManager)
-      this._windowManager = this.instance.finder.getSingletonObjectWithKey<
-        WindowManager
-      >('addWindow');
+      this._windowManager = this.instance.finder.getSingleton<WindowManager>(
+        'addWindow',
+        { window: false, protos: false },
+      );
     return this._windowManager;
   }
 
@@ -45,8 +51,14 @@ export class MgSingletons {
     configuration: CharacterDisplayConfiguration,
   ) => CharacterDisplay {
     if (!this._characterDisplay)
-      this._characterDisplay = this.instance.finder.getSingletonConstructorWithKey(
+      this._characterDisplay = this.instance.finder.getSingleton(
         'rotateCharacter',
+        {
+          protos: true,
+          singletons: false,
+          window: false,
+        },
+        true,
       );
     return this._characterDisplay;
   }
