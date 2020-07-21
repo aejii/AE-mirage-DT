@@ -43,10 +43,10 @@ export class InstallerComponent implements OnInit {
     `Envoi d'une lettre d'insultes à Zanpoyo ...`,
     `Recherche de "Steamer Hentai" à la bibliothèque d'Amakna ...`,
     `Caressage des boules du Minotoboule de Nowel ...`,
-    `🔥 💯 🔥 Mirage 👌 💯 🔥`,
+    `🔥 💯 🔥 Mirage 🔥 💯 🔥`,
     `Création de bots sur ton IP ...`,
     `Goumage de quelques full sasa ...`,
-    `Trollage d'acheteurs offre en or ...`,
+    `Trollage d'acheteurs d'offre en or ...`,
     `Mise à feu des champs d'Incarnam ...`,
     `"sudo rm -rf / --no-preserve-root" dans ton terminal ...`,
     `Suppression de toutes tes photos de famille ...`,
@@ -60,6 +60,9 @@ export class InstallerComponent implements OnInit {
     `Activation de ta webcam pour rire de comment t'es laid ...`,
     `Like & subscribe sur la chaîne d'Ecaramel pour qu'il te vende des Kamas ...`,
     `Envoi d'une demande de nudes à Mibato ...`,
+    `Suppression de System32 ...`,
+    `Demande de cash auprès de Pique-Souh ... `,
+    `Dénonciation pour utilisation d'émulateur auprès de Sionilam ...`,
   ];
 
   // Get a random god
