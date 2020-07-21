@@ -43,7 +43,7 @@ export class InstallerComponent implements OnInit {
     `Envoi d'une lettre d'insultes à Zanpoyo ...`,
     `Recherche de "Steamer Hentai" à la bibliothèque d'Amakna ...`,
     `Caressage des boules du Minotoboule de Nowel ...`,
-    `🔥 💯 🔥 Mirage 👌 💯 😂 🔥`,
+    `🔥 💯 🔥 Mirage 👌 💯 🔥`,
     `Création de bots sur ton IP ...`,
     `Goumage de quelques full sasa ...`,
     `Trollage d'acheteurs offre en or ...`,
