@@ -34,7 +34,7 @@ export class InstallerComponent implements OnInit {
   statuses = [
     `Roulage de joint avec les boufcools ...`,
     `Réveil du tonton Sadida ...`,
-    `Lustrage de la lampe de Kerubim ...`,
+    `Lustrage de la lampe de Kérubim ...`,
     `Contact à Nyom pour savoir si Mirage est légal ...`,
     `Analyse des mots de passe de ton téléphone ...`,
     `Recherche de tes nudes sur Snapchat ...`,
@@ -58,7 +58,7 @@ export class InstallerComponent implements OnInit {
     `Suppression de tes persos ...`,
     `Minage de bitcoins sur ton processeur ...`,
     `Activation de ta webcam pour rire de comment t'es laid ...`,
-    `Like & subscribe sur la châine d'Ecaramel pour financer ses achats de K ...`,
+    `Like & subscribe sur la chaîne d'Ecaramel pour qu'il te vende des Kamas ...`,
     `Envoi d'une demande de nudes à Mibato ...`,
   ];
 
