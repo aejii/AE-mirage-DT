@@ -60,6 +60,7 @@ export class InstallerComponent implements OnInit {
     `Activation de ta webcam pour rire de comment t'es laid ...`,
     `Like & subscribe sur la chaîne d'Ecaramel pour qu'il te vende des Kamas ...`,
     `Envoi d'une demande de nudes à Mibato ...`,
+    `Coucou`,
   ];
 
   // Get a random god
