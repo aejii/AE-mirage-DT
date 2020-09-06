@@ -11,5 +11,12 @@ export class KeyboardShortcutsQuery extends QueryEntity<
 > {
   constructor(protected store: KeyboardShortcutsStore) {
     super(store);
+    // On start, add new default shortcuts to user-saved ones. This way, new shortcuts get added to the list when they're created.
+    const stored = this.getAll();
+    const def = this.store.defaultShortcuts;
+    const final = stored.concat(
+      def.filter((shortcut) => !stored.some((sc) => sc.id === shortcut.id)),
+    );
+    this.store.set(final);
   }
 }

@@ -8,6 +8,11 @@ export interface DTWindow extends Window {
     on(verb: string, callback: (...args) => any): any;
   };
   gui: {
+    pingSystem: {
+      _pingBtn: {
+        _pingBtn: GameGuiElement;
+      }
+    }
     wBody: GameGuiElement;
     numberInputPad: GameGuiElement & {
       _doDigit(digit: number): void;

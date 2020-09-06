@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { InstancesService } from '@providers';
 import {
   BehaviorSubject,
   combineLatest,
@@ -43,9 +44,11 @@ export class InstallationService {
   constructor(
     private fileSystem: FileSystemService,
     private store: InstallationStore,
+    private instances: InstancesService,
   ) {}
 
   installAssets() {
+    this.instances.removeAllInstances();
     this.progress.next({
       currentStep: 0,
       progress: 0,
@@ -81,6 +84,7 @@ export class InstallationService {
   }
 
   installBuild() {
+    this.instances.removeAllInstances();
     this.progress.next({
       currentStep: 0,
       progress: 0,
@@ -114,6 +118,7 @@ export class InstallationService {
   }
 
   updateGame() {
+    this.instances.removeAllInstances();
     this.progress.next({
       currentStep: 0,
       totalStep: 9,

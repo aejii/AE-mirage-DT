@@ -7,12 +7,22 @@ import { KeyboardShortcutsQuery } from './keyboard-shortcuts.query';
 import {
   KeyboardShortcutsStore,
   MgKeyboardShortcut,
+  uiShortcutsTargets
 } from './keyboard-shortcuts.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KeyboardShortcutsService {
+
+  uiShortcutKeys: uiShortcutsTargets[] = [
+    'previous instance',
+    'next instance',
+    'skip turn / ready',
+    'instance',
+    'ping',
+  ];
+
   slotShortcuts$ = this.query
     .selectAll()
     .pipe(
@@ -22,7 +32,7 @@ export class KeyboardShortcutsService {
             (shortcut) =>
               shortcut.target === 'slot' && !!shortcut.code && !!shortcut.name,
           )
-          .sort((a, b) => a.slotIndex - b.slotIndex),
+          .sort((a, b) => a.listIndex - b.listIndex),
       ),
     );
 
@@ -35,10 +45,10 @@ export class KeyboardShortcutsService {
             (shortcut) =>
               !!shortcut.code &&
               !!shortcut.name &&
-              shortcut.target !== 'slot' &&
-              shortcut.target !== 'previous instance' &&
-              shortcut.target !== 'next instance' &&
-              shortcut.target !== 'skip turn / ready',
+              ![
+                'slot',
+                ...this.uiShortcutKeys
+              ].includes(shortcut.target),
           )
           .sort((a, b) => a.target.localeCompare(b.target)),
       ),
@@ -53,9 +63,7 @@ export class KeyboardShortcutsService {
             (shortcut) =>
               !!shortcut.code &&
               !!shortcut.name &&
-              (shortcut.target === 'previous instance' ||
-                shortcut.target === 'next instance' ||
-                shortcut.target === 'skip turn / ready'),
+              this.uiShortcutKeys.includes(shortcut.target as uiShortcutsTargets),
           )
           .sort((a, b) => a.target.localeCompare(b.target)),
       ),
@@ -68,6 +76,21 @@ export class KeyboardShortcutsService {
         shortcuts.filter((shortcut) => !shortcut.name && !shortcut.code),
       ),
     );
+
+  duplicatedShortcuts$ = this.query.selectAll().pipe(
+    map((shortcuts) => {
+      const refs = {};
+      const duplicates = [];
+      for (const shortcut of shortcuts) {
+        if ([shortcut.name, shortcut.code].includes(undefined)) continue;
+        const id = `${shortcut.name}#${shortcut.code}`;
+        const ref = refs[id];
+        if (!ref) refs[id] = shortcut;
+        else duplicates.push(shortcut, ref);
+      }
+      return duplicates;
+    }),
+  );
 
   constructor(
     private query: KeyboardShortcutsQuery,
@@ -118,7 +141,10 @@ export class KeyboardShortcutsService {
       event.stopPropagation();
       return this.instances.removeInstance(instance);
     }
-    if (event.key === 'Enter' && event.code === 'Enter') {
+    if (
+      event.key === 'Enter' &&
+      ['Enter', 'NumpadEnter'].includes(event.code)
+    ) {
       // Don't open if already in an input field
       if (
         // tslint:disable-next-line: no-string-literal
@@ -164,7 +190,11 @@ export class KeyboardShortcutsService {
       return;
 
     if (shortcut.target === 'slot') {
-      instance.actions.useSlotInCurrentPanel(shortcut.slotIndex);
+      instance.actions.useSlotInCurrentPanel(shortcut.listIndex);
+    } else if (shortcut.target === 'instance') {
+      this.instances.setActiveInstanceByIndex(shortcut.listIndex);
+    } else if (shortcut.target === 'ping') {
+      instance.fightManager.triggerPing();
     } else if (shortcut.target === 'next instance') {
       this.instances.nextInstance();
     } else if (shortcut.target === 'previous instance') {

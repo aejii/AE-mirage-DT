@@ -36,4 +36,9 @@ export class MgFightHandler {
   clickOnTimelineButton() {
     this.timelineButton.tap();
   }
+
+  triggerPing() {
+    if (!this.instance?.character.isFighting) return;
+    this.instance?.gui?.pingButton?.tap?.();
+  }
 }

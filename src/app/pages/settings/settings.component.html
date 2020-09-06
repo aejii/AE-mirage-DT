@@ -19,9 +19,7 @@
               </dt-option>
             </dt-select>
             <small>
-              <i>
-                (Essaie de choisir ton propre device)
-              </i>
+              <i> (Essaie de choisir ton propre device) </i>
             </small>
           </div>
         </ng-container>
@@ -88,9 +86,7 @@
 
         <div class="elk-ad">
           <p>🌟 🌟 🌟</p>
-          <p>
-            ElkTouch, le premier serveur privé de Dofus TOUCH.
-          </p>
+          <p>ElkTouch, le premier serveur privé de Dofus TOUCH.</p>
           <p>
             Profitez de Dofus Touch gratuitement avec une stabilité et un
             développement hors du commun !
@@ -100,8 +96,19 @@
       </div>
     </dt-tab-list-item>
     <dt-tab-list-item label="Raccourcis" *ngIf="!isCordova">
-      <div class="settings-container" fxLayout="column" fxLayoutGap="24px">
-        <mg-keyboard-bindings></mg-keyboard-bindings>
+      <div
+        class="duplicated-warning"
+        *ngIf="(bindings.shortcuts.duplicatedShortcuts$ | async)?.length"
+      >
+        Tu as des raccourcis qui sont dupliqués !
+      </div>
+
+      <div
+        class="settings-container bindings"
+        fxLayout="column"
+        fxLayoutGap="24px"
+      >
+        <mg-keyboard-bindings #bindings></mg-keyboard-bindings>
       </div>
     </dt-tab-list-item>
   </dt-tab-list>

@@ -2,17 +2,20 @@ import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 import { GameMenuBarIconsNames } from 'src/app/model/DT/window';
 
-type nonMenuShortcutsTargets =
+export type uiShortcutsTargets =
   | 'slot'
+  | 'instance'
+  | 'ping'
   | 'next instance'
   | 'previous instance'
   | 'skip turn / ready';
-type ShortcutsKeyCodes = GameMenuBarIconsNames | nonMenuShortcutsTargets;
+
+export type ShortcutsKeyCodes = GameMenuBarIconsNames | uiShortcutsTargets;
 
 export interface MgKeyboardShortcut {
   id: string;
   target: ShortcutsKeyCodes;
-  slotIndex?: number;
+  listIndex?: number;
   code?: string;
   name?: string;
 }
@@ -25,9 +28,10 @@ export interface KeyboardShortcutsState
 export class KeyboardShortcutsStore extends EntityStore<
   KeyboardShortcutsState
 > {
+  defaultShortcuts = defaultShortcuts;
+
   constructor() {
     super();
-    if (!this.getValue().ids.length) this.set(defaultShortcuts);
   }
 }
 
@@ -44,6 +48,12 @@ const defaultShortcuts: MgKeyboardShortcut[] = [
     id: 'skipTurnOrReady',
     code: 'Space',
     name: ' ',
+  },
+  {
+    id: 'ping',
+    target: 'ping',
+    code: 'Backquote',
+    name: '²',
   },
 
   createMenuShortcut('Achievement', 'u'),
@@ -74,7 +84,6 @@ const defaultShortcuts: MgKeyboardShortcut[] = [
   // Create unbound shortcuts for remaining item/spell slots
   ...new Array(20).fill(0).map((_, i) => createEmptyShortcut('slot', i + 10)),
   createEmptyShortcut('Alignment'),
-  createEmptyShortcut('Book'),
   createEmptyShortcut('Conquest'),
   createEmptyShortcut('Directory'),
   createEmptyShortcut('Goultine'),
@@ -82,6 +91,8 @@ const defaultShortcuts: MgKeyboardShortcut[] = [
   createEmptyShortcut('Shop'),
   createEmptyShortcut('Spouse'),
   createEmptyShortcut('TOA'),
+  // Create unbound shortcuts to select a given instance
+  ...new Array(12).fill(0).map((_, i) => createEmptyShortcut('instance', i)),
 ];
 
 function createMenuShortcut(
@@ -104,7 +115,7 @@ function createSlotShortcut(
   return {
     id: 'slot' + slotIndex,
     target: 'slot',
-    slotIndex,
+    listIndex: slotIndex,
     name,
     code,
   };
@@ -112,12 +123,12 @@ function createSlotShortcut(
 
 function createEmptyShortcut(
   target: ShortcutsKeyCodes,
-  slotIndex?: number,
+  listIndex?: number,
 ): MgKeyboardShortcut {
   return {
-    id: target + (slotIndex || ''),
+    id: target + (listIndex || ''),
     target,
-    slotIndex,
+    listIndex,
     code: undefined,
     name: undefined,
   };

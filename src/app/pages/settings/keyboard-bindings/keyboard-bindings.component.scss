@@ -4,6 +4,16 @@
   display: block;
 }
 
+.duplicated {
+  color: dt-color('error');
+  + .shortcuts {
+    color: dt-color('error');
+    tbody tr:hover {
+      color: dt-color('error');
+    }
+  }
+}
+
 .shortcuts {
   width: 100%;
   border-collapse: collapse;
@@ -45,7 +55,6 @@
           font-family: 'Material Icons';
           cursor: pointer;
           opacity: 0;
-          transition: opacity 250ms ease-in-out;
         }
       }
     }

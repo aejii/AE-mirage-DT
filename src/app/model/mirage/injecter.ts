@@ -72,7 +72,7 @@ export class MgInjecter {
     });
   }
 
-  /** Manages listeners on the exchange/storage windows, to allow Ctrl + click to send all selected objects at once */
+  /** Manages listeners on the exchange/storage/craft windows, to allow Ctrl + click to send all selected objects at once */
   manageQuickExchange() {
     this._manageDoubletapOnExchangeSlot(
       this.instance.gui.characterExchangeInventory,
@@ -87,12 +87,17 @@ export class MgInjecter {
       false,
     );
 
+    this._manageDoubletapOnExchangeSlot(
+      this.instance.gui.craftingInventoryWindow,
+      true,
+    );
+
     /**
      * Edits the doubletap listener for objects added into the exchange interface
      */
     this.instance.window.gui.on('ExchangeObjectAddedMessage', (event) => {
-      const slot = this.instance.gui.characterExchangeInterface._myTradeSpace
-        ._allSlots._childrenMap['slot' + event.object.objectUID];
+      const slot = this.instance.gui?.characterExchangeInterface?._myTradeSpace
+        ?._allSlots?._childrenMap?.['slot' + event.object.objectUID];
       if (!slot) return;
       this._manageDoubletapOnExchangeSlotInExchange(slot, false);
     });

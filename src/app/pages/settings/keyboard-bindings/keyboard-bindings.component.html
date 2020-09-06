@@ -1,42 +1,51 @@
-<div fxLayout="column" fxLayoutGap="24px">
+<div fxLayout="column" fxLayoutGap="24px" style="position: relative">
+  <ng-container *ngIf="(shortcuts.duplicatedShortcuts$ | async).length">
+    <h1 class="duplicated">Raccourcis dupliqués</h1>
+
+    <ng-container
+      *ngTemplateOutlet="
+        shortcutsTable;
+        context: { $implicit: shortcuts.duplicatedShortcuts$ | async }
+      "
+    ></ng-container>
+  </ng-container>
+
   <h1>Raccourcis d'interface</h1>
-  
-          <ng-container
-            *ngTemplateOutlet="
-              shortcutsTable;
-              context: { $implicit: shortcuts.uiShortcuts$ | async }
-            "
-          ></ng-container>
-  
-          <h1>Raccourcis d'items / sorts</h1>
-  
-          <ng-container
-            *ngTemplateOutlet="
-              shortcutsTable;
-              context: { $implicit: shortcuts.slotShortcuts$ | async }
-            "
-          ></ng-container>
-  
-          <h1>Raccourcis des menus</h1>
-  
-          <ng-container
-            *ngTemplateOutlet="
-              shortcutsTable;
-              context: { $implicit: shortcuts.menuShortcuts$ | async }
-            "
-          ></ng-container>
-  
-          <h1>Raccourcis non utilisés</h1>
-  
-          <ng-container
-            *ngTemplateOutlet="
-              shortcutsTable;
-              context: { $implicit: shortcuts.unusedShortcuts$ | async }
-            "
-          ></ng-container>
+
+  <ng-container
+    *ngTemplateOutlet="
+      shortcutsTable;
+      context: { $implicit: shortcuts.uiShortcuts$ | async }
+    "
+  ></ng-container>
+
+  <h1>Raccourcis d'items / sorts</h1>
+
+  <ng-container
+    *ngTemplateOutlet="
+      shortcutsTable;
+      context: { $implicit: shortcuts.slotShortcuts$ | async }
+    "
+  ></ng-container>
+
+  <h1>Raccourcis des menus</h1>
+
+  <ng-container
+    *ngTemplateOutlet="
+      shortcutsTable;
+      context: { $implicit: shortcuts.menuShortcuts$ | async }
+    "
+  ></ng-container>
+
+  <h1>Raccourcis non utilisés</h1>
+
+  <ng-container
+    *ngTemplateOutlet="
+      shortcutsTable;
+      context: { $implicit: shortcuts.unusedShortcuts$ | async }
+    "
+  ></ng-container>
 </div>
-
-
 
 <ng-template #shortcutsTable let-shortcuts>
   <table class="shortcuts">
@@ -52,7 +61,7 @@
       <tr *ngFor="let shortcut of shortcuts" (click)="setNewBinding(shortcut)">
         <td>
           {{ shortcut.target | titlecase }}
-          {{ shortcut.slotIndex == undefined ? '' : shortcut.slotIndex + 1 }}
+          {{ shortcut.listIndex == undefined ? '' : shortcut.listIndex + 1 }}
         </td>
         <td>
           {{

@@ -107,6 +107,11 @@ export class MgGuiHandler {
     );
   }
 
+  /** Window displayed during a craft with a craftsman */
+  get craftingInventoryWindow() {
+    return this.instance.singletons.windowManager.getWindow('craftInventory');
+  }
+
   /** Window displayed during a storage operation, showing the storage content */
   get exchangeStorageWindow() {
     return this.instance.singletons.windowManager.getWindow('exchangeStorage');
@@ -131,6 +136,11 @@ export class MgGuiHandler {
       (c) =>
         c.rootElement.classList.contains('ContextualMenu') && c.isVisible(),
     );
+  }
+
+  get pingButton() {
+    return this.instance?.window?.gui?.pingSystem?._pingBtn?._pingBtn;
+
   }
 }
 

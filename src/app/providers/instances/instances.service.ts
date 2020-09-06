@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { GameInstance } from '@model';
 import { EMPTY, of } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
+import { SystemService } from '../application/system/system.service';
 import { AccountsQuery } from './accounts.query';
 import { Account, AccountsStore } from './accounts.store';
 import { InstancesQuery } from './instances.query';
@@ -26,6 +27,7 @@ export class InstancesService {
     private instancesQuery: InstancesQuery,
     private instancesStore: InstancesStore,
     private zone: NgZone,
+    private system: SystemService,
   ) {}
 
   addAccount(account: Account) {
@@ -79,11 +81,20 @@ export class InstancesService {
 
   setActiveInstance(instance?: GameInstance) {
     this.zone.run(() => {
-      // To blur any input that might have the focus (closes the phone keyboard)
-      (document?.activeElement as HTMLElement)?.blur?.();
+      // To blur any input that might have the focus (closes the phone keyboard). Keep open on PC
+      if (this.system.isCordova)
+        (document?.activeElement as HTMLElement)?.blur?.();
       this.activeInstance?.singletons.audioManager?.setMute?.(true);
       instance?.singletons.audioManager?.setMute?.(false);
       this.instancesStore.setActive(instance?.ID ?? null);
+    });
+  }
+
+  setActiveInstanceByIndex(index: number) {
+    this.zone.run(() => {
+      const instance = this.instancesQuery.getAll()[index];
+      if (!instance) return;
+      this.setActiveInstance(instance);
     });
   }
 

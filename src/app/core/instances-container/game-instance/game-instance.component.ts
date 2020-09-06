@@ -114,7 +114,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
 
     shortcuts.forEach((shortcut) =>
       this.instance.gui.setShortcutBindingOnSlot(
-        shortcut.slotIndex,
+        shortcut.listIndex,
         shortcut.name,
       ),
     );
