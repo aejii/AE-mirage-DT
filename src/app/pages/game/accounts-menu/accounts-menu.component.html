@@ -1,32 +1,52 @@
 <dt-container fxFill>
   <div fxLayout="column" fxLayoutAlign="start center" fxFill class="container">
-    <button class="add-account-button" dt-icon-button (click)="addGame()" [disabled]="!(UI.canPlay$ | async)">
+    <button
+      class="add-account-button"
+      dt-icon-button
+      (click)="addGame()"
+      [disabled]="!(UI.canPlay$ | async)"
+    >
       add
     </button>
-  
-    <div class="accounts" fxFlex fxLayout="column" fxLayoutGap="12px">
-      <ng-container
-        *ngTemplateOutlet="
-          accountsTemplate;
-          context: { instances: instances$ | async, active: active$ | async }
-        "
-      ></ng-container>
-    </div>
-  
-    <ng-template #accountsTemplate let-instances="instances" let-active="active">
-      <ng-container *ngFor="let instance of instances; let i = index">
-        <div
-          [mgInstanceRef]="instance"
-          (init)="setAccountNumber(instance)"
-          (canvasReady)="setAccountImage(instance, $event)"
-          (logout)="setAccountNumber(instance)"
-          (click)="setActive(instance)"
-          (contextmenu)="removeInstance(instance)"
-          class="account-button"
-          [class.active]="instance === active"
-          #accountsRef
-        ></div>
-      </ng-container>
+
+    <ng-container
+      *ngTemplateOutlet="
+        accountsTemplate;
+        context: { instances: instances$ | async, active: active$ | async }
+      "
+    ></ng-container>
+
+    <ng-template
+      #accountsTemplate
+      let-instances="instances"
+      let-active="active"
+    >
+      <div
+        class="accounts"
+        fxFlex
+        fxLayout="column"
+        fxLayoutGap="12px"
+        cdkDropList
+        cdkDropListOrientation="vertical"
+        cdkDropListLockAxis="y"
+        [cdkDropListSortingDisabled]="false"
+        (cdkDropListDropped)="sortInstances($event)"
+      >
+        <ng-container *ngFor="let instance of instances">
+          <div
+            [mgInstanceRef]="instance"
+            (init)="setAccountNumber(instance)"
+            (canvasReady)="setAccountImage(instance, $event)"
+            (logout)="setAccountNumber(instance)"
+            (click)="setActive(instance)"
+            (contextmenu)="removeInstance(instance)"
+            class="account-button"
+            [class.active]="instance === active"
+            #accountsRef
+            cdkDrag
+          ></div>
+        </ng-container>
+      </div>
     </ng-template>
   </div>
 </dt-container>

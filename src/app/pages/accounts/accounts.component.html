@@ -1,6 +1,15 @@
 <dt-container (closed)="UI.toggleAccounts(false)" label="Connexion des comptes">
   <div [style.padding.px]="12" fxLayout="column">
-    <div class="characters" fxLayout="row wrap" fxLayoutAlign="center center">
+    <div
+      class="characters"
+      fxLayout="row wrap"
+      fxLayoutAlign="center center"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      cdkDropListLockAxis="x"
+      [cdkDropListSortingDisabled]="false"
+      (cdkDropListDropped)="sortAccounts($event)"
+    >
       <div
         class="character"
         fxLayout="column"
@@ -10,6 +19,7 @@
         (contextmenu)="service.removeAccount(account)"
         [class.connects]="account.connects"
         (click)="service.updateAccountConnectionStatus(account)"
+        cdkDrag
       >
         <div class="image-container">
           <img

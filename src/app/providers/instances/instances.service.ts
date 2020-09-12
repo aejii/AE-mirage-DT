@@ -21,6 +21,14 @@ export class InstancesService {
     return this.instancesQuery.getActive();
   }
 
+  get accounts() {
+    return this.accountsQuery.getAll();
+  }
+
+  get instances() {
+    return this.instancesQuery.getAll();
+  }
+
   constructor(
     private accountsQuery: AccountsQuery,
     private accountsStore: AccountsStore,
@@ -29,6 +37,10 @@ export class InstancesService {
     private zone: NgZone,
     private system: SystemService,
   ) {}
+
+  setNewAccountsOrder(accounts: Account[]) {
+    this.accountsStore.set(accounts);
+  }
 
   addAccount(account: Account) {
     this.accountsStore.addAccount(account.username, account.password);
@@ -126,10 +138,6 @@ export class InstancesService {
 
   removeAllInstances() {
     this.instancesStore.set([]);
-  }
-
-  indexOfInstance(instance: GameInstance) {
-    return this.instancesQuery.getAll().indexOf(instance);
   }
 
   /**

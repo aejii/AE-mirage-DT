@@ -16,6 +16,7 @@
 .characters {
   margin-bottom: 24px;
   .character {
+    display: flex;
     cursor: pointer;
     filter: brightness(50%);
     &.connects {
@@ -76,4 +77,22 @@
   45% {
     transform: rotate(0deg);
   }
+}
+
+.cdk-drag-preview {
+  .username {
+    display: none;
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.5;
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms ease-in-out;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms ease-out;
 }

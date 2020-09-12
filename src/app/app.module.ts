@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,8 +22,8 @@ import { InstanceRefDirective } from './pages/game/accounts-menu/instance-ref.di
 import { GameComponent } from './pages/game/game.component';
 import { MainMenuComponent } from './pages/game/main-menu/main-menu.component';
 import { InstallerComponent } from './pages/installer/installer.component';
-import { SettingsComponent } from './pages/settings/settings.component';
 import { KeyboardBindingsComponent } from './pages/settings/keyboard-bindings/keyboard-bindings.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { KeyboardBindingsComponent } from './pages/settings/keyboard-bindings/ke
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    DragDropModule,
 
     // AngularFireModule.initializeApp(environment.firebaseConfig),
     // AngularFireAuthModule,

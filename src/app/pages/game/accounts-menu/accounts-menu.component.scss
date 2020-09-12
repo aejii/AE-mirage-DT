@@ -57,3 +57,18 @@
     justify-content: center;
   }
 }
+
+.cdk-drag-preview {
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.5;
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms ease-in-out;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms ease-out;
+}

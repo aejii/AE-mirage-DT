@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -8,8 +9,9 @@ import {
   Renderer2,
   ViewChildren,
 } from '@angular/core';
-import { InstancesService, UIService } from '@providers';
 import { GameInstance } from '@model';
+import { InstancesService, UIService } from '@providers';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'mg-accounts-menu',
@@ -18,39 +20,56 @@ import { GameInstance } from '@model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountsMenuComponent implements OnInit {
-  instances$ = this.instancesService.instances$;
-  active$ = this.instancesService.activeInstance$;
+  private currentInstancesOrder: GameInstance[] = [];
+
+  instances$ = this.service.instances$.pipe(
+    map((frozenInstances) => {
+      const instances = [...frozenInstances];
+      this.currentInstancesOrder = instances;
+      return instances;
+    }),
+  );
+  active$ = this.service.activeInstance$;
 
   @ViewChildren('accountsRef') accounts: QueryList<ElementRef<HTMLDivElement>>;
 
   constructor(
     private renderer: Renderer2,
     private cdRef: ChangeDetectorRef,
-    private instancesService: InstancesService,
+    private service: InstancesService,
     public UI: UIService,
   ) {}
 
   ngOnInit(): void {}
 
+  sortInstances(event: CdkDragDrop<GameInstance[]>) {
+    this.currentInstancesOrder.splice(
+      event.currentIndex,
+      0,
+      this.currentInstancesOrder.splice(event.previousIndex, 1)[0],
+    );
+    this.cdRef.detectChanges();
+  }
+
   addGame() {
-    this.instancesService.addInstance();
+    this.service.addInstance();
   }
 
   setActive(instance: GameInstance) {
-    this.instancesService.setActiveInstance(instance);
+    this.service.setActiveInstance(instance);
   }
 
   removeInstance(instance: GameInstance) {
-    this.instancesService.removeInstance(instance);
+    this.service.removeInstance(instance);
   }
 
   removeAllInstances() {
-    this.instancesService.removeAllInstances();
+    this.service.removeAllInstances();
   }
 
   setAccountImage(instance: GameInstance, canvas: HTMLDivElement) {
     const accounts = this.accounts.toArray();
-    const account = accounts[this.instancesService.indexOfInstance(instance)];
+    const account = accounts[this.currentInstancesOrder.indexOf(instance)];
     const accountEl = account.nativeElement;
 
     if (!accountEl) return;
@@ -62,7 +81,7 @@ export class AccountsMenuComponent implements OnInit {
   setAccountNumber(instance: GameInstance) {
     this.cdRef.detectChanges();
     const span = document.createElement('span');
-    const index = this.instancesService.indexOfInstance(instance);
+    const index = this.currentInstancesOrder.indexOf(instance);
     const accounts = this.accounts.toArray();
     const account = accounts[index];
     const accountEl = account?.nativeElement;
