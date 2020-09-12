@@ -19,6 +19,8 @@ export class CreateAccountComponent implements AfterViewInit {
 
   @ViewChild('usernameInput') usernameRef: ElementRef<HTMLInputElement>;
 
+  showPassword = false;
+
   constructor(
     private builder: FormBuilder,
     public service: InstancesService,
