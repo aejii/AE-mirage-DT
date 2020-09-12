@@ -117,6 +117,10 @@ export class MgGuiHandler {
     return this.instance.singletons.windowManager.getWindow('exchangeStorage');
   }
 
+  get padlockWindow() {
+    return this.instance.singletons.windowManager.getWindow('padlock');
+  }
+
   setShortcutBindingOnSlot(index: number, key: string) {
     // Do it on all tabs (30 slots per tab)
     const targets = [index, index + 30, index + 60];

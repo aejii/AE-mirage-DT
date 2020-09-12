@@ -7,14 +7,13 @@ import { KeyboardShortcutsQuery } from './keyboard-shortcuts.query';
 import {
   KeyboardShortcutsStore,
   MgKeyboardShortcut,
-  uiShortcutsTargets
+  uiShortcutsTargets,
 } from './keyboard-shortcuts.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KeyboardShortcutsService {
-
   uiShortcutKeys: uiShortcutsTargets[] = [
     'previous instance',
     'next instance',
@@ -45,10 +44,7 @@ export class KeyboardShortcutsService {
             (shortcut) =>
               !!shortcut.code &&
               !!shortcut.name &&
-              ![
-                'slot',
-                ...this.uiShortcutKeys
-              ].includes(shortcut.target),
+              !['slot', ...this.uiShortcutKeys].includes(shortcut.target),
           )
           .sort((a, b) => a.target.localeCompare(b.target)),
       ),
@@ -63,7 +59,9 @@ export class KeyboardShortcutsService {
             (shortcut) =>
               !!shortcut.code &&
               !!shortcut.name &&
-              this.uiShortcutKeys.includes(shortcut.target as uiShortcutsTargets),
+              this.uiShortcutKeys.includes(
+                shortcut.target as uiShortcutsTargets,
+              ),
           )
           .sort((a, b) => a.target.localeCompare(b.target)),
       ),
@@ -117,6 +115,10 @@ export class KeyboardShortcutsService {
       event.target instanceof HTMLTextAreaElement
     )
       return;
+
+    if (instance.gui.padlockWindow?.isVisible?.()) {
+      return this._runPadlockShortcut(instance, event);
+    }
 
     if (instance.window?.gui?.numberInputPad?.isVisible?.()) {
       return this._runNumpadShortcut(instance, event);
@@ -214,5 +216,14 @@ export class KeyboardShortcutsService {
     if (event.key === 'Enter') numpad._doEnter();
     if (event.key === 'Escape') numpad.hide();
     if (event.key === 'Backspace') numpad._doBackspace();
+  }
+
+  private _runPadlockShortcut(instance: GameInstance, event: KeyboardEvent) {
+    const padlock = instance.gui.padlockWindow;
+
+    if (!isNaN(+event.key)) padlock.enterCode(+event.key);
+    if (event.key === 'Enter') padlock.confirmButton.tap();
+    if (event.key === 'Escape') padlock.close();
+    if (event.key === 'Backspace') padlock.resetCode();
   }
 }

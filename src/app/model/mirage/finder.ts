@@ -8,7 +8,7 @@ export class MgFinder {
     singletons: true,
     protos: true,
     isValue: false,
-    depth: 2,
+    depth: 5,
   };
 
   constructor(private instance: GameInstance) {

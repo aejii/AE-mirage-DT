@@ -1,5 +1,5 @@
 import { GameInstance } from '../classes/game-instance';
-import { EventReadyObject } from '../DT/window';
+import { EventReadyObject, GameGuiElement } from '../DT/window';
 
 export class MgSingletons {
   private _audioManager: AudioManager;
@@ -120,6 +120,9 @@ interface DimensionsManager {
 interface WindowManager {
   addWindow(): unknown;
   getWindow(id: 'tradeWithPlayer'): EventReadyObject & ExchangeWindowInterface;
+  getWindow(
+    id: 'padlock',
+  ): EventReadyObject & PadlockWindow & GameGuiElement<HTMLElement>;
   getWindow(id: WindowManagerIds): EventReadyObject;
 }
 
@@ -278,4 +281,10 @@ export interface ExchangeWindowSlot extends EventReadyObject {
     objectUID: number;
   };
   getQuantity(): number;
+}
+
+export interface PadlockWindow {
+  confirmButton: GameGuiElement;
+  enterCode(input: number): void;
+  resetCode(): void;
 }
