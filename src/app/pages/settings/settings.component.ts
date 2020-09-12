@@ -1,13 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SystemService, UIService } from '@providers';
 import { filter, first } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
 import { InstallationStore } from 'src/app/core/installation/installation.store';
+import { LoggerService } from 'src/app/providers/application/logs/logger.service';
 import { InstallationQuery } from '../../core/installation/installation.query';
 
 @Component({
@@ -36,6 +33,7 @@ export class SettingsComponent {
     private installationStore: InstallationStore,
     private system: SystemService,
     public UI: UIService,
+    public logger: LoggerService,
   ) {
     this.device$
       .pipe(first())

@@ -38,3 +38,15 @@
   z-index: 2;
   border-radius: 3px;
 }
+
+.container {
+  max-width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  .log {
+    max-width: 100%;
+    word-wrap: break-word;
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}

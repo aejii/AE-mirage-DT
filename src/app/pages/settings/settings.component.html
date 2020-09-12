@@ -111,5 +111,12 @@
         <mg-keyboard-bindings #bindings></mg-keyboard-bindings>
       </div>
     </dt-tab-list-item>
+    <dt-tab-list-item label="Logs">
+      <div class="container" fxLayout="column" fxLayoutGap="2em">
+        <div class="log" *ngFor="let log of logger.logs$ | async">
+          {{ log }}
+        </div>
+      </div>
+    </dt-tab-list-item>
   </dt-tab-list>
 </dt-container>

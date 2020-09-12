@@ -47,6 +47,12 @@ export class GameInstance {
    */
   frameLoaded(frame: HTMLIFrameElement) {
     this.window = frame.contentWindow as DTWindow;
+    /**
+     * Uses Mirage log system to persist the console actions into the local storage
+     */
+    this.window.addEventListener('error', (...args) =>
+      (this.window.top as any).mgLog(...args),
+    );
   }
 
   private _enableUiResizingOnWindowResizing() {

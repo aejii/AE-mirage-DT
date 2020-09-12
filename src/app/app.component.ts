@@ -10,6 +10,7 @@ import {
 import { UIService } from '@providers';
 import { appAnimation } from './app.animations';
 import { InstallationService } from './core/installation/installation.service';
+import { LoggerService } from './providers/application/logs/logger.service';
 
 @Component({
   selector: 'mg-root',
@@ -29,7 +30,10 @@ export class AppComponent implements OnInit {
     private installation: InstallationService,
     public UI: UIService,
     private cdRef: ChangeDetectorRef,
-  ) {}
+    private logger: LoggerService,
+  ) {
+    this.logger.initializeLogger();
+  }
 
   ngOnInit() {
     // Install the game when the application starts

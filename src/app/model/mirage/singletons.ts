@@ -31,6 +31,7 @@ export class MgSingletons {
       this._dimensionsManager = this.instance.finder.getSingleton<
         DimensionsManager
       >('updateScreen', { window: false, protos: false });
+      console.log(this._dimensionsManager);
     return this._dimensionsManager;
   }
 
