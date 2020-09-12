@@ -121,6 +121,10 @@ export class MgGuiHandler {
     return this.instance.singletons.windowManager.getWindow('padlock');
   }
 
+  get sellingWindow() {
+    return this.instance.singletons.windowManager.getWindow('tradeItem');
+  }
+
   setShortcutBindingOnSlot(index: number, key: string) {
     // Do it on all tabs (30 slots per tab)
     const targets = [index, index + 30, index + 60];
@@ -144,7 +148,6 @@ export class MgGuiHandler {
 
   get pingButton() {
     return this.instance?.window?.gui?.pingSystem?._pingBtn?._pingBtn;
-
   }
 }
 

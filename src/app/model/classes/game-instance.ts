@@ -9,6 +9,7 @@ import { MgFinder } from '../mirage/finder';
 import { MgGroupHandler } from '../mirage/group';
 import { MgGuiHandler } from '../mirage/gui';
 import { MgInjecter } from '../mirage/injecter';
+import { MgMerchant } from '../mirage/merchant';
 import { MgSingletons } from '../mirage/singletons';
 
 export class GameInstance {
@@ -25,6 +26,7 @@ export class GameInstance {
   public groupManager = new MgGroupHandler(this);
   public character = new MgCharacterHandler(this);
   public finder = new MgFinder(this);
+  public merchant = new MgMerchant(this);
 
   constructor(
     public account?: {

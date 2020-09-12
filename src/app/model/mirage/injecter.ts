@@ -32,6 +32,29 @@ export class MgInjecter {
 
   constructor(private instance: GameInstance) {}
 
+  /** Adds a "-1K" button to the selling window */
+  addMinusOneKamaSellingButton() {
+    const tradingWindow = this.instance?.gui?.sellingWindow;
+
+    const newBtn = new this.instance.singletons.DTButton({
+      className: 'greenButton',
+      text: '-1 K',
+    });
+
+    newBtn.addListener('tap', () => {
+      this.instance.merchant.sellCurrentItemAtCurrentPriceForCurrentQuantity();
+    });
+
+    tradingWindow.addListener('open', () => {
+      const sellBtn = tradingWindow?.bidHouseSellerBox?.sellBtn?.rootElement;
+      sellBtn?.after?.(newBtn.rootElement);
+    });
+
+    tradingWindow.addListener('close', () => {
+      newBtn.rootElement.remove();
+    });
+  }
+
   addBindingsToShortcutSlots() {
     const slots = [
       ...this.instance.gui.spellsSlots,

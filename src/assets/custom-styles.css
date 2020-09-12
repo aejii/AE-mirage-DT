@@ -49,3 +49,7 @@ div.quantity.mirage-shortcut-chip {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+.window.tradeItemWindow .windowBody .buttonBox .greenButton {
+  flex: 1 1 auto;
+}

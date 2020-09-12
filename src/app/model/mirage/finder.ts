@@ -5,10 +5,10 @@ import { GameInstance } from '../classes/game-instance';
 export class MgFinder {
   private defaultSearchConfiguration: SearchConfiguration = {
     window: true,
-    singletons: true,
-    protos: true,
-    isValue: false,
-    depth: 5,
+    singleton: true,
+    proto: true,
+    value: false,
+    depth: 2,
   };
 
   constructor(private instance: GameInstance) {
@@ -43,7 +43,7 @@ export class MgFinder {
     };
 
     const wTargets = configuration.window ? this.getWindowTargets() : [];
-    const sTargets = configuration.singletons
+    const sTargets = configuration.singleton
       ? this.getSingletonsTargets()
       : [];
 
@@ -66,7 +66,7 @@ export class MgFinder {
       ),
     );
     const fnResults =
-      configuration.protos && !configuration.isValue
+      configuration.proto && !configuration.value
         ? this.protoSearch(matcher)
         : [];
 
@@ -94,9 +94,10 @@ export class MgFinder {
     const results: SearchResult[] = [];
 
     protoSingletons.forEach(([id, value]) => {
-      const proto = value?.exports.prototype;
+      const exported = value?.exports;
+      const proto = exported?.prototype;
       if (!proto) return null;
-      for (const key in proto) {
+      for (const key in { ...proto, ...exported }) {
         if (this.keyMatches(matcher, key))
           results.push({
             key,
@@ -186,7 +187,7 @@ export class MgFinder {
     matcher: any,
     configuration: SearchConfiguration,
   ): boolean | null {
-    if (configuration.isValue) return true;
+    if (configuration.value) return true;
     else if (typeof matcher === 'string') return false;
     else if (matcher instanceof RegExp) return false;
     else if (matcher instanceof (this.instance.window as any).HTMLElement)
@@ -235,9 +236,9 @@ export class MgFinder {
 
 interface SearchConfiguration {
   window?: boolean;
-  singletons?: boolean;
-  protos?: boolean;
-  isValue?: boolean;
+  singleton?: boolean;
+  proto?: boolean;
+  value?: boolean;
   depth?: number;
 }
 

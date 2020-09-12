@@ -9,7 +9,7 @@ export class MgSingletons {
         'setMute',
         {
           window: false,
-          protos: false,
+          proto: false,
           depth: 1,
         },
       );
@@ -21,7 +21,7 @@ export class MgSingletons {
     if (!this._activityRecorder)
       this._activityRecorder = this.instance.finder.getSingleton<
         ActivityRecorder
-      >('recordActivity', { window: false, protos: false });
+      >('recordActivity', { window: false, proto: false });
     return this._activityRecorder;
   }
 
@@ -30,8 +30,7 @@ export class MgSingletons {
     if (!this._dimensionsManager)
       this._dimensionsManager = this.instance.finder.getSingleton<
         DimensionsManager
-      >('updateScreen', { window: false, protos: false });
-      console.log(this._dimensionsManager);
+      >('updateScreen', { window: false, proto: false });
     return this._dimensionsManager;
   }
 
@@ -40,9 +39,24 @@ export class MgSingletons {
     if (!this._windowManager)
       this._windowManager = this.instance.finder.getSingleton<WindowManager>(
         'addWindow',
-        { window: false, protos: false },
+        { window: false, proto: false },
       );
     return this._windowManager;
+  }
+
+  private _buttonManager: new (
+    configuration: ButtonManagerConfiguration,
+  ) => GameGuiElement & EventReadyObject;
+  get DTButton() {
+    if (!this._buttonManager)
+      this._buttonManager = this.instance.finder.getSingleton<any>(
+        'DofusButton',
+        {
+          proto: true,
+        },
+        true,
+      );
+    return this._buttonManager;
   }
 
   private _characterDisplay: new (
@@ -55,8 +69,8 @@ export class MgSingletons {
       this._characterDisplay = this.instance.finder.getSingleton(
         'rotateCharacter',
         {
-          protos: true,
-          singletons: false,
+          proto: true,
+          singleton: false,
           window: false,
         },
         true,
@@ -121,6 +135,7 @@ interface DimensionsManager {
 interface WindowManager {
   addWindow(): unknown;
   getWindow(id: 'tradeWithPlayer'): EventReadyObject & ExchangeWindowInterface;
+  getWindow(id: 'tradeItem'): EventReadyObject & SellingItemWindow;
   getWindow(
     id: 'padlock',
   ): EventReadyObject & PadlockWindow & GameGuiElement<HTMLElement>;
@@ -288,4 +303,33 @@ export interface PadlockWindow {
   confirmButton: GameGuiElement;
   enterCode(input: number): void;
   resetCode(): void;
+}
+
+export interface SellingItemWindow {
+  bidHouseSellerBox: {
+    sellBtn: GameGuiElement<HTMLDivElement>;
+    quantity: number;
+    quantitySelect: EventReadyObject & GameGuiElement & {
+      setValue(quantity: number): void;
+    };
+    item: {
+      objectGID: number;
+      objectUID: number;
+      quantity: number;
+    };
+    price: number;
+    fees: number;
+    minPricesCache: {
+      [key: number]: [number, number, number];
+    };
+    priceInput: {
+      setValue(number): void;
+    };
+  };
+  sellInBidHouse(item, price, quantity, fees): void;
+}
+
+export interface ButtonManagerConfiguration {
+  className: string;
+  text: string;
 }
