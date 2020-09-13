@@ -1,4 +1,5 @@
-import { first } from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { first, take } from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
 import { EventReadyObject } from '../DT/window';
 import { ExchangeWindowSlot } from './singletons';
@@ -36,22 +37,60 @@ export class MgInjecter {
   addMinusOneKamaSellingButton() {
     const tradingWindow = this.instance?.gui?.sellingWindow;
 
-    const newBtn = new this.instance.singletons.DTButton({
+    const minusOnKamaButton = new this.instance.singletons.DTButton({
       className: 'greenButton',
       text: '-1 K',
     });
 
-    newBtn.addListener('tap', () => {
+    minusOnKamaButton.addListener('tap', () => {
       this.instance.merchant.sellCurrentItemAtCurrentPriceForCurrentQuantity();
     });
 
     tradingWindow.addListener('open', () => {
       const sellBtn = tradingWindow?.bidHouseSellerBox?.sellBtn?.rootElement;
-      sellBtn?.after?.(newBtn.rootElement);
+      sellBtn?.after?.(minusOnKamaButton.rootElement);
     });
 
     tradingWindow.addListener('close', () => {
-      newBtn.rootElement.remove();
+      minusOnKamaButton.rootElement.remove();
+    });
+  }
+
+  addRemoveAllCurrentlySellingItemsButton() {
+    const sellingWindow = this.instance.gui.itemsCurrentlySellingWindow;
+
+    const removeAllButtons = new this.instance.singletons.DTButton({
+      className: [
+        'buyModeBtn',
+        'greenButton',
+        'mirage-remove-all-items-selling',
+      ],
+      text: '',
+      addIcon: true,
+      tooltip: 'Retirer les objets affichés de la vente',
+    });
+
+    removeAllButtons.addListener('tap', () => {
+      const rows = sellingWindow?.shopViewer?.table?.rows?.getChildren?.().filter(row => row.isVisible());
+
+      timer(0, 100)
+        .pipe(take(rows.length))
+        .subscribe((index) => {
+          const row = rows[index];
+          this.instance.window.dofus.sendMessage('ExchangeObjectMoveMessage', {
+            objectUID: row.rowContent.objectUID,
+            quantity: -row.rowContent.quantity,
+          });
+        });
+    });
+
+    sellingWindow?.addListener?.('open', () => {
+      const switchBtn = sellingWindow?.switchToBuyModeBtn.rootElement;
+      switchBtn?.after(removeAllButtons.rootElement);
+    });
+
+    sellingWindow.addListener('close', () => {
+      removeAllButtons.rootElement.remove();
     });
   }
 

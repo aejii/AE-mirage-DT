@@ -22,7 +22,9 @@ export class MgMerchant {
     return quantity ?? 0;
   }
 
-  constructor(private instance: GameInstance) {}
+  constructor(private instance: GameInstance) {
+    
+  }
 
   /**
    * Sells the selected item at the given price minus 1, for the selected quantity

@@ -53,3 +53,15 @@ div.quantity.mirage-shortcut-chip {
 .window.tradeItemWindow .windowBody .buttonBox .greenButton {
   flex: 1 1 auto;
 }
+
+.TradeStorageWindow.modify-bidHouse
+  div.buyModeBtn.greenButton.mirage-remove-all-items-selling.Button {
+  filter: hue-rotate(300deg);
+}
+
+.TradeStorageWindow.modify-bidHouse
+  div.buyModeBtn.greenButton.mirage-remove-all-items-selling.Button
+  .btnIcon {
+  background: url(assets/ui/icons/fail.png) 50% 55% no-repeat;
+  background-size: 20px 20px;
+}

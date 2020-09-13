@@ -125,6 +125,10 @@ export class MgGuiHandler {
     return this.instance.singletons.windowManager.getWindow('tradeItem');
   }
 
+  get itemsCurrentlySellingWindow() {
+    return this.instance.singletons.windowManager.getWindow('tradeStorage');
+  }
+
   setShortcutBindingOnSlot(index: number, key: string) {
     // Do it on all tabs (30 slots per tab)
     const targets = [index, index + 30, index + 60];

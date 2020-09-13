@@ -136,6 +136,7 @@ interface WindowManager {
   addWindow(): unknown;
   getWindow(id: 'tradeWithPlayer'): EventReadyObject & ExchangeWindowInterface;
   getWindow(id: 'tradeItem'): EventReadyObject & SellingItemWindow;
+  getWindow(id: 'tradeStorage'): EventReadyObject & TradeStorageWindow;
   getWindow(
     id: 'padlock',
   ): EventReadyObject & PadlockWindow & GameGuiElement<HTMLElement>;
@@ -309,9 +310,10 @@ export interface SellingItemWindow {
   bidHouseSellerBox: {
     sellBtn: GameGuiElement<HTMLDivElement>;
     quantity: number;
-    quantitySelect: EventReadyObject & GameGuiElement & {
-      setValue(quantity: number): void;
-    };
+    quantitySelect: EventReadyObject &
+      GameGuiElement & {
+        setValue(quantity: number): void;
+      };
     item: {
       objectGID: number;
       objectUID: number;
@@ -330,6 +332,25 @@ export interface SellingItemWindow {
 }
 
 export interface ButtonManagerConfiguration {
-  className: string;
-  text: string;
+  className?: string | string[];
+  text?: string;
+  addIcon?: boolean;
+  tooltip?: string;
+}
+
+export interface TradeStorageWindow {
+  switchToBuyModeBtn: GameGuiElement;
+  shopViewer: {
+    table: {
+      rows: {
+        getChildren(): (EventReadyObject &
+          GameGuiElement & {
+            rowContent: {
+              objectUID: number;
+              quantity: number;
+            };
+          })[];
+      };
+    };
+  };
 }

@@ -55,6 +55,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
           this.instance.actions.removeShopButton();
           this.instance.injecter.addSpellsDoubleTapListener();
           this.instance.injecter.addMinusOneKamaSellingButton();
+          this.instance.injecter.addRemoveAllCurrentlySellingItemsButton();
         }),
       );
 
