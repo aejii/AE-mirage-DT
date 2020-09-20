@@ -390,16 +390,4 @@ const scriptRegexes = [
     '(function (\\D)\\(n\\)\\{)(if\\(i\\[n\\]\\)return i\\[n\\]\\.exports;)',
     '$1window.singletons = $2;$3',
   ],
-  // Removes the console override
-  [
-    '(\\w{1,2}\\.overrideConsole\\s?=)\\s?(function\\(\\))',
-    '$1 function() {}, !1 && $2',
-  ],
-  // Logs uncaught exceptions to top frame
-  [
-    ',\\s*(\\w+\\.logUncaughtExceptions)\\s*=\\s*function\\(([^(]*)\\)',
-    ',$1=function($2) { top.console.log($2); }, !1 && function($2)',
-  ],
-  // Logs the fetches to the top frame
-  ['(,window\\.fetch\\((\\w)+\\+"\\/logger")', ',top.console.log($2)$1'],
 ];

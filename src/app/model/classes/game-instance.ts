@@ -56,7 +56,12 @@ export class GameInstance {
       (this.window.top as any).mgLog(...args),
     );
 
-    // remove the ability to send logs to dofus touchD
+    // Binds the window console to the app console
+    Object.defineProperty(this.window, 'console', {
+      value: console,
+    });
+
+    // remove the ability to send logs to dofus touch
     const orgn = this.window.fetch.bind(this.window);
     this.window.fetch = (...args) => {
       const endpoint: string = args[0] as any;
