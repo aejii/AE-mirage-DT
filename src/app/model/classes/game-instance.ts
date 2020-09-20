@@ -55,6 +55,14 @@ export class GameInstance {
     this.window.addEventListener('error', (...args) =>
       (this.window.top as any).mgLog(...args),
     );
+
+    // remove the ability to send logs to dofus touchD
+    const orgn = this.window.fetch.bind(this.window);
+    this.window.fetch = (...args) => {
+      const endpoint: string = args[0] as any;
+      if (endpoint.endsWith('/logger')) return;
+      return orgn(...args);
+    };
   }
 
   private _enableUiResizingOnWindowResizing() {
