@@ -341,6 +341,18 @@ export interface ButtonManagerConfiguration {
 export interface TradeStorageWindow {
   switchToBuyModeBtn: GameGuiElement;
   shopViewer: {
+    itemFilter: {
+      _selectedFilter: number;
+      _selectedSubFilter: number;
+      _selectList: {
+        wdSelect: {
+          _valuePairs: {
+            text: string;
+            value: number;
+          }[];
+        };
+      }[];
+    };
     table: {
       rows: {
         getChildren(): (EventReadyObject &

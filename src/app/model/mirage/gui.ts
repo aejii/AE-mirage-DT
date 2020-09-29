@@ -129,6 +129,10 @@ export class MgGuiHandler {
     return this.instance.singletons.windowManager.getWindow('tradeStorage');
   }
 
+  get grimoireWindow() {
+    return this.instance.singletons.windowManager.getWindow('grimoire');
+  }
+
   setShortcutBindingOnSlot(index: number, key: string) {
     // Do it on all tabs (30 slots per tab)
     const targets = [index, index + 30, index + 60];

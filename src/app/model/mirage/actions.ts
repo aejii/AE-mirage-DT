@@ -123,6 +123,14 @@ export class MgActionsHandler {
   closeContextualMenu() {
     this.instance.window.gui.closeContextualMenu();
   }
+
+  openConfirmDialog(title: string, message: string, cb: (...args) => void) {
+    this.instance.window.gui.openConfirmPopup({
+      title,
+      message,
+      cb,
+    });
+  }
 }
 
 /**

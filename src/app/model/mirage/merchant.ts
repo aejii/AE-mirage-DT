@@ -22,9 +22,21 @@ export class MgMerchant {
     return quantity ?? 0;
   }
 
-  constructor(private instance: GameInstance) {
-    
+  get currentCateogry() {
+    const window = this.instance.gui.itemsCurrentlySellingWindow;
+    const currentFilter = window?.shopViewer?.itemFilter?._selectedFilter;
+    const currentSubfilter = window?.shopViewer?.itemFilter?._selectedSubFilter;
+    if (currentSubfilter === -1) return undefined; // All items
+    const selectedPair = window?.shopViewer?.itemFilter?._selectList?.[
+      currentFilter
+    ]?.wdSelect?._valuePairs?.find?.(
+      (pair) =>
+        pair?.value === window?.shopViewer?.itemFilter?._selectedSubFilter,
+    );
+    return selectedPair?.text;
   }
+
+  constructor(private instance: GameInstance) {}
 
   /**
    * Sells the selected item at the given price minus 1, for the selected quantity

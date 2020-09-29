@@ -11,8 +11,8 @@ export interface DTWindow extends Window {
     pingSystem: {
       _pingBtn: {
         _pingBtn: GameGuiElement;
-      }
-    }
+      };
+    };
     wBody: GameGuiElement;
     numberInputPad: GameGuiElement & {
       _doDigit(digit: number): void;
@@ -108,6 +108,11 @@ export interface DTWindow extends Window {
     on(verb: WindowGuiEventVerb, callback: (...args: any) => any): any;
     _resizeUi(): void;
     closeContextualMenu(): void;
+    openConfirmPopup(payload: {
+      title: string;
+      message: string;
+      cb: (...args) => void;
+    }): void;
   };
 
   foreground: {

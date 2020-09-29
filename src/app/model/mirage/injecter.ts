@@ -71,17 +71,32 @@ export class MgInjecter {
     });
 
     removeAllButtons.addListener('tap', () => {
-      const rows = sellingWindow?.shopViewer?.table?.rows?.getChildren?.().filter(row => row.isVisible());
+      const currentCateogry = this.instance.merchant.currentCateogry;
+      this.instance.actions.openConfirmDialog(
+        'Retirer les objets de la vente',
+        `Retirer tous les objets en vente ${
+          (currentCateogry && `dans la catégorie " ${currentCateogry} "`) || ''
+        }?`,
+        (response) => {
+          if (!response) return;
+          const rows = sellingWindow?.shopViewer?.table?.rows
+            ?.getChildren?.()
+            .filter((row) => row.isVisible());
 
-      timer(0, 100)
-        .pipe(take(rows.length))
-        .subscribe((index) => {
-          const row = rows[index];
-          this.instance.window.dofus.sendMessage('ExchangeObjectMoveMessage', {
-            objectUID: row.rowContent.objectUID,
-            quantity: -row.rowContent.quantity,
-          });
-        });
+          timer(0, 100)
+            .pipe(take(rows.length))
+            .subscribe((index) => {
+              const row = rows[index];
+              this.instance.window.dofus.sendMessage(
+                'ExchangeObjectMoveMessage',
+                {
+                  objectUID: row.rowContent.objectUID,
+                  quantity: -row.rowContent.quantity,
+                },
+              );
+            });
+        },
+      );
     });
 
     sellingWindow?.addListener?.('open', () => {
