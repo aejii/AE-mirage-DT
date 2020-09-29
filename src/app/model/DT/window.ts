@@ -115,7 +115,7 @@ export interface DTWindow extends Window {
     }): void;
   };
 
-  foreground: {
+  foreground: EventReadyObject & {
     selectSpell(id: number): void;
   };
 
@@ -134,8 +134,10 @@ export interface DTWindow extends Window {
   };
 }
 
+export type UserTouchInteractions = 'tap' | 'doubletap' | 'longtap';
+
 export interface EventReadyObject<T = any> {
-  _events: { [key: string]: any };
+  _events: { [key in UserTouchInteractions & string]: any };
   addListener(verb: T, callback: (...args) => any): any;
   removeListener(verb: string, event: any): void;
   emit(verb: string, ...args: any): any;
