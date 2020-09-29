@@ -37,22 +37,27 @@ export class MgInjecter {
   addMinusOneKamaSellingButton() {
     const tradingWindow = this.instance?.gui?.sellingWindow;
 
-    const minusOnKamaButton = new this.instance.singletons.DTButton({
-      className: 'greenButton',
+    const minusOneKamaButton = new this.instance.singletons.DTButton({
+      className: [
+        'greenButton',
+        'mirage-minus-one-kama'
+      ],
       text: '-1 K',
     });
 
-    minusOnKamaButton.addListener('tap', () => {
+    minusOneKamaButton.addListener('tap', () => {
       this.instance.merchant.sellCurrentItemAtCurrentPriceForCurrentQuantity();
+      minusOneKamaButton.disable();
+      setTimeout(() => minusOneKamaButton.enable(), 300);
     });
 
     tradingWindow.addListener('open', () => {
       const sellBtn = tradingWindow?.bidHouseSellerBox?.sellBtn?.rootElement;
-      sellBtn?.after?.(minusOnKamaButton.rootElement);
+      sellBtn?.after?.(minusOneKamaButton.rootElement);
     });
 
     tradingWindow.addListener('close', () => {
-      minusOnKamaButton.rootElement.remove();
+      minusOneKamaButton.rootElement.remove();
     });
   }
 
@@ -83,7 +88,7 @@ export class MgInjecter {
             ?.getChildren?.()
             .filter((row) => row.isVisible());
 
-          timer(0, 100)
+          timer(0, 250)
             .pipe(take(rows.length))
             .subscribe((index) => {
               const row = rows[index];

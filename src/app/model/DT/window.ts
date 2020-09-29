@@ -203,6 +203,8 @@ export interface GameGuiElement<T = HTMLElement> {
   isVisible(): boolean;
   hide(): void;
   close(): void;
+  enable(): void;
+  disable(): void;
 }
 
 export type WindowGuiEventVerb =

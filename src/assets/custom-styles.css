@@ -65,3 +65,10 @@ div.quantity.mirage-shortcut-chip {
   background: url(assets/ui/icons/fail.png) 50% 55% no-repeat;
   background-size: 20px 20px;
 }
+
+div.BidHouseSellerBox
+  > div.buttonBox
+  > div:nth-child(1)[style='display: none;']
+  + .mirage-minus-one-kama {
+  display: none;
+}
