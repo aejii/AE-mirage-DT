@@ -57,9 +57,15 @@ export class InstancesService {
   }
 
   connectAccounts() {
-    const instances = this.accountsQuery.accountsToConnect.map(
-      (account) => new GameInstance(account),
+    const connectedAccounts = this.instances.map(
+      (instance) => instance.account.username,
     );
+
+    const instances = this.accountsQuery.accountsToConnect
+      .map((account) => new GameInstance(account))
+      .filter(
+        (instance) => !connectedAccounts.includes(instance.account.username),
+      );
 
     const [leader, ...followers] = instances;
 

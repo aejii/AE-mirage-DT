@@ -79,6 +79,7 @@ export interface DTWindow extends Window {
     playerData: {
       id: number;
       isFighting: boolean;
+      loginName: string;
       characterBaseInformations: {
         name: string;
         level: string;
