@@ -37,15 +37,28 @@ export class MgFinder {
     matcher: SearchMatcher,
     _configuration: SearchConfiguration = {},
   ): SearchResult<Value, Parent>[] {
+    const unkwnownKeys = [];
+    const keys = Object.keys(this.defaultSearchConfiguration);
+    for (const key in _configuration) {
+      if (!keys.includes(key)) unkwnownKeys.push(key);
+    }
+
+    if (unkwnownKeys.length)
+      console.log(
+        '[Mirage Finder] -',
+        'Unkonwn configuration keys :',
+        unkwnownKeys.join(', '),
+        '\nValid keys are ',
+        keys.join(', '),
+      );
+
     const configuration = {
       ...this.defaultSearchConfiguration,
       ..._configuration,
     };
 
     const wTargets = configuration.window ? this.getWindowTargets() : [];
-    const sTargets = configuration.singleton
-      ? this.getSingletonsTargets()
-      : [];
+    const sTargets = configuration.singleton ? this.getSingletonsTargets() : [];
 
     const mustSearchOnValue = this.mustSearchOnValue(matcher, configuration);
 
