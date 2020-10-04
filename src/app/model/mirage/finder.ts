@@ -48,7 +48,7 @@ export class MgFinder {
         '[Mirage Finder] -',
         'Unkonwn configuration keys :',
         unkwnownKeys.join(', '),
-        '\nValid keys are ',
+        '\nValid keys are :',
         keys.join(', '),
       );
 

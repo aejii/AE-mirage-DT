@@ -1,6 +1,7 @@
 export interface DTWindow extends Window {
-  dofus: {
-    connectionManager: {
+  dofus: EventReadyObject & {
+    connectionManager: EventReadyObject & {
+      eventHandlers: { [key: string]: ((...args) => any)[] };
       sendMessage(verb: string, payload: any): any;
       on(verb: string, callback: (...args) => any): any;
     };
