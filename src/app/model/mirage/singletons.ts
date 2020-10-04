@@ -294,9 +294,7 @@ export interface ExchangeWindowInterface {
 }
 
 export interface ExchangeWindowSlot extends EventReadyObject {
-  itemInstance: {
-    objectUID: number;
-  };
+  itemInstance: GameItem;
   getQuantity(): number;
 }
 
@@ -308,6 +306,12 @@ export interface PadlockWindow {
 
 export interface SellingItemWindow {
   mode: 'sell-bidHouse' | 'modify-bidHouse';
+  buySoftBtn: GameGuiElement & EventReadyObject;
+  selection: {
+    qty: number;
+    amountSoft: number;
+    item: GameItem;
+  };
   bidHouseSellerBox: {
     sellBtn: GameGuiElement<HTMLDivElement>;
     quantity: number;
@@ -315,11 +319,7 @@ export interface SellingItemWindow {
       GameGuiElement & {
         setValue(quantity: number): void;
       };
-    item: {
-      objectGID: number;
-      objectUID: number;
-      quantity: number;
-    };
+    item: GameItem;
     price: number;
     fees: number;
     minPricesCache: {
@@ -358,12 +358,15 @@ export interface TradeStorageWindow {
       rows: {
         getChildren(): (EventReadyObject &
           GameGuiElement & {
-            rowContent: {
-              objectUID: number;
-              quantity: number;
-            };
+            rowContent: GameItem;
           })[];
       };
     };
   };
+}
+
+export interface GameItem {
+  objectUID: number;
+  objectGID: number;
+  quantity: number;
 }

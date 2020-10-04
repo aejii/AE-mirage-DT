@@ -161,6 +161,7 @@ export class KeyboardShortcutsService {
     if (event.key === 'Escape' && event.code === 'Escape') {
       if (instance.gui.chatWindow.active) {
         instance.actions.toggleChat(false);
+        (document?.activeElement as HTMLElement).blur?.();
       } else if (instance.gui.isContextualMenuOpened) {
         instance.actions.closeContextualMenu();
       } else {

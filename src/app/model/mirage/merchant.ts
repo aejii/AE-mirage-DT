@@ -87,4 +87,12 @@ export class MgMerchant {
       ],
     );
   }
+
+  buyItem(uid: number, qty: number, price: number) {
+    this.instance.window.dofus.sendMessage('ExchangeBidHouseBuyMessage', {
+      uid,
+      qty,
+      price,
+    });
+  }
 }

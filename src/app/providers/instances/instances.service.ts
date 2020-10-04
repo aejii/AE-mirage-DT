@@ -99,9 +99,18 @@ export class InstancesService {
 
   setActiveInstance(instance?: GameInstance) {
     this.zone.run(() => {
-      // To blur any input that might have the focus (closes the phone keyboard). Keep open on PC
-      if (this.system.isCordova)
+      // To blur any input that might have the focus (closes the phone keyboard).
+      // On PC, stay in chat or else blur to set the next instance as active
+      if (
+        this.system.isCordova ||
+        !(
+          this.activeInstance?.window &&
+          this.activeInstance?.window?.document?.activeElement instanceof
+            this.activeInstance.window.HTMLInputElement
+        )
+      )
         (document?.activeElement as HTMLElement)?.blur?.();
+
       this.activeInstance?.singletons.audioManager?.setMute?.(true);
       instance?.singletons.audioManager?.setMute?.(false);
       this.instancesStore.setActive(instance?.ID ?? null);

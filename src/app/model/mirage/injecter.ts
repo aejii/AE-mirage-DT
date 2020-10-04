@@ -33,6 +33,39 @@ export class MgInjecter {
 
   constructor(private instance: GameInstance) {}
 
+  addLongTapEventOnBuyButton() {
+    const wdw = this.instance.gui.sellingWindow;
+
+    let buyerTimeout;
+    const proceedToBuy = () => {
+      const price = wdw.selection?.amountSoft;
+      const qty = wdw.selection?.qty;
+      const uid = wdw.selection?.item?.objectUID;
+
+      if (!price || !qty || !uid) return;
+
+      this.instance.window.dofus.connectionManager.once(
+        'ExchangeBidHouseBuyResultMessage',
+        () => (buyerTimeout = setTimeout(() => proceedToBuy(), 300)),
+      );
+
+      this.instance.merchant.buyItem(uid, qty, price);
+    };
+
+    wdw.on('open', () => {
+      const buyBtn = wdw.buySoftBtn;
+
+      buyBtn.addListener('longtap', () => {
+        proceedToBuy();
+        buyBtn.once('dom.touchend', () => clearTimeout(buyerTimeout));
+      });
+
+      const listener =
+        buyBtn._events.longtap.slice?.(-1)?.[0] || buyBtn._events.longtap;
+      wdw.once('close', () => buyBtn.removeListener('longtap', listener));
+    });
+  }
+
   /** Adds a "-1K" button to the selling window */
   addMinusOneKamaSellingButton() {
     const tradingWindow = this.instance?.gui?.sellingWindow;

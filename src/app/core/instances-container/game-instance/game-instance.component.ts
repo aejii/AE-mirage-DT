@@ -61,6 +61,7 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
         this.instance.events.characterLogin$.pipe(first()).subscribe(() => {
           this.instance.injecter.addMinusOneKamaSellingButton();
           this.instance.injecter.addRemoveAllCurrentlySellingItemsButton();
+          this.instance.injecter.addLongTapEventOnBuyButton();
         }),
       );
 
