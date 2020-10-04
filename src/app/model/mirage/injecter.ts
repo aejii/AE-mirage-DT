@@ -38,11 +38,9 @@ export class MgInjecter {
     const tradingWindow = this.instance?.gui?.sellingWindow;
 
     const minusOneKamaButton = new this.instance.singletons.DTButton({
-      className: [
-        'greenButton',
-        'mirage-minus-one-kama'
-      ],
+      className: ['greenButton', 'mirage-minus-one-kama'],
       text: '-1 K',
+      tooltip: `Met l'objet en vente à 1 kama de moins que la quantité sélectionnée`,
     });
 
     minusOneKamaButton.addListener('tap', () => {

@@ -136,10 +136,10 @@ export interface DTWindow extends Window {
   };
 }
 
-export type UserTouchInteractions = 'tap' | 'doubletap' | 'longtap';
+export type UserTouchInteractions = 'tap' | 'doubletap' | 'longtap' | 'open' | 'close';
 
 export interface EventReadyObject<T = any> {
-  _events: { [key in UserTouchInteractions & string]: any };
+  _events: { [key in UserTouchInteractions]: ((...args) => any) & ((...args) => any)[] };
   addListener(verb: T, callback: (...args) => any): any;
   removeListener(verb: string, event: any): void;
   emit(verb: string, ...args: any): any;

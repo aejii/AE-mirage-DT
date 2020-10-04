@@ -307,6 +307,7 @@ export interface PadlockWindow {
 }
 
 export interface SellingItemWindow {
+  mode: 'sell-bidHouse' | 'modify-bidHouse';
   bidHouseSellerBox: {
     sellBtn: GameGuiElement<HTMLDivElement>;
     quantity: number;

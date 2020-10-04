@@ -4,17 +4,17 @@ import {
   Input,
   NgZone,
   OnDestroy,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { GameInstance } from '@model';
 import {
   InstancesService,
   KeyboardShortcutsService,
   MgKeyboardShortcut,
-  SystemService,
+  SystemService
 } from '@providers';
 import { Subscription, timer } from 'rxjs';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, first, switchMap, tap } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
 
 @Component({
@@ -54,6 +54,11 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
         this.instance.events.characterLogin$.subscribe(() => {
           this.instance.actions.removeShopButton();
           this.instance.injecter.addSpellsDoubleTapListener();
+        }),
+      );
+
+      this.susbscriptions.add(
+        this.instance.events.characterLogin$.pipe(first()).subscribe(() => {
           this.instance.injecter.addMinusOneKamaSellingButton();
           this.instance.injecter.addRemoveAllCurrentlySellingItemsButton();
         }),
