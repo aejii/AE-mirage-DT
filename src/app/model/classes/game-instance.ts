@@ -15,7 +15,7 @@ import { MgSingletons } from '../mirage/singletons';
 export class GameInstance {
   public readonly ID = Math.random().toString(36).slice(2);
 
-  public window: DTWindow;
+  public window: DTWindow & typeof globalThis;
 
   public events = new MgEventsHandler(this);
   public singletons = new MgSingletons(this);
@@ -48,7 +48,7 @@ export class GameInstance {
    * @param window Frame window object
    */
   frameLoaded(frame: HTMLIFrameElement) {
-    this.window = frame.contentWindow as DTWindow;
+    this.window = frame.contentWindow as any;
     /**
      * Uses Mirage log system to persist the console actions into the local storage
      */

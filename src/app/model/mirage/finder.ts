@@ -52,8 +52,17 @@ export class MgFinder {
         keys.join(', '),
       );
 
+    const defaultConf = { ...this.defaultSearchConfiguration };
+
+    if (
+      this.instance.window &&
+      _configuration.value === undefined &&
+      matcher instanceof this.instance.window.HTMLElement
+    )
+      defaultConf.value = true;
+
     const configuration = {
-      ...this.defaultSearchConfiguration,
+      ...defaultConf,
       ..._configuration,
     };
 
