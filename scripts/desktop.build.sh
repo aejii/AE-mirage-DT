@@ -10,7 +10,7 @@ touch electron/package.json && echo {} > electron/package.json
 # Build for Windows and Linux
 npx electron-packager electron Mirage --out electron/dist --platform=win32 --arch=x64 --asar --icon=src/app/assets/logo.ico
 npx electron-packager electron Mirage --out electron/dist --platform=linux --arch=x64 --asar --icon=src/app/assets/logo.ico
-npx electron-packager electron Mirage --out electron/dist --platform=darwin --arch=x64 --asar --icon=src/app/assets/logo.ico
+# npx electron-packager electron Mirage --out electron/dist --platform=darwin --arch=x64 --asar --icon=src/app/assets/logo.ico
 
 # For each directory of the dist folder
 for dirpath in `find ./electron/dist/ -maxdepth 1 -mindepth 1 -type d`
