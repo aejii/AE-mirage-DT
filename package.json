@@ -1,6 +1,6 @@
 {
   "name": "mirage",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "scripts": {
     "ng": "ng",
     "script:get": "touch game.script.js && rm game.script.js && wget -O game.script.js https://proxyconnection.touch.dofus.com/build/script.js",
