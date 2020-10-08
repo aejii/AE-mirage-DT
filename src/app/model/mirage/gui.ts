@@ -90,47 +90,47 @@ export class MgGuiHandler {
 
   /** Window displayed during a trade, showing the inventory */
   get characterExchangeInventory() {
-    return this.instance.singletons.windowManager.getWindow(
+    return this.instance.singletons?.windowManager?.getWindow?.(
       'tradeWithPlayerAndNPCInventory',
     );
   }
 
   /** Interface displayed during a thread, showing the currently traded items */
   get characterExchangeInterface() {
-    return this.instance.singletons.windowManager.getWindow('tradeWithPlayer');
+    return this.instance.singletons?.windowManager?.getWindow?.('tradeWithPlayer');
   }
 
   /** Window displayed during a storage operation, showing the inventory */
   get exchangeInventoryWindow() {
-    return this.instance.singletons.windowManager.getWindow(
+    return this.instance.singletons?.windowManager?.getWindow?.(
       'exchangeInventory',
     );
   }
 
   /** Window displayed during a craft with a craftsman */
   get craftingInventoryWindow() {
-    return this.instance.singletons.windowManager.getWindow('craftInventory');
+    return this.instance.singletons?.windowManager?.getWindow?.('craftInventory');
   }
 
   /** Window displayed during a storage operation, showing the storage content */
   get exchangeStorageWindow() {
-    return this.instance.singletons.windowManager.getWindow('exchangeStorage');
+    return this.instance.singletons?.windowManager?.getWindow?.('exchangeStorage');
   }
 
   get padlockWindow() {
-    return this.instance.singletons.windowManager.getWindow('padlock');
+    return this.instance.singletons?.windowManager?.getWindow?.('padlock');
   }
 
   get sellingWindow() {
-    return this.instance.singletons.windowManager.getWindow('tradeItem');
+    return this.instance.singletons?.windowManager?.getWindow?.('tradeItem');
   }
 
   get itemsCurrentlySellingWindow() {
-    return this.instance.singletons.windowManager.getWindow('tradeStorage');
+    return this.instance.singletons?.windowManager?.getWindow?.('tradeStorage');
   }
 
   get grimoireWindow() {
-    return this.instance.singletons.windowManager.getWindow('grimoire');
+    return this.instance.singletons?.windowManager?.getWindow?.('grimoire');
   }
 
   setShortcutBindingOnSlot(index: number, key: string) {

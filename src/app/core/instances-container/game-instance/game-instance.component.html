@@ -5,3 +5,27 @@
   [src]="src$ | async | safe"
   (load)="instance.frameLoaded(frame)"
 ></iframe>
+
+<ng-container *ngFor="let preview of previews$ | async">
+  <div
+    class="preview"
+    [style.left.px]="preview.coord.x"
+    [style.top.px]="preview.coord.y"
+  >
+    <span
+      [class]="dmg.element"
+      *ngFor="let dmg of preview.previews; last as last"
+    >
+      {{ dmg.element === 'heal' ? '❤️' : '⚔️' }}
+      {{ dmg.min === dmg.max ? dmg.min : dmg.min + ' - ' + dmg.max }}
+      <b
+        >({{
+          dmg.critMin === dmg.critMax
+            ? dmg.critMin
+            : dmg.critMin + ' - ' + dmg.critMax
+        }})</b
+      >
+      <ng-container *ngIf="!last"><br /></ng-container>
+    </span>
+  </div>
+</ng-container>

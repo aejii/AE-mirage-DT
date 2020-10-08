@@ -1,11 +1,16 @@
-import { fromEvent, interval, merge, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  fromEvent,
+  interval,
+  Observable,
+  Subscription,
+} from 'rxjs';
 import {
   filter,
   first,
   map,
   mapTo,
   shareReplay,
-  startWith,
   switchMap,
 } from 'rxjs/operators';
 import { GameInstance } from '../classes/game-instance';
@@ -37,6 +42,12 @@ export class MgEventsHandler {
     'spellSlotSelected',
   ).pipe(filter(() => !!this.instance.character.isFighting));
 
+  /** Emits everytime the character uncasts a spell during a fight */
+  characterSpellUncast$ = fromGuiCallback$<number>(
+    this.instance,
+    'spellSlotDeselected',
+  )/* .pipe(filter(() => !!this.instance.character.isFighting)) */;
+
   /** Emits when the user presses a key on his keyboard */
   public keyDown$ = waitForTruthiness$(() => this.instance.window, true).pipe(
     switchMap(() => fromEvent<KeyboardEvent>(this.instance.window, 'keydown')),
@@ -58,7 +69,7 @@ export class MgEventsHandler {
           filter((event) => event.key === 'Control'),
           mapTo(true),
         )
-        .subscribe(v => this._ctrlPressed.next(v)),
+        .subscribe((v) => this._ctrlPressed.next(v)),
     );
     this.subscriptions.add(
       this.keyUp$
@@ -66,7 +77,7 @@ export class MgEventsHandler {
           filter((event) => event.key === 'Control'),
           mapTo(false),
         )
-        .subscribe(v => this._ctrlPressed.next(v)),
+        .subscribe((v) => this._ctrlPressed.next(v)),
     );
   }
 }

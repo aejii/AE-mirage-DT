@@ -12,3 +12,37 @@ iframe {
 .stash {
   display: none;
 }
+
+.preview {
+  position: absolute;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transform: translate(-50%, 20px);
+  background: rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+  font-size: larger;
+
+  .earth {
+    color: #815633;
+    // color: brown;
+  }
+  .fire {
+    color: #d13800;
+    // color: red;
+  }
+  .water {
+    color: #398a89;
+    // color: blue;
+  }
+  .air {
+    color: #2b6f2d;
+    // color: green;
+  }
+  .neutral {
+    color: #ffffff;
+  }
+  .heal {
+    // color: #b976aa;
+    color: pink;
+  }
+}

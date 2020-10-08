@@ -1,21 +1,23 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   NgZone,
   OnDestroy,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { GameInstance } from '@model';
 import {
   InstancesService,
   KeyboardShortcutsService,
   MgKeyboardShortcut,
-  SystemService
+  SystemService,
 } from '@providers';
-import { Subscription, timer } from 'rxjs';
-import { filter, first, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Subscription, timer } from 'rxjs';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
+import { SpellPreview } from 'src/app/model/mirage/spells';
 
 @Component({
   selector: 'mg-game-instance',
@@ -29,9 +31,12 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
 
   src$ = this.installation.gamePath$;
 
+  previews$ = new BehaviorSubject<SpellPreview[]>([]);
+
   private susbscriptions = new Subscription();
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private installation: InstallationService,
     private instancesService: InstancesService,
     private zone: NgZone,
@@ -44,11 +49,31 @@ export class GameInstanceComponent implements OnInit, OnDestroy {
     this.susbscriptions.unsubscribe();
   }
 
+  clearPreviews() {
+    this.previews$.next([]);
+    this.cdRef.detectChanges();
+  }
+
   ngOnInit(): void {
     this.zone.run(() => {
       this.instance.actions.connectAccount();
 
       this._setActiveOnTurnStart();
+
+      this.instance.events.subscriptions.add(
+        this.instance.events.characterSpellCast$
+          .pipe(
+            map((spellId) => this.instance.spells.previewDamages(spellId)),
+            tap((previews) => this.previews$.next(previews)),
+          )
+          .subscribe(() => this.cdRef.detectChanges()),
+      );
+
+      this.instance.events.subscriptions.add(
+        this.instance.events.characterSpellUncast$.subscribe(() =>
+          this.clearPreviews(),
+        ),
+      );
 
       this.susbscriptions.add(
         this.instance.events.characterLogin$.subscribe(() => {

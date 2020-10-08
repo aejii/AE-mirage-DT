@@ -11,6 +11,7 @@ import { MgGuiHandler } from '../mirage/gui';
 import { MgInjecter } from '../mirage/injecter';
 import { MgMerchant } from '../mirage/merchant';
 import { MgSingletons } from '../mirage/singletons';
+import { MgSpellsManager } from '../mirage/spells';
 
 export class GameInstance {
   public readonly ID = Math.random().toString(36).slice(2);
@@ -27,6 +28,7 @@ export class GameInstance {
   public character = new MgCharacterHandler(this);
   public finder = new MgFinder(this);
   public merchant = new MgMerchant(this);
+  public spells = new MgSpellsManager(this);
 
   constructor(
     public account?: {

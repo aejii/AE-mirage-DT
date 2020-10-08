@@ -78,6 +78,16 @@ export class MgSingletons {
     return this._characterDisplay;
   }
 
+  private _IDB: IDBManager;
+  get IDB(): IDBManager {
+    if (!this._IDB)
+      this._IDB = this.instance.finder.getSingleton<IDBManager>(
+        'newDummyRecord',
+        { window: false, proto: false },
+      );
+    return this._IDB;
+  }
+
   constructor(private instance: GameInstance) {}
 }
 
@@ -370,3 +380,135 @@ export interface GameItem {
   objectGID: number;
   quantity: number;
 }
+
+export interface IDBManager {
+  request: (
+    table: IDBTable,
+    ids: number[],
+    callback: (_: null, results: { key: number }, __: unknown[]) => any,
+  ) => any;
+  // put: any;
+  // requestAll: any;
+  // putAll: any;
+}
+
+export type IDBTable =
+  | 'AbuseReasons'
+  | 'AchievementCategories'
+  | 'AchievementObjectives'
+  | 'AchievementRewards'
+  | 'Achievements'
+  | 'ActionDescriptions'
+  | 'AlignmentBalance'
+  | 'AlignmentEffect'
+  | 'AlignmentGift'
+  | 'AlignmentOrder'
+  | 'AlignmentRank'
+  | 'AlignmentRankJntGift'
+  | 'AlignmentSides'
+  | 'AlignmentTitles'
+  | 'AlmanaxCalendars'
+  | 'Appearances'
+  | 'Areas'
+  | 'BidHouseCategories'
+  | 'Breeds'
+  | 'CensoredContents'
+  | 'CensoredWords'
+  | 'Challenge'
+  | 'ChatChannels'
+  | 'CompanionCharacteristics'
+  | 'Companions'
+  | 'CompanionSpells'
+  | 'CreatureBonesOverrides'
+  | 'CreatureBonesTypes'
+  | 'Documents'
+  | 'Dungeons'
+  | 'Effects'
+  | 'EmblemBackgrounds'
+  | 'EmblemSymbolCategories'
+  | 'EmblemSymbols'
+  | 'Emoticons'
+  | 'ExternalNotifications'
+  | 'Heads'
+  | 'HintCategory'
+  | 'Hints'
+  | 'Houses'
+  | 'Incarnation'
+  | 'IncarnationLevels'
+  | 'InfoMessages'
+  | 'Interactives'
+  | 'Items'
+  | 'ItemSets'
+  | 'ItemTypes'
+  | 'Jobs'
+  | 'LegendaryTreasureHunts'
+  | 'LivingObjectSkinJntMood'
+  | 'MapCoordinates'
+  | 'MapPositions'
+  | 'MapReferences'
+  | 'MapScrollActions'
+  | 'MonsterMiniBoss'
+  | 'MonsterRaces'
+  | 'Monsters'
+  | 'MonsterSuperRaces'
+  | 'Months'
+  | 'MountBehaviors'
+  | 'MountBones'
+  | 'Mounts'
+  | 'Notifications'
+  | 'NpcActions'
+  | 'NpcMessages'
+  | 'Npcs'
+  | 'OptionalFeatures'
+  | 'Ornaments'
+  | 'Pack'
+  | 'Pets'
+  | 'Phoenixes'
+  | 'PointOfInterest'
+  | 'PointOfInterestCategory'
+  | 'PresetIcons'
+  | 'QuestCategory'
+  | 'QuestObjectives'
+  | 'QuestObjectiveTypes'
+  | 'Quests'
+  | 'QuestStepRewards'
+  | 'QuestSteps'
+  | 'RankNames'
+  | 'Recipes'
+  | 'RideFood'
+  | 'ServerCommunities'
+  | 'ServerGameTypes'
+  | 'ServerPopulations'
+  | 'Servers'
+  | 'ShieldModelsLevels'
+  | 'SkillNames'
+  | 'Skills'
+  | 'SkinMappings'
+  | 'SkinPositions'
+  | 'Smileys'
+  | 'SoundBones'
+  | 'SoundUi'
+  | 'SoundUiHook'
+  | 'SpeakingItemsText'
+  | 'SpeakingItemsTriggers'
+  | 'SpellBombs'
+  | 'SpellLevels'
+  | 'SpellPairs'
+  | 'Spells'
+  | 'SpellStates'
+  | 'SpellTypes'
+  | 'StealthBones'
+  | 'SubAreas'
+  | 'SubAreaIdPerCoordinate'
+  | 'SubAreasWorldMapData'
+  | 'SuperAreas'
+  | 'TaxCollectorFirstnames'
+  | 'TaxCollectorNames'
+  | 'Tips'
+  | 'TitleCategories'
+  | 'Titles'
+  | 'ToaRank'
+  | 'TypeActions'
+  | 'Url'
+  | 'Waypoints'
+  | 'WorldMaps';

@@ -88,8 +88,30 @@ export interface DTWindow extends Window {
       };
       characters: {
         mainCharacter: {
+          spellData: {
+            spells: {
+              [key: number]: {
+                spellLevel: {
+                  effects: SpellEffect[];
+                  criticalEffect: SpellEffect[];
+                  minRange: number;
+                  spellId: number;
+                };
+                _item: {
+                  effects: {
+                    actionId: number;
+                    min: number;
+                    max: number;
+                  }[];
+                  item: {
+                    criticalHitBonus: number;
+                  };
+                };
+              };
+            };
+          };
           characteristics: {
-            prospecting: {
+            [key in CharacterCaracteristics]: {
               getTotalStat: () => number;
             };
           };
@@ -108,6 +130,7 @@ export interface DTWindow extends Window {
       callback: (event: ObjectAddedEvent) => any,
     ): any;
     on(verb: WindowGuiEventVerb, callback: (...args: any) => any): any;
+    emit(verb: WindowGuiEventVerb, payload: any): void;
     _resizeUi(): void;
     closeContextualMenu(): void;
     openConfirmPopup(payload: {
@@ -122,10 +145,18 @@ export interface DTWindow extends Window {
   };
 
   isoEngine: {
+    mapRenderer: {
+      getCellSceneCoordinate(cellId: number): { x: number; y: number };
+    };
     mapScene: {
+      canvas: HTMLCanvasElement;
       camera: {
         maxZoom: number;
       };
+      convertSceneToCanvasCoordinate(
+        posX: number,
+        posY: number,
+      ): { x: number; y: number };
     };
     _castSpellImmediately(id: number): void;
   };
@@ -155,9 +186,26 @@ export interface EventReadyObject<T = any> {
 }
 
 export interface FightManagerFighter {
+  buffs: FighterBuff[];
   data: {
+    alive: boolean;
+    stats: {
+      [key in FighterStats]: number;
+    };
     disposition: {
       cellId: number;
+    };
+  };
+}
+
+export interface FighterBuff {
+  effect: {
+    duration: number;
+    value: number;
+    diceNum: number;
+    effectId: number;
+    effect: {
+      active: boolean;
     };
   };
 }
@@ -512,3 +560,130 @@ export interface ObjectAddedEvent {
     objectUID: number;
   };
 }
+
+export type CharacterCaracteristics =
+  | '_type'
+  | 'alignmentInfos'
+  | 'agility'
+  | 'chance'
+  | 'intelligence'
+  | 'strength'
+  | 'wisdom'
+  | 'actionPoints'
+  | 'airDamageBonus'
+  | 'airElementReduction'
+  | 'airElementResistPercent'
+  | 'allDamagesBonus'
+  | 'criticalDamageBonus'
+  | 'criticalDamageReduction'
+  | 'criticalHit'
+  | 'criticalHitWeapon'
+  | 'criticalMiss'
+  | 'damagesBonusPercent'
+  | 'dodgePALostProbability'
+  | 'dodgePMLostProbability'
+  | 'earthDamageBonus'
+  | 'earthElementReduction'
+  | 'earthElementResistPercent'
+  | 'fireDamageBonus'
+  | 'fireElementReduction'
+  | 'fireElementResistPercent'
+  | 'healBonus'
+  | 'initiative'
+  | 'movementPoints'
+  | 'neutralDamageBonus'
+  | 'neutralElementReduction'
+  | 'neutralElementResistPercent'
+  | 'PAAttack'
+  | 'permanentDamagePercent'
+  | 'PMAttack'
+  | 'probationTime'
+  | 'prospecting'
+  | 'pushDamageBonus'
+  | 'pushDamageReduction'
+  | 'pvpAirElementReduction'
+  | 'pvpAirElementResistPercent'
+  | 'pvpEarthElementReduction'
+  | 'pvpEarthElementResistPercent'
+  | 'pvpFireElementReduction'
+  | 'pvpFireElementResistPercent'
+  | 'pvpNeutralElementReduction'
+  | 'pvpNeutralElementResistPercent'
+  | 'pvpWaterElementReduction'
+  | 'pvpWaterElementResistPercent'
+  | 'range'
+  | 'reflect'
+  | 'summonableCreaturesBoost'
+  | 'summonableMaximumBombs'
+  | 'tackleBlock'
+  | 'tackleEvade'
+  | 'trapBonus'
+  | 'trapBonusPercent'
+  | 'vitality'
+  | 'waterDamageBonus'
+  | 'waterElementReduction'
+  | 'waterElementResistPercent'
+  | 'weaponDamagesBonusPercent'
+  | 'dealtDamageMultiplierMelee'
+  | 'receivedDamageMultiplierMelee'
+  | 'dealtDamageMultiplierDistance'
+  | 'receivedDamageMultiplierDistance'
+  | 'dealtDamageMultiplierWeapon'
+  | 'receivedDamageMultiplierWeapon'
+  | 'dealtDamageMultiplierSpells'
+  | 'receivedDamageMultiplierSpells'
+  | 'spellModifications'
+  | 'actionPointsCurrent'
+  | 'additionnalPoints'
+  | 'energyPoints'
+  | 'experience'
+  | 'experienceLevelFloor'
+  | 'experienceNextLevelFloor'
+  | 'kamas'
+  | 'lifePoints'
+  | 'maxEnergyPoints'
+  | 'maxLifePoints'
+  | 'movementPointsCurrent'
+  | 'spellsPoints'
+  | 'statsPoints';
+
+export interface SpellEffect {
+  targetMask: string;
+  /** minimum spell damage */
+  diceNum: number;
+  /** maximum spell damage */
+  diceSide: number;
+  effectId: number;
+  rawZone: string;
+}
+
+export type FighterStats =
+  | 'actionPoints'
+  | 'airElementReduction'
+  | 'airElementResistPercent'
+  | 'baseMaxLifePoints'
+  | 'criticalDamageFixedResist'
+  | 'dodgePALostProbability'
+  | 'dodgePMLostProbability'
+  | 'earthElementReduction'
+  | 'earthElementResistPercent'
+  | 'fireElementReduction'
+  | 'fireElementResistPercent'
+  | 'invisibilityState'
+  | 'initiative'
+  | 'lifePoints'
+  | 'maxActionPoints'
+  | 'maxLifePoints'
+  | 'maxMovementPoints'
+  | 'movementPoints'
+  | 'neutralElementReduction'
+  | 'neutralElementResistPercent'
+  | 'permanentDamagePercent'
+  | 'pushDamageFixedResist'
+  | 'shieldPoints'
+  | 'summoned'
+  | 'summoner'
+  | 'tackleBlock'
+  | 'tackleEvade'
+  | 'waterElementReduction'
+  | 'waterElementResistPercent';
