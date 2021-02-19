@@ -17,7 +17,7 @@
        under the License.
  */
 
-package com.mirage.mirageDT;
+package com.mirageold.mirageoldDT;
 
 import android.os.Bundle;
 import android.view.WindowManager;

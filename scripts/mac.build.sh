@@ -8,7 +8,7 @@ npx ng build -c electron-prod
 touch electron/package.json && echo {} > electron/package.json
 
 # Build for Mac OSX
-npx electron-packager electron Mirage --out electron/dist --platform=darwin --arch=x64 --asar --icon=src/app/assets/logo.ico
+npx electron-packager electron mirageold --out electron/dist --platform=darwin --arch=x64 --asar --icon=src/app/assets/logo.ico
 
 mkdir release
 mkdir release/desktop

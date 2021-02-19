@@ -1,4 +1,4 @@
 docker run \
   --rm \
   -it \
-  -v /$(pwd):/usr/src/mirage mirage
+  -v /$(pwd):/usr/src/mirageold mirageold

@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // Install the game when the application starts
     this.installation.updateGame().subscribe(() => {
-      console.log('Mirage is ready to run game instances');
+      console.log('mirageold is ready to run game instances');
     });
   }
 

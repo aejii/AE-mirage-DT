@@ -5,7 +5,7 @@
   const exec = util.promisify(require('child_process').exec);
 
   const packageRegex = /("version": *)"((?:[0-9]+\.?){3})"(,)/;
-  const configRegex = /(widget *id="com\.mirage\.mirageDT" *version=)"((?:[0-9]+\.?){3})"/;
+  const configRegex = /(widget *id="com\.mirageold\.mirageoldDT" *version=)"((?:[0-9]+\.?){3})"/;
 
   const args = process.argv.slice(2);
   const type = args[0];

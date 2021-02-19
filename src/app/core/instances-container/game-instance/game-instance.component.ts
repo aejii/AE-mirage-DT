@@ -17,7 +17,7 @@ import {
 import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { InstallationService } from 'src/app/core/installation/installation.service';
-import { SpellPreview } from 'src/app/model/mirage/spells';
+import { SpellPreview } from 'src/app/model/mirageold/spells';
 
 @Component({
   selector: 'mg-game-instance',

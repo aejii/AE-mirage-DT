@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { commonEnvironment } from 'src/environments/environment.common';
-import { MirageFileSystemImplementation } from './file-system.implementation';
+import { mirageoldFileSystemImplementation } from './file-system.implementation';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FileSystemService implements MirageFileSystemImplementation {
+export class FileSystemService implements mirageoldFileSystemImplementation {
   gamePath$ = of('');
 
   public readonly scriptFilename = commonEnvironment.scriptFilename;

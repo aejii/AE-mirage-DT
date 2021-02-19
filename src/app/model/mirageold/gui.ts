@@ -139,10 +139,10 @@ export class MgGuiHandler {
 
     targets.forEach((target) => {
       this.spellsSlots[target].rootElement.querySelector(
-        '.mirage-shortcut-key',
+        '.mirageold-shortcut-key',
       ).innerHTML = key || '';
       this.itemsSlots[target].rootElement.querySelector(
-        '.mirage-shortcut-key',
+        '.mirageold-shortcut-key',
       ).innerHTML = key || '';
     });
   }
@@ -177,7 +177,7 @@ function getCharacterImage(
     return char;
   } catch (error) {
     console.error(
-      'An error occured during character image rendering for Mirage',
+      'An error occured during character image rendering for mirageold',
     );
     return undefined;
   }

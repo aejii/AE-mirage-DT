@@ -89,8 +89,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 28 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: __local_aars__:C.\Users\mtrichard-ext\projects\mirage-DT\platforms\android\app\libs\sqlite-connector.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="Gradle: __local_aars__:C.\Users\mtrichard-ext\projects\mirage-DT\platforms\android\app\libs\sqlite-native-driver.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:C.\Users\mtrichard-ext\projects\mirageold-DT\platforms\android\app\libs\sqlite-connector.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:C.\Users\mtrichard-ext\projects\mirageold-DT\platforms\android\app\libs\sqlite-native-driver.jar:unspecified@jar" level="project" />
     <orderEntry type="module" module-name="CordovaLib" />
   </component>
 </module>

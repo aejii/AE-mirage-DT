@@ -24,7 +24,7 @@ export class InstancesContainerComponent implements OnInit {
   ngOnInit() {
     window.mgFind = (matcher, configuration) => {
       const instance = this.instancesService.activeInstance;
-      return instance.finder.mirageFinder(matcher, configuration);
+      return instance.finder.mirageoldFinder(matcher, configuration);
     };
   }
 

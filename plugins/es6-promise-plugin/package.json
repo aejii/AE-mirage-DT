@@ -2,7 +2,7 @@
   "_args": [
     [
       "es6-promise-plugin@4.2.2",
-      "/mnt/c/Users/mtrichard-ext/projects/mirage-DT"
+      "/mnt/c/Users/mtrichard-ext/projects/mirageold-DT"
     ]
   ],
   "_from": "es6-promise-plugin@4.2.2",
@@ -26,7 +26,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/es6-promise-plugin/-/es6-promise-plugin-4.2.2.tgz",
   "_spec": "4.2.2",
-  "_where": "/mnt/c/Users/mtrichard-ext/projects/mirage-DT",
+  "_where": "/mnt/c/Users/mtrichard-ext/projects/mirageold-DT",
   "author": "",
   "bugs": {
     "url": "https://github.com/vstirbu/PromisesPlugin/issues"

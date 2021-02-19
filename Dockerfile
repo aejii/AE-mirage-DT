@@ -37,7 +37,7 @@ RUN sdkmanager --sdk_root="/usr/lib/Android" --install  "build-tools;29.0.3" "pl
 RUN rm tools.zip
 RUN rm gradle.zip
 
-WORKDIR /usr/src/mirage
-VOLUME /usr/src/mirage
+WORKDIR /usr/src/mirageold
+VOLUME /usr/src/mirageold
 
 CMD ["bash"]

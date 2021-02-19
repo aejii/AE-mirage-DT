@@ -13,7 +13,7 @@ export class MgFinder {
 
   constructor(private instance: GameInstance) {
     this.instance.events.gameInit$.subscribe(
-      () => (this.instance.window.mgFind = this.mirageFinder.bind(this)),
+      () => (this.instance.window.mgFind = this.mirageoldFinder.bind(this)),
     );
   }
 
@@ -22,18 +22,18 @@ export class MgFinder {
     configuration: SearchConfiguration,
     isPrototype = false,
   ) {
-    const findings = this.mirageFinder<any, T>(matcher, configuration);
+    const findings = this.mirageoldFinder<any, T>(matcher, configuration);
 
     if (findings.length > 1)
       console.error(
-        `[MIRAGE | Finder] More than one result found for matcher : `,
+        `[mirageold | Finder] More than one result found for matcher : `,
         matcher,
       );
 
     return findings.shift?.()?.[isPrototype ? 'value' : 'parent'];
   }
 
-  mirageFinder<Value = any, Parent = any>(
+  mirageoldFinder<Value = any, Parent = any>(
     matcher: SearchMatcher,
     _configuration: SearchConfiguration = {},
   ): SearchResult<Value, Parent>[] {
@@ -45,7 +45,7 @@ export class MgFinder {
 
     if (unkwnownKeys.length)
       console.log(
-        '[Mirage Finder] -',
+        '[mirageold Finder] -',
         'Unkonwn configuration keys :',
         unkwnownKeys.join(', '),
         '\nValid keys are :',
@@ -73,7 +73,7 @@ export class MgFinder {
 
     if (mustSearchOnValue === null)
       throw new Error(
-        '[MIRAGE | Finder] matcher must be either a string, RegExp, or memory reference (with isValue = true)',
+        '[mirageold | Finder] matcher must be either a string, RegExp, or memory reference (with isValue = true)',
       );
 
     const windowRefs = [];

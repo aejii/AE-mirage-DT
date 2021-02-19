@@ -8,10 +8,10 @@
   },
   "installed_plugins": {
     "cordova-plugin-browsersync-gen2": {
-      "PACKAGE_NAME": "Mirage DT"
+      "PACKAGE_NAME": "mirageold DT"
     },
     "cordova-plugin-file": {
-      "PACKAGE_NAME": "Mirage DT"
+      "PACKAGE_NAME": "mirageold DT"
     }
   },
   "dependent_plugins": {}

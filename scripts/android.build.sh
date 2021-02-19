@@ -10,8 +10,8 @@ if test -f ./platforms/android/local.properties; then
 fi
 
 # Remove previous version
-if test -f ./release/Mirage.apk; then
-  rm release/Mirage.apk
+if test -f ./release/mirageold.apk; then
+  rm release/mirageold.apk
 fi
 
 # Build the Cordova (Java) application
@@ -26,7 +26,7 @@ if ! test -d ./release; then
 fi
 
 # Sign the APK
-apksigner sign --out release/Mirage.apk --ks apk/keystore.jks --ks-pass pass:MaxTri2012 --key-pass pass:MaxTri2012 apk/app-release-unsigned.apk
+apksigner sign --out release/mirageold.apk --ks apk/keystore.jks --ks-pass pass:MaxTri2012 --key-pass pass:MaxTri2012 apk/app-release-unsigned.apk
 
 # Remove the artifacts
 rm -rf apk/app-release-unsigned.apk www

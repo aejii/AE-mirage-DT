@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { concat, forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { commonEnvironment } from 'src/environments/environment.common';
-import { MirageFileSystemImplementation } from './file-system.implementation';
+import { mirageoldFileSystemImplementation } from './file-system.implementation';
 import { InstallationQuery } from './installation.query';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FileSystemService implements MirageFileSystemImplementation {
+export class FileSystemService implements mirageoldFileSystemImplementation {
   public readonly scriptFilename = commonEnvironment.scriptFilename;
   public readonly styleFilename = commonEnvironment.styleFilename;
 

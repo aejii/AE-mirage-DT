@@ -6,7 +6,7 @@ import { ExchangeWindowSlot } from './singletons';
 
 export class MgInjecter {
   get placeholderPartyInfo() {
-    const placeholderClass = 'mirage-party-infos';
+    const placeholderClass = 'mirageold-party-infos';
 
     const partyEl = this.instance.window?.gui?.party?.classicParty;
     const groupLeaderEl = partyEl?._childrenList[0]?.rootElement;
@@ -71,7 +71,7 @@ export class MgInjecter {
     const tradingWindow = this.instance?.gui?.sellingWindow;
 
     const minusOneKamaButton = new this.instance.singletons.DTButton({
-      className: ['greenButton', 'mirage-minus-one-kama'],
+      className: ['greenButton', 'mirageold-minus-one-kama'],
       text: '-1 K',
       tooltip: `Met l'objet en vente à 1 kama de moins que la quantité sélectionnée`,
     });
@@ -99,7 +99,7 @@ export class MgInjecter {
       className: [
         'buyModeBtn',
         'greenButton',
-        'mirage-remove-all-items-selling',
+        'mirageold-remove-all-items-selling',
       ],
       text: '',
       addIcon: true,
@@ -153,7 +153,7 @@ export class MgInjecter {
 
     slots.forEach((slot) => {
       const div = document.createElement('div');
-      div.className = 'mirage-shortcut-key quantity';
+      div.className = 'mirageold-shortcut-key quantity';
       slot.appendChild(div);
     });
   }

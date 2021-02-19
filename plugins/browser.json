@@ -8,27 +8,27 @@
   },
   "installed_plugins": {
     "cordova-plugin-browsersync-gen2": {
-      "PACKAGE_NAME": "com.mirage.mirageDT"
+      "PACKAGE_NAME": "com.mirageold.mirageoldDT"
     },
     "cordova-plugin-file": {
-      "PACKAGE_NAME": "com.mirage.mirageDT"
+      "PACKAGE_NAME": "com.mirageold.mirageoldDT"
     },
     "cordova-plugin-indexedDB": {
-      "PACKAGE_NAME": "com.mirage.mirageDT"
+      "PACKAGE_NAME": "com.mirageold.mirageoldDT"
     },
     "cordova-plugin-screen-orientation": {
-      "PACKAGE_NAME": "com.mirage.mirageDT"
+      "PACKAGE_NAME": "com.mirageold.mirageoldDT"
     },
     "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.mirage.mirageDT"
+      "PACKAGE_NAME": "com.mirageold.mirageoldDT"
     },
     "cordova-sqlite-storage": {
-      "PACKAGE_NAME": "com.mirage.mirageDT"
+      "PACKAGE_NAME": "com.mirageold.mirageoldDT"
     }
   },
   "dependent_plugins": {
     "es6-promise-plugin": {
-      "PACKAGE_NAME": "com.mirage.mirageDT"
+      "PACKAGE_NAME": "com.mirageold.mirageoldDT"
     }
   }
 }

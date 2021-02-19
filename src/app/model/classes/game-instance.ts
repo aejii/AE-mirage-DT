@@ -1,17 +1,17 @@
 import { fromEvent } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { DTWindow } from '../DT/window';
-import { MgActionsHandler } from '../mirage/actions';
-import { MgCharacterHandler } from '../mirage/character';
-import { MgEventsHandler } from '../mirage/events';
-import { MgFightHandler } from '../mirage/fights';
-import { MgFinder } from '../mirage/finder';
-import { MgGroupHandler } from '../mirage/group';
-import { MgGuiHandler } from '../mirage/gui';
-import { MgInjecter } from '../mirage/injecter';
-import { MgMerchant } from '../mirage/merchant';
-import { MgSingletons } from '../mirage/singletons';
-import { MgSpellsManager } from '../mirage/spells';
+import { MgActionsHandler } from '../mirageold/actions';
+import { MgCharacterHandler } from '../mirageold/character';
+import { MgEventsHandler } from '../mirageold/events';
+import { MgFightHandler } from '../mirageold/fights';
+import { MgFinder } from '../mirageold/finder';
+import { MgGroupHandler } from '../mirageold/group';
+import { MgGuiHandler } from '../mirageold/gui';
+import { MgInjecter } from '../mirageold/injecter';
+import { MgMerchant } from '../mirageold/merchant';
+import { MgSingletons } from '../mirageold/singletons';
+import { MgSpellsManager } from '../mirageold/spells';
 
 export class GameInstance {
   public readonly ID = Math.random().toString(36).slice(2);
@@ -52,7 +52,7 @@ export class GameInstance {
   frameLoaded(frame: HTMLIFrameElement) {
     this.window = frame.contentWindow as any;
     /**
-     * Uses Mirage log system to persist the console actions into the local storage
+     * Uses mirageold log system to persist the console actions into the local storage
      */
     this.window.addEventListener('error', (...args) =>
       (this.window.top as any).mgLog(...args),

@@ -1,4 +1,4 @@
-div.quantity.mirage-shortcut-chip {
+div.quantity.mirageold-shortcut-chip {
   display: block;
   top: auto;
   left: auto;
@@ -13,13 +13,13 @@ div.quantity.mirage-shortcut-chip {
   padding: 5px;
 }
 
-.mirage-party-infos {
+.mirageold-party-infos {
   padding-bottom: 8px;
   text-align: left;
 }
 
-.mirage-shortcut-key.quantity,
-.mirage-shortcut-key.quantity {
+.mirageold-shortcut-key.quantity,
+.mirageold-shortcut-key.quantity {
   top: auto;
   left: auto;
   right: 3px;
@@ -55,12 +55,12 @@ div.quantity.mirage-shortcut-chip {
 }
 
 .TradeStorageWindow.modify-bidHouse
-  div.buyModeBtn.greenButton.mirage-remove-all-items-selling.Button {
+  div.buyModeBtn.greenButton.mirageold-remove-all-items-selling.Button {
   filter: hue-rotate(300deg);
 }
 
 .TradeStorageWindow.modify-bidHouse
-  div.buyModeBtn.greenButton.mirage-remove-all-items-selling.Button
+  div.buyModeBtn.greenButton.mirageold-remove-all-items-selling.Button
   .btnIcon {
   background: url(assets/ui/icons/fail.png) 50% 55% no-repeat;
   background-size: 20px 20px;
@@ -69,6 +69,6 @@ div.quantity.mirage-shortcut-chip {
 div.BidHouseSellerBox
   > div.buttonBox
   > div:nth-child(1)[style='display: none;']
-  + .mirage-minus-one-kama {
+  + .mirageold-minus-one-kama {
   display: none;
 }

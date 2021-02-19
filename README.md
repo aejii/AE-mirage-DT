@@ -1,4 +1,4 @@
-# Mirage 
+# mirageold 
 
 **The unofficial best way to play Dofus Touch**
 
@@ -44,7 +44,7 @@ You can read them and use their code if you'd like to, but they're built around 
 settings.setUseWideViewPort(true);
 settings.setLoadWithOverviewMode(true);
 ```
-- In `platforms\android\app\src\main\java\com\mirage\mirageDT\MainActivity.java @ onCreate`, at the end, add those lines to ensure the phone does not go into sleep mode and the status bar does not show up at all. This comes from `import android.view.WindowManager;`, which needs to be added too.
+- In `platforms\android\app\src\main\java\com\mirageold\mirageoldDT\MainActivity.java @ onCreate`, at the end, add those lines to ensure the phone does not go into sleep mode and the status bar does not show up at all. This comes from `import android.view.WindowManager;`, which needs to be added too.
 ```java
 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

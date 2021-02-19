@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class LoggerService {
-  private readonly LOGS_LS_KEY = 'mirage-logs';
+  private readonly LOGS_LS_KEY = 'mirageold-logs';
 
   private readonly logsOfTodayName = (() => {
     const d = new Date();

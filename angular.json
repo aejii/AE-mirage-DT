@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "mirage": {
+    "mirageold": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:directive": {
@@ -139,18 +139,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mirage:build"
+            "browserTarget": "mirageold:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mirage:build:production"
+              "browserTarget": "mirageold:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mirage:build"
+            "browserTarget": "mirageold:build"
           }
         },
         "test": {
@@ -180,18 +180,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "mirage:serve"
+            "devServerTarget": "mirageold:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "mirage:serve:production"
+              "devServerTarget": "mirageold:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "mirage",
+  "defaultProject": "mirageold",
   "cli": {
     "analytics": "22a6c71a-e8c0-47ef-aad8-78a921f18a7c"
   }

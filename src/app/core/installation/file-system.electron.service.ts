@@ -4,7 +4,7 @@ import { PlatformPath } from 'path';
 import { concat, forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { commonEnvironment } from '../../../environments/environment.common';
-import { MirageFileSystemImplementation } from './file-system.implementation';
+import { mirageoldFileSystemImplementation } from './file-system.implementation';
 import { InstallationQuery } from './installation.query';
 
 // Workarounds the NG limitation of not using Node modules
@@ -20,8 +20,8 @@ const appDataPath =
 @Injectable({
   providedIn: 'root',
 })
-export class FileSystemService implements MirageFileSystemImplementation {
-  private appDataFolderName = 'Mirage';
+export class FileSystemService implements mirageoldFileSystemImplementation {
+  private appDataFolderName = 'mirageold';
   private gamePath = nodePath.join(appDataPath, this.appDataFolderName);
   private assetsDir = nodePath.join(__dirname, 'assets');
 

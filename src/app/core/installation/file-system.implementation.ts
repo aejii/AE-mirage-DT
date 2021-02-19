@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-export interface MirageFileSystemImplementation {
+export interface mirageoldFileSystemImplementation {
   /** Path to the game files */
   gamePath$: Observable<string>;
 

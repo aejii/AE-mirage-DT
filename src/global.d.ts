@@ -1,4 +1,4 @@
-import { MgFinder } from './app/model/mirage/finder';
+import { MgFinder } from './app/model/mirageold/finder';
 
 declare global {
   type ManifestName = 'manifest' | 'assetMap';
@@ -15,6 +15,6 @@ declare global {
   }
 
   interface Window {
-    mgFind: typeof MgFinder.prototype.mirageFinder;
+    mgFind: typeof MgFinder.prototype.mirageoldFinder;
   }
 }
