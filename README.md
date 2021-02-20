@@ -14,6 +14,39 @@ Once done, you will have access to npm scripts in the `package.json`.
 
 You will need two core dependencies : `electron` and `cordova`.
 
+# How to release
+
+easy way : docker
+
+download/git clone this repo
+```bash
+docker build -t mirageold .
+```
+
+run and enter in (open port 3000 )
+```bash
+docker run -i -t mirageold /bin/bash -p 3000:3000
+```
+
+then you have to get the source back (TODO copie in dockerfile?)
+```bash
+git clone https://github.com/aejii/AE-mirage-DT.git
+cd AE-mirage-DT
+```
+
+install npm package
+```bash
+npm i
+```
+
+run release script
+```bash
+./scripts/release.sh
+```
+
+apk and desktop app are in release folder
+(just have to export them out of the docker and you are done (through web server on port 3000?))
+
 # Android Debug Bridge (ADB)
 
 The debug bridge is the middleware that allows cordova to deploy the app on testing devices. It should be included into the Androdi SDK.
