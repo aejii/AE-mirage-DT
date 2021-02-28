@@ -25,7 +25,7 @@ docker build -t mirageold .
 
 run and enter in (open port 3000 )
 ```bash
-docker run -i -t mirageold /bin/bash -p 3000:3000
+docker run -i -t -p 3000:3000 mirageold /bin/bash
 ```
 
 then you have to get the source back (TODO copie in dockerfile?)
