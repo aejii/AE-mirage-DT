@@ -1,7 +1,7 @@
 // Global variables that van be used in all environments
 export const commonEnvironment = {
   dofusTouchProxy: 'https://proxyconnection.touch.dofus.com/',
-  elkProxy: 'https://elk-touch.ml/',
+  elkProxy: 'http://192.168.1.120:3000/',
   iTunesManifestUrl:
     'https://itunes.apple.com/lookup?id=1041406978&t=' + Date.now(),
 

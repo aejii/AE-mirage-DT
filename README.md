@@ -31,6 +31,7 @@ docker run -i -t -p 3000:3000 mirageold /bin/bash
 then you have to get the source back (TODO copie in dockerfile?)
 ```bash
 git clone https://github.com/aejii/AE-mirage-DT.git
+git clone https://github.com/aejii/nodejs-simple-share-server.git
 cd AE-mirage-DT
 ```
 
@@ -43,6 +44,18 @@ run release script
 ```bash
 ./scripts/release.sh
 ```
+
+how to export (optionnel)
+```bash
+cd release
+mkdir ../../nodejs-simple-share-server/public
+cp * -r ../../nodejs-simple-share-server/public
+cd ../../nodejs-simple-share-server
+npm i
+node partage.js
+```
+open a nav tab on your host computer (http://127.0.0.1:3000/desktop/mirageold-win32-x64.zip)
+
 
 apk and desktop app are in release folder
 (just have to export them out of the docker and you are done (through web server on port 3000?))
