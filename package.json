@@ -39,7 +39,7 @@
     "cordova-plugin-indexeddb": "^0.1.2",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "cordova-sqlite-storage": "^4.0.0",
-    "electron": "^8.2.3",
+    "electron": "^9.4.0",
     "es6-promise-plugin": "^4.2.2",
     "firebase": "^7.8.1",
     "rxjs": "6.5.4",
