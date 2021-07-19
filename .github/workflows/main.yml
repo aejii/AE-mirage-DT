@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Build app
-        uses: AE-mirage-DT/actionbuild@v1
+
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Exctract apk et exe
         uses: shrink/actions-docker-extract@v1
