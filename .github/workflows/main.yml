@@ -13,7 +13,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Build app
-        uses: actionbuild/actions@v1
+        uses: actionbuild/AE-mirage-DT@v1
 
       - name: Exctract apk et exe
         uses: shrink/actions-docker-extract@v1
