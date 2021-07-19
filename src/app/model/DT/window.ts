@@ -75,7 +75,7 @@ export interface DTWindow extends Window {
         };
         _play(): void;
       };
-      showLoginForm(): void;
+      show(): void;
     };
     playerData: {
       id: number;

@@ -30,7 +30,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
-          title: "Development Build"
+          title: "Pre release"
           files: |
             mirageold.apk
             mirageold-win32-x64.zip

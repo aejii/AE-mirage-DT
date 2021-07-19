@@ -16,7 +16,7 @@ export class MgGuiHandler {
         ?._inputPassword?.rootElement,
       rememberName: this.instance.window.gui?.loginScreen?._loginForm
         ?._rememberName,
-      show: () => this.instance.window.gui?.loginScreen?.showLoginForm?.(),
+      show: () => this.instance.window.gui?.loginScreen?.show?.(),
       play: () => this.instance.window.gui?.loginScreen?._loginForm?._play?.(),
     };
   }
