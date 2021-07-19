@@ -35,13 +35,13 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
-          title: "beta."${{ steps.package-version.outputs.current-version}}
+          title: "beta.${{ steps.package-version.outputs.current-version}}"
           files: |
             mirageold.apk
             mirageold-win32-x64.zip
             mirageold-linux-x64.zip
 
-
+---
 name: "tagged-release"
 on:
   push:
