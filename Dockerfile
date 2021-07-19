@@ -38,6 +38,9 @@ RUN rm tools.zip
 RUN rm gradle.zip
 
 WORKDIR /usr/src/mirageold
-VOLUME /usr/src/mirageold
+COPY / /usr/src/mirageold/
+WORKDIR /usr/src/mirageold
 
-CMD ["bash"]
+RUN npm i
+
+CMD scripts/release.sh
