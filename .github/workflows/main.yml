@@ -17,31 +17,21 @@ jobs:
 
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
 
-      - name: on est ou
-        run: |
-          pwd
-
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-
-      - run: echo "On lance le build du containeur"
       - run: docker build -t mirageold .
 
-      - run: echo "On lance le containeur"
-      - run: docker run mirageold
+      - run: docker run --name=mirageoldname mirageold
 
-      #- name: Exctract apk et exe
-      #  uses: shrink/actions-docker-extract@v1
-      #  with:
-      #    image: ubuntu:18.04
-      #    path: /usr/src/mirageold/release/mirageold.apk
+      - run: docker cp mirageoldname:/usr/src/mirageold/release/mirageold.apk mirageold.apk
+      - run: docker cp mirageoldname:/usr/src/mirageold/release/desktop/mirageold-win32-x64.zip mirageold-win32-x64.zip
+      - run: docker cp mirageoldname:/usr/src/mirageold/release/desktop/mirageold-linux-x64.zip mirageold-linux-x64.zip
   
-      #- uses: "marvinpinto/action-automatic-releases@latest"
-      #  with:
-      #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #    automatic_release_tag: "latest"
-      #    prerelease: true
-      #    title: "Development Build"
-      #    files: |
-      #      ${{ steps.extract.outputs.destination }}
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            mirageold.apk
+            mirageold-win32-x64.zip
+            mirageold-linux-x64.zip
