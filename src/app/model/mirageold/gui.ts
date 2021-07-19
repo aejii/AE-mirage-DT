@@ -10,12 +10,9 @@ export class MgGuiHandler {
   /** Login form displayed when the user starts the game */
   get loginForm() {
     return {
-      username: this.instance.window.gui?.loginScreen?._loginForm?._inputLogin
-        ?.rootElement,
-      password: this.instance.window.gui?.loginScreen?._loginForm
-        ?._inputPassword?.rootElement,
-      rememberName: this.instance.window.gui?.loginScreen?._loginForm
-        ?._rememberName,
+      username: this.instance.window.gui?.loginScreen?._loginForm?._inputLogin,
+      password: this.instance.window.gui?.loginScreen?._loginForm?._inputPassword,
+      rememberName: this.instance.window.gui?.loginScreen?._loginForm?._rememberName,
       show: () => this.instance.window.gui?.loginScreen?.show?.(),
       play: () => this.instance.window.gui?.loginScreen?._loginForm?._play?.(),
     };

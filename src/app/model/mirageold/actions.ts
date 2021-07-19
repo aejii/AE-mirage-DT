@@ -88,13 +88,15 @@ export class MgActionsHandler {
         delay(500),
         tap(() => this.instance.window.gui.loginScreen.show()),
         switchMap(() =>
-          emulateUserTyping$(
+          pasEmultate(this.instance.gui.loginForm.username,
+            this.instance.account.username)
+          /*emulateUserTyping$(
             this.instance.gui.loginForm.username,
             this.instance.account.username,
-          ),
+          )*/,
         ),
         switchMap(() =>
-          emulateUserTyping$(
+          pasEmultate(
             this.instance.gui.loginForm.password,
             this.instance.account.password,
           ),
@@ -131,6 +133,13 @@ export class MgActionsHandler {
       cb,
     });
   }
+}
+
+function pasEmultate(input, content) {
+  input.setValue(content)
+  return forkJoin([
+    content
+  ])
 }
 
 /**
