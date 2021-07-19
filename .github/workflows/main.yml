@@ -15,17 +15,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Exctract apk et exe
-        uses: shrink/actions-docker-extract@v1
-        with:
-          image: ubuntu:18.04
-          path: /usr/src/mirageold/release/mirageold.apk
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+
+      - name: on est ou
+        run: |
+          pwd
+
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+
+      - run: echo "On lance le build du containeur"
+      - run: docker build -t mirageold .
+
+      - run: echo "On lance le containeur"
+      - run: docker run mirageold
+
+      #- name: Exctract apk et exe
+      #  uses: shrink/actions-docker-extract@v1
+      #  with:
+      #    image: ubuntu:18.04
+      #    path: /usr/src/mirageold/release/mirageold.apk
   
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            ${{ steps.extract.outputs.destination }}
+      #- uses: "marvinpinto/action-automatic-releases@latest"
+      #  with:
+      #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #    automatic_release_tag: "latest"
+      #    prerelease: true
+      #    title: "Development Build"
+      #    files: |
+      #      ${{ steps.extract.outputs.destination }}
