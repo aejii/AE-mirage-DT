@@ -86,7 +86,7 @@ export class MgActionsHandler {
     this.instance.events.gameInit$
       .pipe(
         delay(500),
-        tap(() => this.instance.window.gui.loginScreen.showLoginForm()),
+        tap(() => this.instance.window.gui.loginScreen.show()),
         switchMap(() =>
           emulateUserTyping$(
             this.instance.gui.loginForm.username,
