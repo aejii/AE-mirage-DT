@@ -2,13 +2,13 @@
 <widget id="com.mirageold.mirageoldDT" version="2.6.0" 
   xmlns="http://www.w3.org/ns/widgets" 
   xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>mirageold DT</name>
+  <name>Mirage DT</name>
   <icon src="src/assets/logo.png" />
   <description>
-        mirageold, l'application qui simplifie la vie des joueurs DT sur Android
+        Mirage, l'application qui simplifie la vie des joueurs DT sur Android
   </description>
   <author email="you.wish@but.no.com" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-        mirageold
+        Mirage
   </author>
   <content src="index.html" />
   <plugin name="cordova-plugin-whitelist" spec="1" />
