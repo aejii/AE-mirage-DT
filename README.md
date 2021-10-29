@@ -14,24 +14,31 @@ Once done, you will have access to npm scripts in the `package.json`.
 
 You will need two core dependencies : `electron` and `cordova`.
 
+# How to dev (almost like lindo)
+
+```bash
+npm run serve:electron
+npm start
+```
+
 # How to release
 
-easy way : docker
+releasing for all platform : docker
+
 
 download/git clone this repo
 ```bash
 docker build -t mirageold .
 ```
 
-run and enter in (open port 3000 )
+run and enter inside
 ```bash
-docker run -i -t -p 3000:3000 mirageold /bin/bash
+docker run -it mirageold /bin/bash
 ```
 
 then you have to get the source back (TODO copie in dockerfile?)
 ```bash
 git clone https://github.com/aejii/AE-mirage-DT.git
-git clone https://github.com/aejii/nodejs-simple-share-server.git
 cd AE-mirage-DT
 ```
 
@@ -45,20 +52,13 @@ run release script
 ./scripts/release.sh
 ```
 
-how to export (optionnel)
-```bash
-cd release
-mkdir ../../nodejs-simple-share-server/public
-cp * -r ../../nodejs-simple-share-server/public
-cd ../../nodejs-simple-share-server
-npm i
-node partage.js
-```
-open a nav tab on your host computer (http://127.0.0.1:3000/desktop/mirageold-win32-x64.zip)
-
-
 apk and desktop app are in release folder
-(just have to export them out of the docker and you are done (through web server on port 3000?))
+you just have to export them out of the docker and you are done ([docker cp](https://www.youtube.com/watch?v=dQw4w9WgXcQ))
+
+releasing without docker :
+
+look inside the script directory
+
 
 # Android Debug Bridge (ADB)
 
