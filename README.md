@@ -26,7 +26,6 @@ npm start
 releasing for all platform : docker
 
 
-download/git clone this repo
 ```bash
 docker build -t mirageold .
 ```
